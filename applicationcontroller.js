@@ -30,6 +30,10 @@ app.get('/yummly', function(req, res) {
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup">');
   res.end('</form></body></html>');
   */
+  var credentials = {
+  id: '13944c3c',
+  key: '5a09042c7587234cbd1adc10150874cf'
+}
     yummly.search({
       credentials: credentials,
       query: {
