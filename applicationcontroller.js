@@ -29,6 +29,12 @@ app.get('/', function(req, res) {
 app.post('/search', function(req, res) {
   res.writeHead(200);
   var query = req.body.q;
+  function superCallBack(result) {
+    res.end(result);
+  }
+  search_controller.search(req.body.q,superCallBack);
+});
+  /*
   while(typeof query != 'undefined')
   {
     result = search_controller.search(query);
@@ -38,7 +44,7 @@ app.post('/search', function(req, res) {
     console.log(result);
     res.end(result);
   }
-  
+  */
   /*
     TODO: MOVE THIS TO THE SEARCHCONTROLLER
 
@@ -55,8 +61,6 @@ app.post('/search', function(req, res) {
   //res.get("/CAMILLE");
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
-    
-});
 
 
 app.post('/users/login', function(req, res) {
