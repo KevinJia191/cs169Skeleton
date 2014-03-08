@@ -24,8 +24,12 @@ app.get('/', function(req, res) {
   res.end('</form></body></html>');
 });
 
-app.post('/yummly', function(req, res) {
+app.get('/yummly', function(req, res) {
   res.writeHead(200);
+  console.log("YUMMLY WORKS")
+  res.write('<html><body>');
+  res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup">');
+  res.end('</form></body></html>');
   /*
     TODO: MOVE THIS TO THE SEARCHCONTROLLER
 
@@ -59,11 +63,6 @@ app.post('/yummly', function(req, res) {
     });
     */
 });
-
-app.post('/search', function(req, res) {
-    console.log("MOSES");
-});
-
 
 app.post('/users/login', function(req, res) {
     res.header('Content-Type', 'application/json');
