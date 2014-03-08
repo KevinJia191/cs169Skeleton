@@ -25,7 +25,7 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/yummly', function(req, res) {
+app.get('/search', function(req, res) {
   res.writeHead(200);
   console.log("YUMMLY WORKS")
   
@@ -58,7 +58,22 @@ app.get('/yummly', function(req, res) {
       } else if (response.statusCode === 200) {
         console.log("FRUITCAKES");
         console.log(json.matches[0].id);
+        var new_son = {
+          errCode: UserModel.ERR_BAD_CREDENTIALS,
+          count: result.rows[0].count
+        };
+        jsonArray = []
+        for (int i=0;i<10;i++) {
+            new_son = {
+            recipe_id : json.matches[i].id, 
+            recipe_name: json.matches[i].recipeName, 
+            smallImageUrls:json.matches[i].smallImageUrls, 
+            details: json.matches[i].sourceDisplayName,
+            ingredient_list: json.matches[i].ingredients}
+            jsonArray.push(new_son);
+        }
       }
+      /*
       res.write(json.matches[0].recipeName);
       res.write(json.matches[1].recipeName);
       res.write(json.matches[2].recipeName);
@@ -70,6 +85,8 @@ app.get('/yummly', function(req, res) {
       res.write(json.matches[8].recipeName);
       res.write(json.matches[9].recipeName);
       res.end(json.matches[0].recipeName);
+      */
+      res.end(jsonArray);
     });
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
