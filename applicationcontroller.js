@@ -29,13 +29,9 @@ app.get('/', function(req, res) {
 app.post('/search', function(req, res) {
   res.writeHead(200);
   var query = req.body.q;
-  //result = search_controller.search(query);
-  //console.log(result);
-  search_controller.search(req.body.q,function(final)
-      {
-        res.end(final); 
-      }
-  );
+  result = search_controller.search(query);
+  console.log(result);
+  res.end(result);
   
   /*
     TODO: MOVE THIS TO THE SEARCHCONTROLLER

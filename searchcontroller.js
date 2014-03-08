@@ -10,7 +10,8 @@ var history_controller = require('./historycontroller.js');
 var search_controller = require('./searchcontroller.js');
 
 
-var search = function(param1,callback){
+var search = function(param1){
+	console.log("called");
 	jsonArray = []
     recArray=[];
     recnameArray=[];
@@ -21,6 +22,7 @@ var search = function(param1,callback){
       id: '13944c3c',
       key: '5a09042c7587234cbd1adc10150874cf'
     }
+    console.log("starting search");
     yummly.search({
       credentials: credentials,
       query: {
@@ -43,6 +45,7 @@ var search = function(param1,callback){
             dArray.push(json.matches[i].sourceDisplayName);
             ilArray.push(json.matches[i].ingredients);
         }
+        console.log("create final json")
         new_son = {
         recipe_id : recArray, 
         recipe_name: recnameArray, 
@@ -70,7 +73,7 @@ var search = function(param1,callback){
         };
       var format_son = JSON.stringify(new_son);
       */
-      callback(format_son);
+      return format_son;
       }
 
 
