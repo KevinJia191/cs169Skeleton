@@ -100,6 +100,7 @@ app.get('/search', function(req, res) {
       */
       var format_son = JSON.stringify(new_son);
       res.end(format_son);
+      console.log(format_son);
     });
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
