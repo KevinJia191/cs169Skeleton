@@ -27,7 +27,7 @@ app.get('/', function(req, res) {
 
 app.get('/search', function(req, res) {
   res.writeHead(200);
-  console.log("YUMMLY WORKS")
+  console.log("YUMMLY WORKS");
   
   /*
     TODO: MOVE THIS TO THE SEARCHCONTROLLER
@@ -81,7 +81,8 @@ app.get('/search', function(req, res) {
         recipe_name: recnameArray, 
         smallImageUrls:siuArray, 
         details: dArray,
-        ingredient_list: ilArray}
+        ingredient_list: ilArray
+    };
 
       /*
       res.write(json.matches[0].recipeName);
