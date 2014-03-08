@@ -59,6 +59,17 @@ app.get('/yummly', function(req, res) {
         console.log("FRUITCAKES");
         console.log(json.matches[0].id);
       }
+      res.write(json.matches[0].recipeName);
+      res.write(json.matches[1].recipeName);
+      res.write(json.matches[2].recipeName);
+      res.write(json.matches[3].recipeName);
+      res.write(json.matches[4].recipeName);
+      res.write(json.matches[5].recipeName);
+      res.write(json.matches[6].recipeName);
+      res.write(json.matches[7].recipeName);
+      res.write(json.matches[8].recipeName);
+      res.write(json.matches[9].recipeName);
+      res.write(json.matches[10].recipeName);
       res.end(json.matches[0].recipeName);
     });
     //res.write('<html><body>');
