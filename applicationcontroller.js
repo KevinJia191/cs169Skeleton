@@ -31,7 +31,11 @@ app.post('/search', function(req, res) {
   var query = req.body.q;
   //result = search_controller.search(query);
   //console.log(result);
-  res.end(search_controller.search(req.body.q));
+  search_controller.search(req.body.q,function(final)
+      {
+        res.end(final); 
+      }
+  );
   
   /*
     TODO: MOVE THIS TO THE SEARCHCONTROLLER

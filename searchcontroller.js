@@ -10,7 +10,7 @@ var history_controller = require('./historycontroller.js');
 var search_controller = require('./searchcontroller.js');
 
 
-var search = function(param1){
+var search = function(param1,callback){
 	jsonArray = []
     recArray=[];
     recnameArray=[];
@@ -70,7 +70,7 @@ var search = function(param1){
         };
       var format_son = JSON.stringify(new_son);
       */
-      return format_son;
+      callback(format_son);
       }
 
 
