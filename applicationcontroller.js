@@ -30,7 +30,7 @@ app.post('/search', function(req, res) {
   res.writeHead(200);
   var query = req.body.q;
   result = search_controller.search(query);
-  while(typeof result === 'undefined')
+  while(typeof result != 'undefined')
   {
     console.log(result);
     res.end(result);
