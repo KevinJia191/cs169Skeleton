@@ -75,14 +75,17 @@ app.get('/search', function(req, res) {
             dArray.push(json.matches[i].sourceDisplayName);
             ilArray.push(json.matches[i].ingredients);
         }
-      }
-      new_son = {
+        new_son = {
         recipe_id : recArray, 
         recipe_name: recnameArray, 
         smallImageUrls:siuArray, 
         details: dArray,
         ingredient_list: ilArray
-    };
+        };
+      var format_son = JSON.stringify(new_son);
+      res.end(format_son);
+      }
+
 
       /*
       res.write(json.matches[0].recipeName);
@@ -97,8 +100,6 @@ app.get('/search', function(req, res) {
       res.write(json.matches[9].recipeName);
       res.end(json.matches[0].recipeName);
       */
-      var format_son = JSON.stringify(new_son);
-      res.end(format_son);
     });
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
