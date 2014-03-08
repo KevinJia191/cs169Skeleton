@@ -32,6 +32,7 @@ app.get('/async', function(req,res) {
     function doSomething() {console.log(1)},
     function doSomethingElse() {console.log(2)},
     function finish() {console.log(3)}
+    res.end();
   ]);
 });
 
