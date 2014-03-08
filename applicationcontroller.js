@@ -88,7 +88,7 @@ app.get('/search', function(req, res) {
       }
 
 
-      
+      /*
       res.write(json.matches[0].recipeName);
       res.write(json.matches[1].recipeName);
       res.write(json.matches[2].recipeName);
@@ -100,6 +100,7 @@ app.get('/search', function(req, res) {
       res.write(json.matches[8].recipeName);
       res.write(json.matches[9].recipeName);
       //res.end(json.matches[0].recipeName);
+      */
       for (var i=0;i<10;i++) {
             console.log("for loop");
             recArray.push(json.matches[i].id);
