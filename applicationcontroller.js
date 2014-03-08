@@ -3,7 +3,7 @@ var logfmt = require("logfmt");
 var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
-var async = require('async'),
+var async = require('async');
 
 var user_controller = require("./usercontroller.js");
 var ingredient_controller = require('./ingredientcontroller.js');
