@@ -28,10 +28,22 @@ app.get('/', function(req, res) {
 
 app.get('/async', function(req,res) {
     res.writeHead(200);
+    function callback(){
+      console.log("called back");
+    }
     async.series([
-    function doSomething() {console.log(1)},
-    function doSomethingElse() {console.log(2)},
-    function finish() {console.log(3)},
+    function doSomething(callback) {
+      console.log(1);
+      callback();
+    },
+    function doSomethingElse(callback) {
+      console.log(2);
+      callback();
+    },
+    function finish(callback) {
+      console.log(3);
+      callback();
+    },
     res.end()
   ]);
 });
