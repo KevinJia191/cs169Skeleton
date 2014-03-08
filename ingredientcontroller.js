@@ -3,10 +3,10 @@ var logfmt = require("logfmt");
 var app = express();
 var pg = require('pg');
 
-var user_controller = require('/user_controller.java');
-var ingredient_controller = require('/ingredient_controller.java');
-var history_controller = require('/history_controller.java');
-var search_controller = require('/search_controller.java');
+var user_controller = require('/usercontroller.js');
+var ingredient_controller = require('/ingredientcontroller.js');
+var history_controller = require('/historycontroller.js');
+var search_controller = require('/searchcontroller.js');
 
 
 //Take in a Ingredient Object eventually

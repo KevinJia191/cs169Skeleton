@@ -4,9 +4,9 @@ var app = express();
 var pg = require('pg');
 
 var user_controller = require("./usercontroller.js");
-var ingredient_controller = require('./ingredient_controller.js');
-var history_controller = require('./history_controller.js');
-var search_controller = require('./search_controller.js');
+var ingredient_controller = require('./ingredientcontroller.js');
+var history_controller = require('./historycontroller.js');
+var search_controller = require('./searchcontroller.js');
 
 app.configure(function(){
   app.use(express.bodyParser());
