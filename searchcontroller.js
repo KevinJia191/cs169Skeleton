@@ -12,6 +12,7 @@ var search_controller = require('./searchcontroller.js');
 
 
 var search = function(param1){
+  /*
   jsonArray = []
   recArray=[];
   recnameArray=[];
@@ -87,6 +88,7 @@ var search = function(param1){
       return format_son;
       }
     });
+*/
 }
 
 var getRecipeData = function(param1, param2){
