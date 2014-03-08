@@ -32,17 +32,14 @@ app.get('/async', function(req,res) {
       console.log("called back");
     }
     async.series([
-    function doSomething(callback) {
+    function doSomething() {
       console.log(1);
-      callback();
     },
-    function doSomethingElse(callback) {
+    function doSomethingElse() {
       console.log(2);
-      callback();
     },
-    function finish(callback) {
+    function finish() {
       console.log(3);
-      callback();
     },
     res.end()
   ]);
