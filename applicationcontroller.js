@@ -69,21 +69,20 @@ app.get('/search', function(req, res) {
           count: result.rows[0].count
         };
         for (var i=0;i<10;i++) {
-            recArray.push(json.matches[0].id);
-            recnameArray.push(json.matches[0].recipeName);
-            siuArray.push(json.matches[0].smallImageUrls);
-            dArray.push(json.matches[0].sourceDisplayName);
-            ilArray.push(json.matches[0].ingredients);
+            recArray.push(json.matches[i].id);
+            recnameArray.push(json.matches[i].recipeName);
+            siuArray.push(json.matches[i].smallImageUrls);
+            dArray.push(json.matches[i].sourceDisplayName);
+            ilArray.push(json.matches[i].ingredients);
         }
-        new_son = {
+      }
+      new_son = {
         recipe_id : recArray, 
         recipe_name: recnameArray, 
         smallImageUrls:siuArray, 
         details: dArray,
         ingredient_list: ilArray
-      };
-    }
-      
+    };
 
       /*
       res.write(json.matches[0].recipeName);
@@ -99,8 +98,7 @@ app.get('/search', function(req, res) {
       res.end(json.matches[0].recipeName);
       */
       var format_son = JSON.stringify(new_son);
-      res.end(format_son);
-      console.log(format_son);
+      res.end(new_son);
     });
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
