@@ -69,11 +69,11 @@ app.get('/search', function(req, res) {
           count: result.rows[0].count
         };
         for (var i=0;i<10;i++) {
-            recArray.push(json.matches[i].id);
-            recnameArray.push(json.matches[i].recipeName);
-            siuArray.push(json.matches[i].smallImageUrls);
-            dArray.push(json.matches[i].sourceDisplayName);
-            ilArray.push(json.matches[i].ingredients);
+            recArray.push(json.matches[0].id);
+            recnameArray.push(json.matches[0].recipeName);
+            siuArray.push(json.matches[0].smallImageUrls);
+            dArray.push(json.matches[0].sourceDisplayName);
+            ilArray.push(json.matches[0].ingredients);
         }
       }
       new_son = {
