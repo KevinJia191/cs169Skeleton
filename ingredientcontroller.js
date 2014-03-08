@@ -3,9 +3,9 @@ var logfmt = require("logfmt");
 var app = express();
 var pg = require('pg');
 
-var user_controller = require('/usercontroller.js');
-var history_controller = require('/historycontroller.js');
-var search_controller = require('/searchcontroller.js');
+var user_controller = require('./usercontroller.js');
+var history_controller = require('./historycontroller.js');
+var search_controller = require('./searchcontroller.js');
 
 
 //Take in a Ingredient Object eventually
