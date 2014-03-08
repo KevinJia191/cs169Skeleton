@@ -27,12 +27,12 @@ app.get('/', function(req, res) {
 });
 
 app.get('/async', function(req,res) {
-  res.writeHead(200);
+    res.writeHead(200);
     async.series([
     function doSomething() {console.log(1)},
     function doSomethingElse() {console.log(2)},
-    function finish() {console.log(3)}
-    res.end();
+    function finish() {console.log(3)},
+    res.end()
   ]);
 });
 
