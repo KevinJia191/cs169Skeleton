@@ -2,6 +2,7 @@ var express = require("express");
 var logfmt = require("logfmt");
 var app = express();
 var pg = require('pg');
+var yummly = require('yummly');
 
 var user_controller = require('./usercontroller.js');
 var ingredient_controller = require('./ingredientcontroller.js');
@@ -23,7 +24,7 @@ var search = function(param1){
     yummly.search({
       credentials: credentials,
       query: {
-        q: query
+        q: param1
       }
     }, function (error, response, json) {
       if (error) {
