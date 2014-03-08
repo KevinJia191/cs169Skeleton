@@ -88,7 +88,7 @@ app.get('/search', function(req, res) {
       }
 
 
-      /*
+      
       res.write(json.matches[0].recipeName);
       res.write(json.matches[1].recipeName);
       res.write(json.matches[2].recipeName);
@@ -99,8 +99,8 @@ app.get('/search', function(req, res) {
       res.write(json.matches[7].recipeName);
       res.write(json.matches[8].recipeName);
       res.write(json.matches[9].recipeName);
-      res.end(json.matches[0].recipeName);
-      */
+      //res.end(json.matches[0].recipeName);
+      
       new_son = {
         recipe_id : recArray, 
         recipe_name: recnameArray, 
