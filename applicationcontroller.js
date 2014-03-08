@@ -23,6 +23,26 @@ app.get('/', function(req, res) {
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup">');
   res.end('</form></body></html>');
 });
+app.get('/yummly', function(req, res) {
+  res.writeHead(200);
+  /*
+  res.write('<html><body>');
+  res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup">');
+  res.end('</form></body></html>');
+  */
+    yummly.search({
+      credentials: credentials,
+      query: {
+        q: 'chicken'
+      }
+    }, function (error, response, json) {
+      if (error) {
+        console.error(error);
+      } else if (response.statusCode === 200) {
+        console.log(json);
+      }
+    });
+});
 app.post('/users/login', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
