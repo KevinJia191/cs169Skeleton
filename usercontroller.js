@@ -3,7 +3,7 @@ var logfmt = require("logfmt");
 var app = express();
 var pg = require('pg');
 
-var user_controller = require('/usercontroller.js');
+
 var ingredient_controller = require('/ingredientcontroller.js');
 var history_controller = require('/historycontroller.js');
 var search_controller = require('/searchcontroller.js');
