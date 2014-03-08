@@ -24,7 +24,7 @@ app.get('/', function(req, res) {
   res.end('</form></body></html>');
 });
 
-app.get('/yummly', function(req, res) {
+app.post('/yummly', function(req, res) {
   res.writeHead(200);
   /*
     TODO: MOVE THIS TO THE SEARCHCONTROLLER
@@ -60,7 +60,7 @@ app.get('/yummly', function(req, res) {
     */
 });
 
-app.get('/search', function(req, res) {
+app.post('/search', function(req, res) {
     console.log("MOSES");
 });
 
