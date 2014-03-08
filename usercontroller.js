@@ -4,7 +4,7 @@ var app = express();
 var pg = require('pg');
 
 
-var ingredient_controller = require('/ingredientcontroller.js');
+var ingredient_controller = require('./ingredientcontroller.js');
 var history_controller = require('/historycontroller.js');
 var search_controller = require('/searchcontroller.js');
 
