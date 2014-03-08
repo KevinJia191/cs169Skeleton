@@ -52,6 +52,25 @@ var search = function(param1){
         };
         var format_son = JSON.stringify(new_son);
         //res.write(format_son);
+        /*
+        for (var i=0;i<10;i++) {
+            recArray.push(json.matches[i].id);
+            recnameArray.push(json.matches[i].recipeName);
+            siuArray.push(json.matches[i].smallImageUrls);
+            dArray.push(json.matches[i].sourceDisplayName);
+            ilArray.push(json.matches[i].ingredients);
+    }
+      
+      new_son = {
+        recipe_id : recArray, 
+        recipe_name: recnameArray, 
+        smallImageUrls:siuArray, 
+        details: dArray,
+        ingredient_list: ilArray
+        };
+      var format_son = JSON.stringify(new_son);
+      */
+      return format_son;
       }
 
 
@@ -68,23 +87,7 @@ var search = function(param1){
       res.write(json.matches[9].recipeName);
       //res.end(json.matches[0].recipeName);
       */
-      for (var i=0;i<10;i++) {
-            recArray.push(json.matches[i].id);
-            recnameArray.push(json.matches[i].recipeName);
-            siuArray.push(json.matches[i].smallImageUrls);
-            dArray.push(json.matches[i].sourceDisplayName);
-            ilArray.push(json.matches[i].ingredients);
-    }
       
-      new_son = {
-        recipe_id : recArray, 
-        recipe_name: recnameArray, 
-        smallImageUrls:siuArray, 
-        details: dArray,
-        ingredient_list: ilArray
-        };
-      var format_son = JSON.stringify(new_son);
-      return format_son;
     });
 }
 
