@@ -101,10 +101,18 @@ app.get('/search', function(req, res) {
       res.write(json.matches[9].recipeName);
       res.end(json.matches[0].recipeName);
       */
+      new_son = {
+        recipe_id : recArray, 
+        recipe_name: recnameArray, 
+        smallImageUrls:siuArray, 
+        details: dArray,
+        ingredient_list: ilArray
+        };
+      var format_son = JSON.stringify(new_son);
+      res.end(format_son);
     });
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
-    res.end();
     
 });
 
