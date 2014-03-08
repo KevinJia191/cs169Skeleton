@@ -69,7 +69,6 @@ app.get('/yummly', function(req, res) {
       res.write(json.matches[7].recipeName);
       res.write(json.matches[8].recipeName);
       res.write(json.matches[9].recipeName);
-      res.write(json.matches[10].recipeName);
       res.end(json.matches[0].recipeName);
     });
     //res.write('<html><body>');
