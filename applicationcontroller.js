@@ -28,8 +28,8 @@ app.get('/', function(req, res) {
 
 app.post('/search', function(req, res) {
   res.writeHead(200);
-  console.log("YUMMLY WORKS");
   var query = req.body.q;
+  console.log(search_controller.search(2));
   
   /*
     TODO: MOVE THIS TO THE SEARCHCONTROLLER

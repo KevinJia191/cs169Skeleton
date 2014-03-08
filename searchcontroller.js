@@ -9,8 +9,8 @@ var history_controller = require('./historycontroller.js');
 var search_controller = require('./searchcontroller.js');
 
 
-var search = function(param1, param2){
-    return {errCode : 1};
+var search = function(param1){
+    return "PUPPY GUPPY";
 }
 
 var getRecipeData = function(param1, param2){
