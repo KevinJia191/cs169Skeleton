@@ -33,7 +33,7 @@ app.get('/async' function(req,res) {
     function doSomethingElse() {console.log(2)},
     function finish() {console.log(3)}
   ]);
-}
+});
 
 app.post('/search', function(req, res) {
   res.writeHead(200);
