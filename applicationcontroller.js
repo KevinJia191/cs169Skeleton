@@ -60,6 +60,11 @@ app.get('/yummly', function(req, res) {
     */
 });
 
+app.get('/search', function(req, res) {
+    console.log("MOSES");
+});
+
+
 app.post('/users/login', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
