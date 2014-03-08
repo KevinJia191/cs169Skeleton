@@ -43,6 +43,7 @@ app.get('/search', function(req, res) {
   */
   //req.get("/JON");
   //res.get("/CAMILLE");
+  jsonArray = []
     var credentials = {
       id: '13944c3c',
       key: '5a09042c7587234cbd1adc10150874cf'
@@ -62,7 +63,6 @@ app.get('/search', function(req, res) {
           errCode: UserModel.ERR_BAD_CREDENTIALS,
           count: result.rows[0].count
         };
-        jsonArray = []
         for (var i=0;i<10;i++) {
             new_son = {
             recipe_id : json.matches[i].id, 
