@@ -40,6 +40,7 @@ app.get('/yummly', function(req, res) {
   */
   req.get("/JON");
   //res.get("/CAMILLE");
+  /*
     var credentials = {
       id: '13944c3c',
       key: '5a09042c7587234cbd1adc10150874cf'
@@ -56,6 +57,7 @@ app.get('/yummly', function(req, res) {
         console.log(json);
       }
     });
+    */
 });
 app.post('/users/login', function(req, res) {
     res.header('Content-Type', 'application/json');
