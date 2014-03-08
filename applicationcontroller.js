@@ -25,12 +25,8 @@ app.get('/', function(req, res) {
   res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="Login" onclick=this.form.action="search">');
   res.end('</form></body></html>');
 });
-
 app.get('/async', function(req,res) {
     res.writeHead(200);
-    function callback2(){
-      console.log("called back");
-    }
     async.series([
     function doSomething(callback2) {
       console.log(1);
