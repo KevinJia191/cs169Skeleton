@@ -26,7 +26,7 @@ app.get('/', function(req, res) {
   res.end('</form></body></html>');
 });
 
-app.get('/async' function(req,res) {
+app.get('/async', function(req,res) {
   res.writeHead(200);
     async.series([
     function doSomething() {console.log(1)},
