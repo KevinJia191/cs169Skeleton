@@ -24,6 +24,7 @@ app.get('/', function(req, res) {
   res.end('</form></body></html>');
 });
 
+
 app.get('/yummly', function(req, res) {
   res.writeHead(200);
   console.log("YUMMLY WORKS")
@@ -58,10 +59,11 @@ app.get('/yummly', function(req, res) {
         console.log(json);
       }
     });
-    res.write('<html><body>');
-    res.write('CHOCO TACO');
-    res.end('</html>');
+    //res.write('<html><body>');
+    //res.write('CHOCO TACO');
+    res.end(json);
 });
+
 
 app.post('/users/login', function(req, res) {
     res.header('Content-Type', 'application/json');
