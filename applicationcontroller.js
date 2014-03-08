@@ -75,14 +75,15 @@ app.get('/search', function(req, res) {
             dArray.push(json.matches[0].sourceDisplayName);
             ilArray.push(json.matches[0].ingredients);
         }
-      }
-      new_son = {
+        new_son = {
         recipe_id : recArray, 
         recipe_name: recnameArray, 
         smallImageUrls:siuArray, 
         details: dArray,
         ingredient_list: ilArray
-    };
+      };
+    }
+      
 
       /*
       res.write(json.matches[0].recipeName);
