@@ -58,10 +58,11 @@ app.get('/yummly', function(req, res) {
       } else if (response.statusCode === 200) {
         console.log(json);
       }
+      res.end(json);
     });
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
-    res.end(json);
+    
 });
 
 
