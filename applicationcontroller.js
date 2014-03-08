@@ -21,6 +21,7 @@ app.get('/', function(req, res) {
   res.writeHead(200);
   res.write('<html><body>');
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup">');
+  res.write('<input type="submit" value="getHistory" onclick=this.form.action="/history">');
   res.end('</form></body></html>');
 });
 
@@ -192,7 +193,7 @@ app.get('/history', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var jsonObject = history_controller.get(params);
+    var jsonObject = history_controller.getHistory();
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
