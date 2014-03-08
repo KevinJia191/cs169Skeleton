@@ -63,7 +63,7 @@ app.get('/search', function(req, res) {
           count: result.rows[0].count
         };
         jsonArray = []
-        for (int i=0;i<10;i++) {
+        for (var i=0;i<10;i++) {
             new_son = {
             recipe_id : json.matches[i].id, 
             recipe_name: json.matches[i].recipeName, 
