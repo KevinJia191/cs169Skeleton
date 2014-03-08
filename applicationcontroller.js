@@ -41,7 +41,7 @@ var called = false;
   while(typeof query != 'undefined' && called==false)
   {
     result = search_controller.search(query);
-    called==true;
+    called=true;
   }
   while(typeof result != 'undefined')
   {
