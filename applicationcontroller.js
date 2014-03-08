@@ -63,16 +63,26 @@ app.get('/search', function(req, res) {
           errCode: UserModel.ERR_BAD_CREDENTIALS,
           count: result.rows[0].count
         };
+        recArray=[];
+        recnameArray=[];
+        siuArray=[];
+        dArray=[];
+        ilArray=[];
         for (var i=0;i<10;i++) {
-            new_son = {
-            recipe_id : json.matches[i].id, 
-            recipe_name: json.matches[i].recipeName, 
-            smallImageUrls:json.matches[i].smallImageUrls, 
-            details: json.matches[i].sourceDisplayName,
-            ingredient_list: json.matches[i].ingredients}
-            jsonArray.push(new_son);
+            recArray.push(json.matches[i].id);
+            recnameArray.push(json.matches[i].recipeName);
+            siuArray.push(json.matches[i].smallImageUrls);
+            dArray.push(json.matches[i].sourceDisplayName);
+            ilArray.push(json.matches[i].ingredients);
         }
       }
+      new_son = {
+        recipe_id : recArray, 
+        recipe_name: recnameArray, 
+        smallImageUrls:siuArray, 
+        details: dArray,
+        ingredient_list: ilArray}
+
       /*
       res.write(json.matches[0].recipeName);
       res.write(json.matches[1].recipeName);
@@ -86,9 +96,6 @@ app.get('/search', function(req, res) {
       res.write(json.matches[9].recipeName);
       res.end(json.matches[0].recipeName);
       */
-      new_son = {
-        jsonArray
-      }
       res.end(new_son);
     });
     //res.write('<html><body>');
