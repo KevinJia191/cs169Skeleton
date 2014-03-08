@@ -69,6 +69,7 @@ app.get('/search', function(req, res) {
           count: result.rows[0].count
         };
         for (var i=0;i<10;i++) {
+            console.log("for loop");
             recArray.push(json.matches[i].id);
             recnameArray.push(json.matches[i].recipeName);
             siuArray.push(json.matches[i].smallImageUrls);
@@ -82,8 +83,8 @@ app.get('/search', function(req, res) {
         details: dArray,
         ingredient_list: ilArray
         };
-      var format_son = JSON.stringify(new_son);
-      res.end(format_son);
+        var format_son = JSON.stringify(new_son);
+        res.end(format_son);
       }
 
 
