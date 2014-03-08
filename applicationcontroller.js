@@ -97,7 +97,8 @@ app.get('/search', function(req, res) {
       res.write(json.matches[9].recipeName);
       res.end(json.matches[0].recipeName);
       */
-      res.end(new_son);
+      var format_son = JSON.stringify(new_son);
+      res.end(format_son);
     });
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
