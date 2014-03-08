@@ -98,7 +98,7 @@ app.get('/search', function(req, res) {
       res.end(json.matches[0].recipeName);
       */
       var format_son = JSON.stringify(new_son);
-      res.end(new_son);
+      res.end(format_son);
     });
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
