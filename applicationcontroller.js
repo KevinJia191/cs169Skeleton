@@ -20,14 +20,16 @@ app.use(logfmt.requestLogger());
 app.get('/', function(req, res) {
   res.writeHead(200);
   res.write('<html><body>');
-  res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup">');
+  res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
+  res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="Login" onclick=this.form.action="search">');
   res.end('</form></body></html>');
 });
 
 
-app.get('/search', function(req, res) {
+app.post('/search', function(req, res) {
   res.writeHead(200);
   console.log("YUMMLY WORKS");
+  var query = req.body.q;
   
   /*
     TODO: MOVE THIS TO THE SEARCHCONTROLLER
@@ -56,7 +58,7 @@ app.get('/search', function(req, res) {
     yummly.search({
       credentials: credentials,
       query: {
-        q: 'chicken'
+        q: query
       }
     }, function (error, response, json) {
       if (error) {
