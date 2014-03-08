@@ -27,6 +27,19 @@ app.get('/', function(req, res) {
 });
 app.get('/async', function(req,res) {
     res.writeHead(200);
+    var myNumber = 1
+    function addOne() { myNumber++ } // define the function
+    addOne() // run the function
+    console.log(myNumber)
+    addOne() // run the function
+    console.log(myNumber)
+    addOne() // run the function
+    console.log(myNumber)
+    /*
+    UNDERSTANDING OF HOW CALLBACKS WORK
+    IT NEEDS THE CALLBACK TO BE CALLED AT THE END SO IT KNOWS TO START THE NEXT ONE, THATS HOW SERIES WORKS!
+    */
+    /*
     async.series([
     function doSomething(callback2) {
       console.log(1);
@@ -42,6 +55,7 @@ app.get('/async', function(req,res) {
     },
     res.end()
   ]);
+*/
 });
 
 app.post('/search', function(req, res) {
