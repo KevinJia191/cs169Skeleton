@@ -43,7 +43,12 @@ app.get('/search', function(req, res) {
   */
   //req.get("/JON");
   //res.get("/CAMILLE");
-  jsonArray = []
+    jsonArray = []
+    recArray=[];
+    recnameArray=[];
+    siuArray=[];
+    dArray=[];
+    ilArray=[];
     var credentials = {
       id: '13944c3c',
       key: '5a09042c7587234cbd1adc10150874cf'
@@ -63,11 +68,6 @@ app.get('/search', function(req, res) {
           errCode: UserModel.ERR_BAD_CREDENTIALS,
           count: result.rows[0].count
         };
-        recArray=[];
-        recnameArray=[];
-        siuArray=[];
-        dArray=[];
-        ilArray=[];
         for (var i=0;i<10;i++) {
             recArray.push(json.matches[i].id);
             recnameArray.push(json.matches[i].recipeName);
