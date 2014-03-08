@@ -3,6 +3,7 @@ var logfmt = require("logfmt");
 var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
+var async = require('async');
 
 var user_controller = require('./usercontroller.js');
 var ingredient_controller = require('./ingredientcontroller.js');
@@ -11,6 +12,11 @@ var search_controller = require('./searchcontroller.js');
 
 
 var search = function(param1){
+  async.series([
+    function doSomething() {console.log(1)},
+    function doSomethingElse() {console.log(2)},
+    function finish() {console.log(3)}
+  ]);
 	console.log("called");
 	jsonArray = []
     recArray=[];
