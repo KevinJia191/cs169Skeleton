@@ -84,7 +84,6 @@ app.get('/search', function(req, res) {
         ingredient_list: ilArray
         };
         var format_son = JSON.stringify(new_son);
-        res.end(format_son);
       }
 
 
@@ -104,6 +103,7 @@ app.get('/search', function(req, res) {
     });
     //res.write('<html><body>');
     //res.write('CHOCO TACO');
+    res.end(format_son);
     
 });
 
