@@ -29,8 +29,8 @@ app.get('/', function(req, res) {
 app.post('/search', function(req, res) {
   res.writeHead(200);
   var query = req.body.q;
-  console.log(search_controller.search(2));
   result = search_controller.search(query);
+  console.log(result);
   res.end(result);
   
   /*
