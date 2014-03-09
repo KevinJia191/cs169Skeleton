@@ -1,20 +1,20 @@
-var historycontroller = function(json){
+var HistoryController = function(request) {
 
-    this.json = json;
+    this.request = request;
     
     //take in a "recipe" object eventually
-    function make(user, recipeData){
+    function make(user, recipeData) {
         return {errCode : 1};
     }
     
-    function getHistory(user){
+    function getHistory(user) {
         return {errCode : 1};
     }
     
-    function clearHistory(user){
+    function clearHistory(user) {
         return {errCode : 1};
     }
 }
 
 
-module.exports = historycontroller;
+module.exports = HistoryController;

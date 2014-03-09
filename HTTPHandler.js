@@ -4,10 +4,10 @@ var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
 
-var user_controller = require("./usercontroller.js");
-var ingredient_controller = require('./ingredientcontroller.js');
-var history_controller = require('./historycontroller.js');
-var search_controller = require('./searchcontroller.js');
+var UserController = require("./usercontroller.js");
+var IngredientController = require('./ingredientcontroller.js');
+var HistoryController = require('./historycontroller.js');
+var SearchController = require('./searchcontroller.js');
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -131,7 +131,7 @@ app.post('/users/login', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var userController = new user_controller;
+    var userController = new UserController(null);
     var jsonObject = userController.login(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
@@ -141,7 +141,7 @@ app.post('/users/signup', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var userController = new user_controller;
+    var userController = new UserController(null);
     var jsonObject = userController.signup(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);});
@@ -150,7 +150,7 @@ app.post('/ingredients/add', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var ingredientController = new ingredient_controller;
+    var ingredientController = new IngredientController(null);
     var jsonObject = ingredientController.add(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
@@ -160,7 +160,7 @@ app.post('/ingredients/remove', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var ingredientController = new ingredient_controller;
+    var ingredientController = new IngredientController(null);
     var jsonObject = ingredientController.remove(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
@@ -170,7 +170,7 @@ app.post('/ingredients/removeAll', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var ingredientController = new ingredient_controller;
+    var ingredientController = new IngredientController(null);
     var jsonObject = ingredientController.removeAll(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
@@ -180,7 +180,7 @@ app.post('/search', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var searchController = new search_controller;
+    var searchController = new SearchController(null);
     var jsonObject = searchController.search(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
@@ -191,7 +191,7 @@ app.get('/getRecipeData', function(req, res) {
     //example
 
     //process req, res to get stuff
-    var searchController = new search_controller;
+    var searchController = new SearchController(null);
     var jsonObject = searchController.signup(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
@@ -200,7 +200,7 @@ app.get('/getRecipeData', function(req, res) {
 app.get('/history', function(req, res) {
     res.header('Content-Type', 'application/json');
 
-    var historyController = new history_controller;
+    var historyController = new HistoryController(null);
     var jsonObject = historyController.getHistory();
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
@@ -211,7 +211,7 @@ app.post('/make', function(req, res) {
     //example
     //process req, res to get stuff
     
-    var historyController = new history_controller;
+    var historyController = new HistoryController(null);
     var jsonObject = historyController.make(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
