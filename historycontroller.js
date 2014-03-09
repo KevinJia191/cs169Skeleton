@@ -13,14 +13,14 @@ var testing123 = 4;
 
 //take in a "recipe" object eventually
 var make = function(user, recipeData){
+    return {errCode : 1};
+}
+
+var getHistory = function(user){
     console.log("hey hey" + testing123);
     return {errCode : 1,
             t : testing123
             };
-}
-
-var getHistory = function(user){
-    return {errCode : 1};
 }
 
 var clearHistory = function(user){
