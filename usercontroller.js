@@ -1,20 +1,13 @@
-var express = require("express");
-var logfmt = require("logfmt");
-var app = express();
-var pg = require('pg');
+var searchcontroller = function(json){
 
+    this.json = json;
 
-var ingredient_controller = require('./ingredientcontroller.js');
-var history_controller = require('./historycontroller.js');
-var search_controller = require('./searchcontroller.js');
-
-var addUser = function(username, password){
-    return {errCode : 1};
+    function addUser(username, password){
+        return {errCode : 1};
+    }
+    
+    function login(username, password){
+        return {errCode : 1};
+    }
 }
-
-var login = function(username, password){
-    return {errCode : 1};
-}
-
-exports.addUser = addUser;
-exports.login = login;
+module.exports = usercontroller;

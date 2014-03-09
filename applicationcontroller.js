@@ -131,7 +131,8 @@ app.post('/users/login', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var jsonObject = user_controller.login(params);
+    var userController = new user_controller;
+    var jsonObject = userController.login(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
@@ -140,7 +141,8 @@ app.post('/users/signup', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var jsonObject = user_controller.signup(params);
+    var userController = new user_controller;
+    var jsonObject = userController.signup(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);});
 
@@ -148,7 +150,8 @@ app.post('/ingredients/add', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var jsonObject = ingredient_controller.add(params);
+    var ingredientController = new ingredient_controller;
+    var jsonObject = ingredientController.add(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
@@ -157,7 +160,8 @@ app.post('/ingredients/remove', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var jsonObject = ingredient_controller.remove(params);
+    var ingredientController = new ingredient_controller;
+    var jsonObject = ingredientController.remove(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
@@ -166,7 +170,8 @@ app.post('/ingredients/removeAll', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var jsonObject = ingredient_controller.removeAll(params);
+    var ingredientController = new ingredient_controller;
+    var jsonObject = ingredientController.removeAll(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
@@ -175,7 +180,8 @@ app.post('/search', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var jsonObject = search_controller.search(params);
+    var searchController = new search_controller;
+    var jsonObject = searchController.search(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
@@ -183,26 +189,19 @@ app.post('/search', function(req, res) {
 app.get('/getRecipeData', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
+
     //process req, res to get stuff
-    var jsonObject = search_controller.signup(params);
+    var searchController = new search_controller;
+    var jsonObject = searchController.signup(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
 
 app.get('/history', function(req, res) {
     res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
-    //console.log("REQ STARTING");
-    //console.log(req);
-    //console.log("RES STARTING");
-    //console.log(res);
-    console.log("REQ BODY" + req.body);
-    var user = req.body.username;
-    console.log("user is" + user);
-    console.log("uuuuser is" + req.body.user);
-    
-    var jsonObject = history_controller.getHistory();
+
+    var historyController = new history_controller;
+    var jsonObject = historyController.getHistory();
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
@@ -211,7 +210,9 @@ app.post('/make', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    var jsonObject = history_controller.make(params);
+    
+    var historyController = new history_controller;
+    var jsonObject = historyController.make(params);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
