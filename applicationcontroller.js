@@ -193,10 +193,10 @@ app.get('/history', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
-    console.log("REQ STARTING");
-    console.log(req);
-    console.log("RES STARTING");
-    console.log(res);
+    //console.log("REQ STARTING");
+    //console.log(req);
+    //console.log("RES STARTING");
+    //console.log(res);
     console.log("REQ BODY" + req.body);
     var jsonObject = history_controller.getHistory();
     var jsonForm = JSON.stringify(jsonObject);
