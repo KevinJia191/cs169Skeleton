@@ -1,11 +1,10 @@
 //TODO: Figure out difference between using this.username, self.username, and var username
-function Recipe(username, recipe_name, date_created, rating){
-    //each "Recipe" object represents a row in the History table
+function User(username, password){
+    //each "User" object represents a row in the Users table
     this.username = username;
-    this.recipe_name = recipe_name;
-    this.date_created = date_created;
-    this.rating = rating;
+    this.password = password;
     
+    //repeat for all fields
     this.get = function(callback){
     }
     
@@ -20,4 +19,9 @@ function Recipe(username, recipe_name, date_created, rating){
     this.contains = function(callback) {
 
     }
+    
+}
+
+Ingredient.removeAll = function(callback) {
+    
 }
