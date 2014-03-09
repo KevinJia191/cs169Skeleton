@@ -9,9 +9,13 @@ var ingredient_controller = require('./ingredientcontroller.js');
 var search_controller = require('./searchcontroller.js');
 */
 
+var testing123 = 4;
+
 //take in a "recipe" object eventually
 var make = function(user, recipeData){
-    return {errCode : 1};
+    return {errCode : 1,
+            t : testing123
+            };
 }
 
 var getHistory = function(user){
