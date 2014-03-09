@@ -1,13 +1,15 @@
-var searchcontroller = function(json){
+var UserController = function(request) {
 
-    this.json = json;
-
-    function addUser(username, password){
-        return {errCode : 1};
+    this.request = request;
+    // postRequest is a json containing the fields: user, password
+    // TODO: encrypt the password
+    function signup(postRequest) {
+        return {'errCode' : 1};
     }
-    
-    function login(username, password){
-        return {errCode : 1};
+
+    // postRequest is a json containing the fields: user, hashed_password
+    function login(postRequest) {
+        return {'errCode' : 1};
     }
 }
-module.exports = usercontroller;
+module.exports = UserController;
