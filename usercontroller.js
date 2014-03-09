@@ -1,12 +1,14 @@
 var UserController = function(request) {
 
-    this.request = json;
-
-    function addUser(username, password) {
+    this.request = request;
+    // postRequest is a json containing the fields: user, password
+    // TODO: encrypt the password
+    function signup(postRequest) {
         return {'errCode' : 1};
     }
-    
-    function login(username, password) {
+
+    // postRequest is a json containing the fields: user, hashed_password
+    function login(postRequest) {
         return {'errCode' : 1};
     }
 }

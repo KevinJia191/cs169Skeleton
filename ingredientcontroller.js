@@ -2,21 +2,22 @@ var IngredientController = function(request) {
 
     this.request = request;
 
-    //Take in a Ingredient Object eventually
-    function addIngredient(user, ingredient_name, quantity, unit, expiration_date) {
+    // postRequest is a json containing fields: user, ingredient_name, quantity, unit, expiration_date
+    function addIngredient(postRequest) {
         return {errCode : 1};
     }
 
-    //Take in a Ingredient Object eventually
-    function removeIngredient(user, ingredient_name, quantity, unit, expiration_date) {
+    // postRequest is a json containing fields: user, ingredient_name, quantity, unit, expiration_date
+    function removeIngredient(postRequest) {
         return {errCode : 1};
     }
 
-    function removeAll(user) {
+    // postRequest is a json containing the fields: user
+    function removeAll(postRequest) {
         return {errCode : 1};
     }
-
-    function getInventory(user) {
+    // postRequest is a json containing the fields: user
+    function getInventory(postRequest) {
         return {errCode : 1};
     }
 }
