@@ -198,7 +198,9 @@ app.get('/history', function(req, res) {
     //console.log("RES STARTING");
     //console.log(res);
     console.log("REQ BODY" + req.body);
-    var user = req.body.username
+    var user = req.body.username;
+    console.log("user is" + user);
+    console.log("uuuuser is" + req.body.user);
     
     var jsonObject = history_controller.getHistory();
     var jsonForm = JSON.stringify(jsonObject);
