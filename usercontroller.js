@@ -1,13 +1,13 @@
-var searchcontroller = function(json){
+var UserController = function(request){
 
-    this.json = json;
+    this.request = json;
 
     function addUser(username, password){
-        return {errCode : 1};
+        return {'errCode' : 1};
     }
     
     function login(username, password){
-        return {errCode : 1};
+        return {'errCode' : 1};
     }
 }
-module.exports = usercontroller;
+module.exports = UserController;
