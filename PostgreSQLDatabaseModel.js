@@ -1,12 +1,19 @@
+//should extend the DatabaseModel class
 function PostgreSQLDatabaseModel(value) {
-    //this.setValue(value);
-}
-
-PostgreSQLDatabaseModel.inherits(Database_Model);
-
-PostgreSQLDatabaseModel.method('toString', function () {
-    if (this.getValue()) {
-        return this.uber('toString');
+    /*
+     * Start a connection with the db.
+     */
+    this.connect = function() {
     }
-    return "-0-";
-});
+    /*
+     * End the connection with the db.
+     */
+    this.end = function() {
+    }
+    
+    /*
+     * Execute the sql query, and call the callback when the query completes
+     */
+    this.query  = function(query, callback) {
+    }
+}

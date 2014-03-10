@@ -1,16 +1,19 @@
-function Database_Model(value) {
-    //this.setValue(value);
+// Abstract class to be extended by SQL database models
+function Database_Model() {
+    /*
+     * Start a connection with the db.
+     */
+    this.connect = function() {
+    }
+    /*
+     * End the connection with the db.
+     */
+    this.end = function() {
+    }
+    
+    /*
+     * Execute the sql query, and call the callback when the query completes
+     */
+    this.query  = function(query, callback) {
+    }
 }
-
-Database_Model.method('setValue', function (value) {
-    this.value = value;
-    return this;
-});
-
-Database_Model.method('getValue', function () {
-    return this.value;
-});
-
-Database_Model.method('toString', function () {
-    return '(' + this.getValue() + ')';
-});
