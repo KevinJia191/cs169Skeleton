@@ -1,27 +1,23 @@
-//TODO: Figure out difference between using this.username, self.username, and var username
+// should extend the ActiveRecord class.
 function User(username, password){
-    //each "User" object represents a row in the Users table
     this.username = username;
     this.password = password;
-    
-    //repeat for all fields
-    this.get = function(callback){
-    }
-    
-    this.add = function(callback) {
-	
-    }
 
-   this.remove = function(callback) {
+    this.add = function(callback) {
+    }
     
+    this.get = function(callback) {
+    }
+    
+    this.remove = function(callback) {
     }
     
     this.contains = function(callback) {
-
     }
-    
-}
 
-Ingredient.removeAll = function(callback) {
+    this.setDatabaseModel = function(model) {
+    }
+    this.setSort = function(sortby) {
+    }
     
 }
