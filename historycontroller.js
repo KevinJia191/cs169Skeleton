@@ -21,7 +21,7 @@ var HistoryController = function(request) {
                     return;
                 }
                 
-                jsonObject.errCode = SUCCESS:
+                jsonObject.errCode = SUCCESS;
                 
                 var madeEntry = "(" + postRequest.user + "," + postRequest.recipe_name + "," + postRequest.current_date + "," + postRequest.rating + ")";
                 
