@@ -22,7 +22,30 @@ app.get('/', function(req, res) {
   res.write('<html><body>');
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
   res.write('<form action="history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
+  res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="Login" onclick=this.form.action="recipes/search"></form>');
   res.end('</body></html>');
+});
+
+app.get('/test2', function(req,res) {
+    res.writeHead(200);
+    /*
+    UNDERSTANDING OF HOW CALLBACKS WORK
+    IT NEEDS THE CALLBACK TO BE CALLED AT THE END SO IT KNOWS TO START THE NEXT ONE, THATS HOW SERIES
+    */
+    
+    console.log(52);
+    console.log(53);
+    console.log(54);
+    var searchController = new SearchController(null);
+    searchController.search(function(result){
+      res.end(result);
+    });
+
+    /*
+    SearchController.search(function(result){
+      res.end(result);
+    });
+    */
 });
 
 
@@ -180,10 +203,11 @@ app.post('/recipes/search', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
+    var q = req.body.q;
     var searchController = new SearchController(null);
-    var jsonObject = searchController.search(null);
-    var jsonForm = JSON.stringify(jsonObject);
-    res.end(jsonForm);
+    searchController.search(q,function(result){
+      res.end(result);
+    });
 });
 
 app.get('/recipes/getRecipeData', function(req, res) {

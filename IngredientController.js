@@ -3,7 +3,7 @@ var IngredientModel = require('./Ingredient.js');
 var IngredientController = function(request) {
 
     this.request = request;
-    this.ingredientModel = new Ingredient();
+    this.ingredientModel = new IngredientModel();
     // postRequest is a json containing fields: user, ingredient_name, quantity, unit, expiration_date
     this.addIngredient = function(postRequest) {
 	console.log("TEST PRINT");
