@@ -21,7 +21,7 @@ app.get('/', function(req, res) {
   res.writeHead(200);
   res.write('<html><body>');
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
-  res.write('<form action="history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
+  res.write('<form action="/recipes/history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
   res.end('</body></html>');
 });
 
@@ -212,9 +212,10 @@ app.post('/recipes/make', function(req, res) {
     //process req, res to get stuff
     
     var historyController = new HistoryController(null);
-    var jsonObject = historyController.make(null);
-    var jsonForm = JSON.stringify(jsonObject);
-    res.end(jsonForm);
+    
+    historyController.make(null, function(resultingJson){
+        res.end(result);
+    }
 });
 
 
