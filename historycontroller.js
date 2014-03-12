@@ -62,7 +62,7 @@ var HistoryController = function(request) {
         var jsonObject = {};
         
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-            client.query("DELETE FROM HISTORY WHERE username=\' " + postRequest.user"\'", function(err, result){
+            client.query("DELETE FROM HISTORY WHERE username=\' " + postRequest.user + "\'", function(err, result){
                 done();
                 if(err){
                     console.error(err);
