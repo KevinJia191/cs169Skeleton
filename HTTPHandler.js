@@ -213,8 +213,9 @@ app.post('/recipes/make', function(req, res) {
     //process req, res to get stuff
     
     var historyController = new HistoryController(null);
+    testJson = {user : "testUser"};
     
-    historyController.make(null, function(resultingJson){
+    historyController.make(testJson, function(resultingJson){
         res.end(resultingJson);
     });
 });

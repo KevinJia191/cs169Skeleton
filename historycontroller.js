@@ -14,7 +14,7 @@ var HistoryController = function(request) {
     // postRequest is a json containing the fields: user
     this.getHistory = function(postRequest, callback) {
         var jsonObject = {errCode : 1};
-        
+        var user = postRequest.user;
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query("SELECT * FROM login_info WHERE username=\'"+user+"\'", function(err, result){
                 done();
