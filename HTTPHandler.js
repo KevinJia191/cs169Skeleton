@@ -215,7 +215,7 @@ app.post('/recipes/make', function(req, res) {
     
     historyController.make(null, function(resultingJson){
         res.end(result);
-    };
+    });
 });
 
 
