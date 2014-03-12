@@ -3,8 +3,8 @@ var pg = require('pg');
 var HistoryController = function(request) {
 
     this.request = request;
-    this.SUCCESS = "SUCCESS";
-    this.dbERROR = "dbERROR";
+    var SUCCESS = "SUCCESS";
+    var dbERROR = "dbERROR";
     
     // postRequest is a json containing the fields: user, recipe_name, current_date, rating
     this.make = function(postRequest, callback) { 
@@ -15,13 +15,13 @@ var HistoryController = function(request) {
                 done();
                 if(err){
                     console.error(err);
-                    jsonObject.errCode = this.dbERROR;
+                    jsonObject.errCode = dbERROR;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 }
                 
-                jsonObject.errCode = this.SUCCESS:
+                jsonObject.errCode = SUCCESS:
                 
                 var madeEntry = "(" + postRequest.user + "," + postRequest.recipe_name + "," + postRequest.current_date + "," + postRequest.rating + ")";
                 
@@ -42,14 +42,14 @@ var HistoryController = function(request) {
                 done();
                 if(err){
                     console.error(err);
-                    jsonObject.errCode = this.dbERROR;
+                    jsonObject.errCode = dbERROR;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 }
                 jsonObject.user = user;
                 jsonObject.userHistory = result.rows;
-                jsonObject.errCode = this.SUCCESS;
+                jsonObject.errCode = SUCCESS;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
@@ -66,13 +66,13 @@ var HistoryController = function(request) {
                 done();
                 if(err){
                     console.error(err);
-                    jsonObject.errCode = this.dbERROR;
+                    jsonObject.errCode = dbERROR;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 }
                 
-                jsonObject.errCode = this.SUCCESS;
+                jsonObject.errCode = SUCCESS;
                 jsonObject.deletedEntry = "deletedAll";
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
