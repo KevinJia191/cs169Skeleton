@@ -14,8 +14,8 @@ primary key(username,ingredient_name,expiration_date)
 
 Create table history (
 username text references users(username),
-recipie_name text,
+recipe_name text,
 dateCreated timestamp,
 rating int,
-primary key(username,recipie_name,dateCreated)
+primary key(username,recipe_name,dateCreated)
 );

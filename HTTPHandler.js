@@ -171,17 +171,17 @@ app.post('/ingredients/removeAll', function(req, res) {
     //example
     //process req, res to get stuff
     var ingredientController = new IngredientController(null);
-    var jsonObject = ingredientController.removeAll(params);
+    var jsonObject = ingredientController.removeAll(null);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
 
-app.post('/search', function(req, res) {
+app.post('/recipes/search', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
     var searchController = new SearchController(null);
-    var jsonObject = searchController.search(params);
+    var jsonObject = searchController.search(null);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
@@ -192,7 +192,7 @@ app.get('/recipes/getRecipeData', function(req, res) {
 
     //process req, res to get stuff
     var searchController = new SearchController(null);
-    var jsonObject = searchController.getRecipeData(params);
+    var jsonObject = searchController.getRecipeData(null);
     var jsonForm = JSON.stringify(jsonObject);
     res.end(jsonForm);
 });
