@@ -10,8 +10,10 @@ var HistoryController = function(request) {
     }
 
     // postRequest is a json containing the fields: user
-    this.getHistory = function(postRequest) {
-        return {errCode : 1};
+    this.getHistory = function(postRequest, callback) {
+        var jsonObject = {errCode : 1};
+        var jsonForm = JSON.stringify(jsonObject);
+        callback(jsonForm);
     }
     
     // postRequest is a json containing the fields: user

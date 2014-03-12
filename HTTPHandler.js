@@ -201,9 +201,10 @@ app.get('/recipes/history', function(req, res) {
     res.header('Content-Type', 'application/json');
 
     var historyController = new HistoryController(null);
-    var jsonObject = historyController.getHistory(null);
-    var jsonForm = JSON.stringify(jsonObject);
-    res.end(jsonForm);
+    
+    historyController.getHistory(null, function(resultingJson){
+        res.end(result);
+    });
 });
 
 app.post('/recipes/make', function(req, res) {
