@@ -23,9 +23,9 @@ var HistoryController = function(request) {
                 
                 jsonObject.errCode = this.SUCCESS:
                 
-                var deletedEntry = "(" + postRequest.user + "," + postRequest.recipe_name + "," + postRequest.current_date + "," + postRequest.rating + ")";
+                var madeEntry = "(" + postRequest.user + "," + postRequest.recipe_name + "," + postRequest.current_date + "," + postRequest.rating + ")";
                 
-                jsonObject.deletedEntry = deletedEntry;
+                jsonObject.madeEntry = madeEntry;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;

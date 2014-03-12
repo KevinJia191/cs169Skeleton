@@ -201,9 +201,9 @@ app.get('/recipes/history', function(req, res) {
     res.header('Content-Type', 'application/json');
 
     var historyController = new HistoryController(null);
-    var testJson = {user : "testUser"};
+    var stubJson = {user : "testUser"};
     
-    historyController.getHistory(testJson, function(resultingJson){
+    historyController.getHistory(stubJson, function(resultingJson){
         res.end(resultingJson);
     });
 });
@@ -214,9 +214,26 @@ app.post('/recipes/make', function(req, res) {
     //process req, res to get stuff
     
     var historyController = new HistoryController(null);
-    var testJson = {user : "testUser"};
+    var stubJson = {user : "testUser",
+                    recipe_name : "Onion Soup",
+                    current_date : "2/2/2",
+                    rating : 3
+                   };
     
-    historyController.make(testJson, function(resultingJson){
+    historyController.make(stubJson, function(resultingJson){
+        res.end(resultingJson);
+    });
+});
+
+app.post('/recipes/deleteAllHistory', function(req, res) {
+    res.header('Content-Type', 'application/json');
+    //example
+    //process req, res to get stuff
+    
+    var historyController = new HistoryController(null);
+    var stubJson = {user : "testUser"};
+    
+    historyController.clearHistory(stubJson, function(resultingJson){
         res.end(resultingJson);
     });
 });
