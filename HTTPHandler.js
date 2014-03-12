@@ -203,7 +203,7 @@ app.get('/recipes/history', function(req, res) {
     var historyController = new HistoryController(null);
     var testJson = {user : "testUser"};
     
-    historyController.make(testJson, function(resultingJson){
+    historyController.getHistory(testJson, function(resultingJson){
         res.end(resultingJson);
     });
 });
