@@ -203,7 +203,7 @@ app.get('/recipes/history', function(req, res) {
     var historyController = new HistoryController(null);
     
     historyController.getHistory(null, function(resultingJson){
-        res.end(result);
+        res.end(resultingJson);
     });
 });
 
@@ -215,7 +215,7 @@ app.post('/recipes/make', function(req, res) {
     var historyController = new HistoryController(null);
     
     historyController.make(null, function(resultingJson){
-        res.end(result);
+        res.end(resultingJson);
     });
 });
 
