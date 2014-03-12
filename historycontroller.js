@@ -16,7 +16,7 @@ var HistoryController = function(request) {
         var jsonObject = {errCode : 1};
         var user = postRequest.user;
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-            client.query("SELECT * FROM users U,history H WHERE username=\'" + user + "\'" + "AND U.username = H.username", function(err, result){
+            client.query("SELECT * FROM history H WHERE username=\'" + user + "\'", function(err, result){
                 done();
                 if(err) return console.error(err);
                 jsonObject.user = user;
