@@ -20,6 +20,7 @@ var HistoryController = function(request) {
                 done();
                 if(err) return console.error(err);
                 jsonObject.result = result;
+                jsonObject.user = user;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
             });
