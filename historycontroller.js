@@ -19,9 +19,10 @@ var HistoryController = function(request) {
             client.query("SELECT * FROM users WHERE username=\'"+user+"\'", function(err, result){
                 done();
                 if(err) return console.error(err);
-                console.log(result);
+                console.log('result is ' + result);
                 jsonObject.result = result;
                 jsonObject.user = user;
+                console.log('JSON is ' + jsonObject);
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
             });
