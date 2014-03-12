@@ -4,10 +4,10 @@ var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
 
-var UserController = require("./usercontroller.js");
-var IngredientController = require('./ingredientcontroller.js');
-var HistoryController = require('./historycontroller.js');
-var SearchController = require('./searchcontroller.js');
+var UserController = require("./UserController.js");
+var IngredientController = require('./IngredientController.js');
+var HistoryController = require('./HistoryController.js');
+var SearchController = require('./SearchController.js');
 
 app.configure(function(){
   app.use(express.bodyParser());
