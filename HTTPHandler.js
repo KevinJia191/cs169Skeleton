@@ -201,8 +201,9 @@ app.get('/recipes/history', function(req, res) {
     res.header('Content-Type', 'application/json');
 
     var historyController = new HistoryController(null);
+    var testJson = {user : "testUser"};
     
-    historyController.getHistory(null, function(resultingJson){
+    historyController.make(testJson, function(resultingJson){
         res.end(resultingJson);
     });
 });
