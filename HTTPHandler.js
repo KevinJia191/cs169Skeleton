@@ -22,6 +22,10 @@ app.get('/', function(req, res) {
   res.write('<html><body>');
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
   res.write('<form action="recipes/history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
+  
+  res.write('<form action="recipes/deleteAllHistory" method="post"><input type="text" name="username">Clear History<input type="submit" value="delete all history post Button"></form>');
+  res.write('<form action="recipes/make" method="post"><input type="text" name="username">Make <input type="submit" value="delete all history post Button"></form>');
+
   res.end('</body></html>');
 });
 
