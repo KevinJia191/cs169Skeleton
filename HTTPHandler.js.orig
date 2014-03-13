@@ -4,10 +4,17 @@ var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
 
+<<<<<<< HEAD
 var UserController = require("./UserController.js");
 var IngredientController = require('./IngredientController.js');
 var HistoryController = require('./HistoryController.js');
 var SearchController = require('./SearchController.js');
+=======
+var UserController = require("./usercontroller.js");
+var IngredientController = require('./ingredientcontroller.js');
+var HistoryController = require('./historycontroller.js');
+var SearchController = require('./searchcontroller.js');
+>>>>>>> 64801f3decfeadc6fd894c7274cc6d9dd43b0355
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -21,11 +28,13 @@ app.get('/', function(req, res) {
   res.writeHead(200);
   res.write('<html><body>');
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
-  res.write('<form action="recipes/history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
-  res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="Login" onclick=this.form.action="recipes/search"></form>');
-  res.write('<form action="recipes/deleteAllHistory" method="post"><input type="text" name="username">Clear History<input type="submit" value="delete all history post Button"></form>');
-  res.write('<form action="recipes/make" method="post"><input type="text" name="username">Make <input type="submit" value="delete all history post Button"></form>');
+  res.write('<form action="history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
+<<<<<<< HEAD
+  res.end('</body></html>');
+});
 
+=======
+  res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="Login" onclick=this.form.action="recipes/search"></form>');
   res.end('</body></html>');
 });
 
@@ -51,6 +60,7 @@ app.get('/test2', function(req,res) {
     */
 });
 
+>>>>>>> 64801f3decfeadc6fd894c7274cc6d9dd43b0355
 
 app.get('/search', function(req, res) {
   res.writeHead(200);
@@ -173,8 +183,13 @@ app.post('/users/signup', function(req, res) {
     res.end(jsonForm);});
 
 app.post('/ingredients/add', function(req, res) {
-    var ingredientController = new IngredientController(res);
-    ingredientController.addIngredient(req.body);
+    res.header('Content-Type', 'application/json');
+    //example
+    //process req, res to get stuff
+    var ingredientController = new IngredientController(null);
+    var jsonObject = ingredientController.addIngredient(null);
+    var jsonForm = JSON.stringify(jsonObject);
+    res.end(jsonForm);
 });
 
 app.post('/ingredients/remove', function(req, res) {
@@ -201,11 +216,18 @@ app.post('/recipes/search', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
+<<<<<<< HEAD
+    var searchController = new SearchController(null);
+    var jsonObject = searchController.search(null);
+    var jsonForm = JSON.stringify(jsonObject);
+    res.end(jsonForm);
+=======
     var q = req.body.q;
     var searchController = new SearchController(null);
     searchController.search(q,function(result){
       res.end(result);
     });
+>>>>>>> 64801f3decfeadc6fd894c7274cc6d9dd43b0355
 });
 
 app.get('/recipes/getRecipeData', function(req, res) {
@@ -223,11 +245,9 @@ app.get('/recipes/history', function(req, res) {
     res.header('Content-Type', 'application/json');
 
     var historyController = new HistoryController(null);
-    var stubJson = {user : "testUser"};
-    
-    historyController.getHistory(stubJson, function(resultingJson){
-        res.end(resultingJson);
-    });
+    var jsonObject = historyController.getHistory(null);
+    var jsonForm = JSON.stringify(jsonObject);
+    res.end(jsonForm);
 });
 
 app.post('/recipes/make', function(req, res) {
@@ -236,28 +256,9 @@ app.post('/recipes/make', function(req, res) {
     //process req, res to get stuff
     
     var historyController = new HistoryController(null);
-    var stubJson = {user : "testUser",
-                    recipe_name : "Onion Soup",
-                    current_date : "2/2/2",
-                    rating : 3
-                   };
-    
-    historyController.make(stubJson, function(resultingJson){
-        res.end(resultingJson);
-    });
-});
-
-app.post('/recipes/deleteAllHistory', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
-    
-    var historyController = new HistoryController(null);
-    var stubJson = {user : "testUser"};
-    
-    historyController.clearHistory(stubJson, function(resultingJson){
-        res.end(resultingJson);
-    });
+    var jsonObject = historyController.make(null);
+    var jsonForm = JSON.stringify(jsonObject);
+    res.end(jsonForm);
 });
 
 

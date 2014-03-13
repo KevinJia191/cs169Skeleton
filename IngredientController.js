@@ -1,18 +1,22 @@
 var pg = require('pg');
 var IngredientModel = require('./Ingredient.js');
-var IngredientController = function(request) {
+var IngredientController = function(res) {
 
-    this.request = request;
-    this.ingredientModel = new Ingredient();
+    this.res = res;
     // postRequest is a json containing fields: user, ingredient_name, quantity, unit, expiration_date
     this.addIngredient = function(postRequest) {
-	console.log("TEST PRINT");
-	var connection = new pg.Client(process.env.DATABASE_URL);
-	connection.connect();
-	connection.query("SELECT * FROM Users", function(err, result) {
-	    console.log(result);
+	console.log(postRequest);
+	console.log(postRequest["user"]);
+	console.log(postRequest["ingredient_name"]);
+	console.log(postRequest["expiration_date"]);
+	console.log(postRequest["quantity"]);
+	console.log(postRequest["unit"]);
+	var ingredientModel = new IngredientModel(postRequest["user"], postRequest["ingredient_name"], postRequest["expiration_date"], postRequest["quantity"], postRequest["unit"]);
+	ingredientModel.add(function (err, result) {
+	    var json = {errCode : err};
+	    res.header('Content-Type', 'application/json');
+	    res.end(JSON.stringify(json));
 	});
-        return {errCode : 1};
     }
 
     // postRequest is a json containing fields: user, ingredient_name, quantity, unit, expiration_date
