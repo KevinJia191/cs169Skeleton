@@ -41,6 +41,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		});
 	    }
+	});
     }
     /* 
      * Removes a quantity of an ingredient from  the User's inventory.
