@@ -76,7 +76,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    console.log(err);
 	    console.log("Result length: "+result.rows.length);
 	    connection.end();
-	    console.log(this.foo());
+	    var x = this.foo();
+	    console.log(x);
 	    callback(Ingredient.SUCCESS_ADDED, null);
 	});
     }
