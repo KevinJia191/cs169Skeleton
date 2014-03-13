@@ -35,7 +35,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    }
 	    // ingredient is already in the db, so update its quantity
 	    else {
-		var newQuantity = result[0]"quantity"] + this.quantity;
+		var newQuantity = result[0]["quantity"] + this.quantity;
 		var updateQuery = "update ingredients set quantity ="+newQuantity+"where username = '"+user+"' AND ingredient_name = '"+this.ingredient_name+"' AND expiration_date= '"+this.expiration_date+"'";
 		connection.query(updateQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
@@ -100,6 +100,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     }
     
     this.parseDBResult = function(result) {
+	console.log("PARSING RESULTS");
 	var ingredients = new Array();
 	if (result.rows.length == 0) {
 	    return ingredients;
