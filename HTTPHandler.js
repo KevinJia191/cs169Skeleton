@@ -153,24 +153,53 @@ app.get('/search', function(req, res) {
 });
 
 
-app.post('/users/login', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
-    var userController = new UserController(null);
-    var jsonObject = userController.login(null);
-    var jsonForm = JSON.stringify(jsonObject);
-    res.end(jsonForm);
-});
-  
+
+
 app.post('/users/signup', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
-    var userController = new UserController(null);
-    var jsonObject = userController.signup(null);
-    var jsonForm = JSON.stringify(jsonObject);
-    res.end(jsonForm);});
+
+  console.log(req.body);
+   
+  //START JSON HEADER
+  res.header('Content-Type', 'application/json');
+
+  
+  var signinJSON = req.body;
+  var userController = new UserController(null);
+  
+  //START REQUEST
+  var jsonToReturn = userController.signup(signinJSON);
+  var jsonForm = JSON.stringify(jsonToReturn);
+
+  //RETURN RESULT
+  res.end(jsonForm);
+
+  console.log(res.body);
+});
+
+
+  
+app.post('/users/login', function(req, res) {
+  
+  console.log(req.body);
+
+  //START JSON HEADER
+  res.header('Content-Type', 'application/json');
+
+  
+  var loginJSON = req.body;
+  var userController = new UserController(null);
+  
+  //START REQUEST
+  var jsonToReturn = userController.login(loginJSON);
+  var jsonForm = JSON.stringify(jsonToReturn);
+
+  //RETURN RESULT
+  res.end(jsonForm);
+ 
+  console.log(res.body);
+});
+
+
 
 app.post('/ingredients/add', function(req, res) {
     var ingredientController = new IngredientController(res);
