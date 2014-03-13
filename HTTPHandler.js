@@ -202,7 +202,7 @@ app.post('/recipes/search', function(req, res) {
     //example
     //process req, res to get stuff
     var q = req.body.q;
-    var searchController = new SearchController(null);
+    var sc = new SearchController(null);
     SearchController.search(q,function(result){
       res.end(result);
     });
