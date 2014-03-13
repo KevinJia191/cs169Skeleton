@@ -1,5 +1,6 @@
 var yummly = require('yummly');
 var apiERROR = 1;
+var noItems = 2;
 var searchcontroller = function(json){
     
     this.json = json;
@@ -60,40 +61,48 @@ var searchcontroller = function(json){
 		}*/
 
     this.search = function(recipie,callback){
-    	console.log(1);
-        console.log(2);
-        console.log(3);
+    	//console.log(1);
+        //console.log(2);
+        //console.log(3);
         jsonArray = []
         recArray=[];
         recnameArray=[];
         siuArray=[];
         dArray=[];
         ilArray=[];
-        console.log("happen 1");
+        //console.log("happen 1");
         var credentials = {
           id: '13944c3c',
           key: '5a09042c7587234cbd1adc10150874cf'
         }
-        console.log("PRE SEARCH");
+        //console.log("PRE SEARCH");
         yummly.search({
           credentials: {id: '13944c3c', key: '5a09042c7587234cbd1adc10150874cf'},
           query: {
             q: recipie
           }
         }, function (error, response, json) {
-          console.log(response.statusCode);
+          //console.log(response.statusCode);
           //console.log(json.matches[0].id);
           if (error) {
-            console.log(response.statusCode);
-            console.error(error);
+            //console.log(response.statusCode);
+            //console.error(error);
             err_son = {
             errCode:apiERROR
             };
-            return JSON.stringify(err_son);
+            callback(JSON.stringify(err_son));
+            return;
           } else {
-            console.log("FRUITCAKES");
-            console.log("matches length is "+json.matches.length);
-            console.log(json.matches[0].id);
+            //console.log("FRUITCAKES");
+            //console.log("matches length is "+json.matches.length);
+            if(json.matches.length==0){
+                //console.log("we 0 length case!");
+                err_son = {
+                errCode:noItems
+                };
+                callback(JSON.stringify(err_son));
+                return;
+            }
             var new_son = "";
             for (var i=0;i<json.matches.length;i++) {
                 recArray.push(json.matches[i].id);
