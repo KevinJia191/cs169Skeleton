@@ -1,7 +1,7 @@
 /*
 Searchcontroller Tests
 */
-var SearchController = require('../searchcontroller.js');
+var SearchController = require('../SearchController.js');
 
 /*
 

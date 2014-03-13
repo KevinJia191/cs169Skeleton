@@ -4,16 +4,12 @@ var searchcontroller = function(json){
     this.json = json;
 
     this.search = function(recipie,callback){
-    	console.log(1);
-        console.log(2);
-        console.log(3);
         jsonArray = []
         recArray=[];
         recnameArray=[];
         siuArray=[];
         dArray=[];
         ilArray=[];
-        console.log("happen 1");
         var credentials = {
           id: '13944c3c',
           key: '5a09042c7587234cbd1adc10150874cf'
@@ -30,11 +26,22 @@ var searchcontroller = function(json){
           if (error) {
             console.log(response.statusCode);
             console.error(error);
+            var err_son = {
+            		errCode:2
+            	}
+            	callback(JSON.stringify(err_son));
+            	return;
           } else {
-            console.log("FRUITCAKES");
-            console.log(json.matches[0].id);
+            console.log(json.matches.length);
+            if (json.matches.length==0){
+            	var err_son = {
+            		errCode:2
+            	}
+            	callback(JSON.stringify(err_son));
+            	return;
+            }
             var new_son = "";
-            for (var i=0;i<10;i++) {
+            for (var i=0;i<json.matches.length;i++) {
                 recArray.push(json.matches[i].id);
                 recnameArray.push(json.matches[i].recipeName);
                 siuArray.push(json.matches[i].smallImageUrls);
