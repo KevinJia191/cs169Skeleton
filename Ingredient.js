@@ -40,25 +40,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     
     }
 
-    this.blahfish = function(result) {
-	var ingredients = new Array();
-	if (result.rows.length == 0) {
-	    return ingredients;
-	}
-	for (index = 0; index < result.rows.length; index++) {
-	    var rows = result.rows[index];
-	    console.log("DB user:"+rows["user"]);
-	    var ingredient = new Ingredient(rows["user"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
-	    ingredients[index] = ingredient;
-	}
-	return ingredients;
-    }
-
-    this.foo = function() {
-	return 0
-    }
-
-
     /*
      * Gets the ingredient with the specified parameters passed into the constructor. 
      * For example, if you only specify username and all other fields are null,
@@ -69,6 +50,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.get = function(callback) {
 	var connection = new pg.Client(process.env.DATABASE_URL);
 	var selectQuery = this.createSelectQuery();
+	var self = this;
 	console.log(selectQuery);
 	console.log("The username is: "+this.username);
 	connection.connect();
@@ -76,8 +58,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    console.log(err);
 	    console.log("Result length: "+result.rows.length);
 	    connection.end();
-	    var x = this.foo();
-	    console.log(x);
+	    console.log(self.parseDBResult(result));
 	    callback(Ingredient.SUCCESS_ADDED, null);
 	});
     }
@@ -109,6 +90,20 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    addQuery = addQuery + constraints[index];
 	}
 	return addQuery;
+    }
+    
+    this.parseDBResult = function(result) {
+	var ingredients = new Array();
+	if (result.rows.length == 0) {
+	    return ingredients;
+	}
+	for (index = 0; index < result.rows.length; index++) {
+	    var rows = result.rows[index];
+	    console.log("DB user:"+rows["user"]);
+	    var ingredient = new Ingredient(rows["user"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
+	    ingredients[index] = ingredient;
+	}
+	return ingredients;
     }
 
     /*
@@ -156,12 +151,10 @@ Ingredient.DATE_ERROR = -2;
 Ingredient.ERROR = -3;
 
 
-/*
 Ingredient.prototype.toString = function() {
     var ret = "Ingredient is: "+this.ingredient_name+", and is owned by: "+this.username;
-  return ret;
+    return ret;
 }
-*/
 
 
 module.exports = Ingredient;
