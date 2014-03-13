@@ -40,7 +40,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		connection.query(updateQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		});
-	    });
+	    }
     }
     /* 
      * Removes a quantity of an ingredient from  the User's inventory.
