@@ -2,7 +2,7 @@ var searchcontroller = function(json){
     
     this.json = json;
 
-    this.search = function(recipie,callback){
+    function search(recipie,callback){
     	console.log(1);
         console.log(2);
         console.log(3);
