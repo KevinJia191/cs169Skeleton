@@ -27,7 +27,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	}
 	this.get(function(err, result) {
 	    // the item is not currently in the database, so we can directly insert it.
-	    else if (result.length == 0) { 
+	    if (result.length == 0) { 
 		var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
 		connection.query(addQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_ADDED, null);
