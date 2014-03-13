@@ -67,9 +67,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	var selectQuery = this.createSelectQuery();
 	var self = this;
 	console.log(selectQuery);
-	console.log("The username is: "+this.username);
 	this.connection.query(selectQuery, function(err, result) {
-	    console.log(err);
+	    console.log("GET ran");
 	    callback(Ingredient.SUCCESS, self.parseDBResult(result));
 	});
     }
@@ -106,12 +105,11 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.parseDBResult = function(result) {
 	var ingredients = new Array();
 	if (result.rows.length == 0) {
+	    console.log("Empty return");
 	    return ingredients;
 	}
 	for (index = 0; index < result.rows.length; index++) {
 	    var rows = result.rows[index];
-	    console.log("DB user:"+rows["user"]);
-	    console.log("ingredient_name:"+rows["ingredient_name"]);
 	    var ingredient = new Ingredient(rows["user"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
 	    ingredients[index] = ingredient;
 	}
