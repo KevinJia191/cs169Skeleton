@@ -26,6 +26,9 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    return;
 	}
 	this.get(function(err, result) {
+	    console.log("RAN");
+	    console.log("error value:"+err);
+	    console.log("Result is:"+result);
 	    // the item is not currently in the database, so we can directly insert it.
 	    if (result.length == 0) { 
 		var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
