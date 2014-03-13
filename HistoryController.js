@@ -60,21 +60,30 @@ var HistoryController = function(request) {
         var jsonObject = {};
         var user = postRequest.user;
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-            client.query("SELECT * FROM history H WHERE username=\'" + user + "\'", function(err, result){
-                done();
-                if(err){
-                    console.error(err);
-                    jsonObject.errCode = ERROR;
+            client.query("SELECT * FROM users U WHERE username=\'" + postRequest.user + "/'", function(err, result){
+                if(result.rows.length > 0){
+                    client.query("SELECT * FROM history H WHERE username=\'" + user + "\'", function(err, result){
+                        done();
+                        if(err){
+                            console.error(err);
+                            jsonObject.errCode = ERROR;
+                            var jsonForm = JSON.stringify(jsonObject);
+                            callback(jsonForm);
+                            return;
+                        }
+                        jsonObject.userHistory = result.rows;
+                        jsonObject.errCode = SUCCESS;
+                        var jsonForm = JSON.stringify(jsonObject);
+                        callback(jsonForm);
+                        return;
+                    });
+                }
+                else{
+                    jsonObject.errCode = INVAL_USER;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 }
-                jsonObject.user = user;
-                jsonObject.userHistory = result.rows;
-                jsonObject.errCode = SUCCESS;
-                var jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
-                return;
             });
         });
     }
@@ -82,7 +91,6 @@ var HistoryController = function(request) {
     // postRequest is a json containing the fields: user
     this.clearHistory = function(postRequest) {
         var jsonObject = {};
-        
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query("DELETE FROM HISTORY WHERE username=\' " + postRequest.user + "\'", function(err, result){
                 done();
