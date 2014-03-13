@@ -21,14 +21,26 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * the ingredient.
      */
     this.add = function(callback) {
-	var connection = new pg.Client(process.env.DATABASE_URL);
-	connection.connect();
-	var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
-	connection.query(addQuery, function(err, result) {
-	    console.log(err);
-	    connection.end();
-	    callback(Ingredient.SUCCESS_ADDED, null);
-	});
+	if (quantity < 0) {
+	    callback(Ingredient.NEGATIVE_QUANTITY, null);
+	    return;
+	}
+	this.get(function(err, result) {
+	    // the item is not currently in the database, so we can directly insert it.
+	    else if (result.length == 0) { 
+		var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
+		connection.query(addQuery, function(err, result) {
+		    callback(Ingredient.SUCCESS_ADDED, null);
+		});
+	    }
+	    // ingredient is already in the db, so update its quantity
+	    else {
+		var newQuantity = result[0]"quantity"] + this.quantity;
+		var updateQuery = "update ingredients set quantity ="+newQuantity+"where username = '"+user+"' AND ingredient_name = '"+this.ingredient_name+"' AND expiration_date= '"+this.expiration_date+"'";
+		connection.query(updateQuery, function(err, result) {
+		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
+		});
+	    });
     }
     /* 
      * Removes a quantity of an ingredient from  the User's inventory.
@@ -48,18 +60,13 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * is not guaranteed.
      */
     this.get = function(callback) {
-	var connection = new pg.Client(process.env.DATABASE_URL);
 	var selectQuery = this.createSelectQuery();
 	var self = this;
 	console.log(selectQuery);
 	console.log("The username is: "+this.username);
-	connection.connect();
 	connection.query(selectQuery, function(err, result) {
 	    console.log(err);
-	    console.log("Result length: "+result.rows.length);
-	    connection.end();
-	    console.log(self.parseDBResult(result));
-	    callback(Ingredient.SUCCESS_ADDED, null);
+	    callback(Ingredient.SUCCESS, self.parseDBResult(result));
 	});
     }
 
@@ -135,6 +142,14 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.getParser = function() {
     }
 
+    this.connect() {
+	var connection = new pg.Client(process.env.DATABASE_URL);
+	connection.connect();
+    }
+    this.end() {
+	connection.end();
+    }
+
     /*
      * Sets how the list returned by get is sorted by.
      *
@@ -144,17 +159,13 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     }
 }
 
+Ingredient.SUCCESS = 3;
 Ingredient.SUCCESS_ADDED = 1;
 Ingredient.SUCCESS_UPDATED = 2;
 Ingredient.NEGATIVE_QUANTITY = -1;
 Ingredient.DATE_ERROR = -2;
 Ingredient.ERROR = -3;
 
-
-Ingredient.prototype.toString = function() {
-    var ret = "Ingredient is: "+this.ingredient_name+", and is owned by: "+this.username;
-    return ret;
-}
 
 
 module.exports = Ingredient;
