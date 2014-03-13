@@ -170,13 +170,8 @@ app.post('/users/signup', function(req, res) {
     res.end(jsonForm);});
 
 app.post('/ingredients/add', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
-    var ingredientController = new IngredientController(null);
-    var jsonObject = ingredientController.addIngredient(null);
-    var jsonForm = JSON.stringify(jsonObject);
-    res.end(jsonForm);
+    var ingredientController = new IngredientController(res);
+    ingredientController.addIngredient(req.body);
 });
 
 app.post('/ingredients/remove', function(req, res) {

@@ -1,3 +1,5 @@
+var pg = require('pg');
+
 /*
 * Model for an ingredient. username, ingredient_name, expiration_date are primary keys.
 * All methods in here have a callback function of format function(err, result);
@@ -17,7 +19,14 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * the ingredient.
      */
     this.add = function(callback) {
-    
+	var connection = new pg.Client(process.env.DATABASE_URL);
+	connection.connect();
+	var addQuery = "insert into ingredients values('"+username+"', '"+ingredient_name+"','"+expiration_date+"', '"+quantity+"', '"+unit+"')";
+	connection.query(addQuery, function(err, result) {
+	    console.log(err);
+	    connection.end();
+	    callback(Ingredient.SUCCESS_ADDED, null);
+	});
     }
     /* 
      * Removes a quantity of an ingredient from  the User's inventory.
@@ -65,5 +74,12 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 
     }
 }
+
+Ingredient.SUCCESS_ADDED = 1;
+Ingredient.SUCCESS_UPDATED = 2;
+Ingredient.NEGATIVE_QUANTITY = -1;
+Ingredient.DATE_ERROR = -2;
+Ingredient.ERROR = -3;
+
 
 module.exports = Ingredient;
