@@ -1,7 +1,7 @@
 /*
 Searchcontroller Tests
 */
-var SearchController = require('../searchcontroller.js');
+var SearchController = require('../SearchController.js');
 
 /*
 
@@ -24,20 +24,16 @@ If Passed Tests == 0; then this means that the API could be down!
 exports['chickenSearch'] = function (test) {
 	query="chicken";
 	var result;
-	console.log("starting chicken search");
 	var s;
 	var searchController = new SearchController(null);
     searchController.search(query,function(result){
       s = result;
-      console.log(s.indexOf(query));
       if(s.indexOf(query)==-1){
-      	console.log('item that was searched for not showing in API call');
       	result = -1;
       }
       else{
       	result = 1;
       }
-      console.log("result is "+result);
 	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
 	  test.done();
     });
@@ -46,20 +42,16 @@ exports['chickenSearch'] = function (test) {
 exports['milkSearch'] = function (test) {
 	query="milk";
 	var result;
-	console.log("starting milk search");
 	var s;
 	var searchController = new SearchController(null);
     searchController.search(query,function(result){
       s = result;
-      console.log(s.indexOf(query));
       if(s.indexOf(query)==-1){
-      	console.log('item that was searched for not showing in API call');
       	result = -1;
       }
       else{
       	result = 1;
       }
-      console.log("result is "+result);
 	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
 	  test.done();
     });
@@ -69,20 +61,16 @@ exports['milkSearch'] = function (test) {
 exports['vegetableSearch'] = function (test) {
 	query="vegetable";
 	var result;
-	console.log("starting vegetable search");
 	var s;
 	var searchController = new SearchController(null);
     searchController.search(query,function(result){
       s = result;
-      console.log(s.indexOf(query));
       if(s.indexOf(query)==-1){
-      	console.log('item that was searched for not showing in API call');
       	result = -1;
       }
       else{
       	result = 1;
       }
-      console.log("result is "+result);
 	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
 	  test.done();
     });
@@ -92,20 +80,17 @@ exports['vegetableSearch'] = function (test) {
 exports['pastaSearch'] = function (test) {
 	query="pasta";
 	var result;
-	console.log("starting pasta search");
 	var s;
 	var searchController = new SearchController(null);
     searchController.search(query,function(result){
       s = result;
       console.log(s.indexOf(query));
       if(s.indexOf(query)==-1){
-      	console.log('item that was searched for not showing in API call');
       	result = -1;
       }
       else{
       	result = 1;
       }
-      console.log("result is "+result);
 	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
 	  test.done();
     });
@@ -115,20 +100,58 @@ exports['pastaSearch'] = function (test) {
 exports['italianSearch'] = function (test) {
 	query="italian";
 	var result;
-	console.log("starting italian search");
 	var s;
 	var searchController = new SearchController(null);
     searchController.search(query,function(result){
       s = result;
       console.log(s.indexOf(query));
       if(s.indexOf(query)==-1){
-      	console.log('item that was searched for not showing in API call');
       	result = -1;
       }
       else{
       	result = 1;
       }
-      console.log("result is "+result);
+	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+	  test.done();
+    });
+    
+};
+
+exports['fishSearch'] = function (test) {
+	query="fish";
+	var result;
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      if(s.indexOf(query)==-1){
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+	  test.done();
+    });
+    
+};
+
+exports['nameSearch'] = function (test) {
+	//My name should not be a valid search that returns some recipie for my name
+	//should return no items
+	query="akhilnambiar";
+	var result;
+	var noItemsERROR = 2;
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      if(s.indexOf(noItemsERROR)==-1){
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
 	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
 	  test.done();
     });
@@ -143,7 +166,54 @@ exports['nonExistent'] = function (test) {
 	var searchController = new SearchController(null);
     searchController.search(query,function(result){
       s = result;
-      console.log(s.indexOf(query));
+      if(s.indexOf("chicken")==-1){
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+	  test.equal(result,-1,"chicken parmesean should not be a result of searching for beef stew!");
+	  test.done();
+    });  
+};
+
+exports['nameSearch2'] = function (test) {
+	query="GEORGENECULA";
+	var result;
+	var noItemsERROR = 2;
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      if(s.indexOf(noItemsERROR)==-1){
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+	  test.done();
+    });
+    
+};
+
+exports['IFALLFAIL'] = function (test) {
+	console.log("important note! If all tests fail, could be API Failure");
+	test.done();
+}
+
+/*
+exports['invalidQuery'] = function (test) {
+	//SEarch for something that doesn't make sesnes
+
+	query="%5";
+	var result;
+	console.log("starting nonExistent search: search for beef stew and chicken doesn't show up");
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      console.log(s.indexOf("chicken"));
       if(s.indexOf("chicken")==-1){
       	console.log('item that was searched for not showing in API call');
       	result = -1;
@@ -156,3 +226,4 @@ exports['nonExistent'] = function (test) {
 	  test.done();
     });  
 };
+*/
