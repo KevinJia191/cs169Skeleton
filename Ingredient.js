@@ -21,14 +21,12 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * the ingredient.
      */
     this.add = function(callback) {
+	var self = this;
 	if (quantity < 0) {
 	    callback(Ingredient.NEGATIVE_QUANTITY, null);
 	    return;
 	}
 	this.get(function(err, result) {
-	    console.log("error value:"+err);
-	    console.log("Result is:"+result);
-	    var self = this;
 	    // the item is not currently in the database, so we can directly insert it.
 	    if (result.length == 0) { 
 		var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
