@@ -40,7 +40,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     
     }
 
-        this.parseDatabaseResult = function(result) {
+    this.blahfish = function(result) {
 	var ingredients = new Array();
 	if (result.rows.length == 0) {
 	    return ingredients;
@@ -52,7 +52,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    ingredients[index] = ingredient;
 	}
 	return ingredients;
-	}
+    }
 
 
     /*
@@ -72,7 +72,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    console.log(err);
 	    console.log("Result length: "+result.rows.length);
 	    connection.end();
-	    console.log(this.parseDatabaseResult(result));
+	    console.log(this.blahfish(result));
 	    callback(Ingredient.SUCCESS_ADDED, null);
 	});
     }
