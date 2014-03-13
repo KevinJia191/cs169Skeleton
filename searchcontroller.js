@@ -1,8 +1,9 @@
+var yummly = require('yummly');
 var searchcontroller = function(json){
     
     this.json = json;
 
-    function search(recipie,callback){
+    this.search = function(recipie,callback){
     	console.log(1);
         console.log(2);
         console.log(3);
