@@ -54,6 +54,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	return ingredients;
     }
 
+    this.foo = function() {
+	return 0
+    }
+
 
     /*
      * Gets the ingredient with the specified parameters passed into the constructor. 
@@ -72,7 +76,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    console.log(err);
 	    console.log("Result length: "+result.rows.length);
 	    connection.end();
-	    console.log(this.blahfish(result));
+	    console.log(this.foo());
 	    callback(Ingredient.SUCCESS_ADDED, null);
 	});
     }
