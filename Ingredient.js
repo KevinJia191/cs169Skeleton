@@ -101,7 +101,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     }
     
     this.parseDBResult = function(result) {
-	console.log("PARSING RESULTS");
 	var ingredients = new Array();
 	if (result.rows.length == 0) {
 	    return ingredients;
@@ -150,7 +149,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.connection.connect();
     }
     this.end = function() {
-	connection.end();
+	this.connection.end();
     }
 
     /*
