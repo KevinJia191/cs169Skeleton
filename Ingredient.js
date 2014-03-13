@@ -26,13 +26,13 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    return;
 	}
 	this.get(function(err, result) {
-	    console.log("RAN");
 	    console.log("error value:"+err);
 	    console.log("Result is:"+result);
+	    var self = this;
 	    // the item is not currently in the database, so we can directly insert it.
 	    if (result.length == 0) { 
 		var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
-		this.connection.query(addQuery, function(err, result) {
+		self.connection.query(addQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_ADDED, null);
 		});
 	    }
@@ -68,7 +68,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	var self = this;
 	console.log(selectQuery);
 	this.connection.query(selectQuery, function(err, result) {
-	    console.log("GET ran");
 	    callback(Ingredient.SUCCESS, self.parseDBResult(result));
 	});
     }
@@ -105,7 +104,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.parseDBResult = function(result) {
 	var ingredients = new Array();
 	if (result.rows.length == 0) {
-	    console.log("Empty return");
 	    return ingredients;
 	}
 	for (index = 0; index < result.rows.length; index++) {
