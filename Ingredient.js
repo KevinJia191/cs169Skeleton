@@ -147,7 +147,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 
     this.connect = function() {
 	this.connection = new pg.Client(process.env.DATABASE_URL);
-	connection.connect();
+	this.connection.connect();
     }
     this.end = function() {
 	connection.end();
