@@ -11,6 +11,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.expiration_date = expiration_date;
     this.quantity = quantity;
     this.unit = unit;
+    //this.attributes = {"username":username, "ingredient_name": ingredient_name, "expiration_date":expiration_date, "quantity":quantity, "unit":unit};
     
     /* 
      * Adds the ingredient to the User's inventory.
@@ -21,7 +22,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.add = function(callback) {
 	var connection = new pg.Client(process.env.DATABASE_URL);
 	connection.connect();
-	var addQuery = "insert into ingredients values('"+username+"', '"+ingredient_name+"','"+expiration_date+"', '"+quantity+"', '"+unit+"')";
+	var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
 	connection.query(addQuery, function(err, result) {
 	    console.log(err);
 	    connection.end();
@@ -46,6 +47,29 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * is not guaranteed.
      */
     this.get = function(callback) {
+	var connection = new pg.Client(process.env.DATABASE_URL);
+	connection.connect();
+	var addQuery = "select * from ingredients where";
+	var isFirst = true;
+	if (this.username != null) {
+	    if (!isFirst) {
+		addQuery = addQuery + " AND";
+		isFirst = false;
+	    }
+	    addQuery = addQuery + " username " + " = " + "'" + this.username;
+	}
+	if (this.username != null) {
+	    if (!isFirst) {
+		addQuery = addQuery + " AND";
+		isFirst = false;
+	    }
+	    addQuery = addQuery + " username " + " = " + "'" + this.username;
+	}
+	connection.query(addQuery, function(err, result) {
+	    console.log(err);
+	    connection.end();
+	    callback(Ingredient.SUCCESS_ADDED, null);
+	});
     }
 
     /*

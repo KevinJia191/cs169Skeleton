@@ -6,11 +6,6 @@ var IngredientController = function(res) {
     // postRequest is a json containing fields: user, ingredient_name, quantity, unit, expiration_date
     this.addIngredient = function(postRequest) {
 	console.log(postRequest);
-	console.log(postRequest["user"]);
-	console.log(postRequest["ingredient_name"]);
-	console.log(postRequest["expiration_date"]);
-	console.log(postRequest["quantity"]);
-	console.log(postRequest["unit"]);
 	var ingredientModel = new IngredientModel(postRequest["user"], postRequest["ingredient_name"], postRequest["expiration_date"], postRequest["quantity"], postRequest["unit"]);
 	ingredientModel.add(function (err, result) {
 	    var json = {errCode : err};
@@ -19,18 +14,33 @@ var IngredientController = function(res) {
 	});
     }
 
-    // postRequest is a json containing fields: user, ingredient_name, quantity, unit, expiration_date
+    // postRequest is a json containing fields: user, ingredient_name, quantity, expiration_date
     this.removeIngredient = function(postRequest) {
-        return {errCode : 1};
+	var ingredientModel = new IngredientModel(postRequest["user"], postRequest["ingredient_name"], postRequest["expiration_date"], postRequest["quantity"], null);
+	ingredientModel.remove(function (err, result) {
+	    var json = {errCode : err};
+	    res.header('Content-Type', 'application/json');
+	    res.end(JSON.stringify(json));
+	});
     }
 
     // postRequest is a json containing the fields: user
     this.removeAll = function(postRequest) {
-        return {errCode : 1};
+	var ingredientModel = new IngredientModel(postRequest["user"]);
+	ingredientModel.remove(function (err, result) {
+	    var json = {errCode : err};
+	    res.header('Content-Type', 'application/json');
+	    res.end(JSON.stringify(json));
+	});
     }
     // postRequest is a json containing the fields: user
     this.getInventory = function(postRequest) {
-        return {errCode : 1};
+        var ingredientModel = new IngredientModel(postRequest["user"]);
+	ingredientModel.get(function (err, result) {
+	    var json = {errCode : err};
+	    res.header('Content-Type', 'application/json');
+	    res.end(JSON.stringify(json));
+	});
     }
 }
 module.exports = IngredientController;
