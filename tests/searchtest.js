@@ -10,6 +10,9 @@ LOGIC:
 We know that the API is dynamic (they could add or remove ingredients)
 as a result, we will check for a few things.
 
+The reason why the api call will contain the search keyword is simple. I am using
+extremely popular words that are highly likely to show up at least once!
+
 1) We will make sure what we query for comes out as a result
 2) We will check to make sure that the ERROR Doesn't come up
 3) We will keep track of a variable called passed tests.
@@ -19,20 +22,137 @@ If Passed Tests == 0; then this means that the API could be down!
 */
 
 exports['chickenSearch'] = function (test) {
-
+	query="chicken";
+	var result;
 	console.log("starting chicken search");
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search("chicken",function(result){
+    searchController.search(query,function(result){
       s = result;
-      console.log(s.indexOf("penis"));
-    
+      console.log(s.indexOf(query));
+      if(s.indexOf(query)==-1){
+      	console.log('item that was searched for not showing in API call');
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+      console.log("result is "+result);
+	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+	  test.done();
     });
-    test.done();
-	
 };
 
-exports['calculate2'] = function (test) {
-    test.equal(4, 4);
-    test.done();
+exports['milkSearch'] = function (test) {
+	query="milk";
+	var result;
+	console.log("starting milk search");
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      console.log(s.indexOf(query));
+      if(s.indexOf(query)==-1){
+      	console.log('item that was searched for not showing in API call');
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+      console.log("result is "+result);
+	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+	  test.done();
+    });
+    
+};
+
+exports['vegetableSearch'] = function (test) {
+	query="vegetable";
+	var result;
+	console.log("starting vegetable search");
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      console.log(s.indexOf(query));
+      if(s.indexOf(query)==-1){
+      	console.log('item that was searched for not showing in API call');
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+      console.log("result is "+result);
+	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+	  test.done();
+    });
+    
+};
+
+exports['pastaSearch'] = function (test) {
+	query="pasta";
+	var result;
+	console.log("starting pasta search");
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      console.log(s.indexOf(query));
+      if(s.indexOf(query)==-1){
+      	console.log('item that was searched for not showing in API call');
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+      console.log("result is "+result);
+	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+	  test.done();
+    });
+    
+};
+
+exports['italianSearch'] = function (test) {
+	query="italian";
+	var result;
+	console.log("starting italian search");
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      console.log(s.indexOf(query));
+      if(s.indexOf(query)==-1){
+      	console.log('item that was searched for not showing in API call');
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+      console.log("result is "+result);
+	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+	  test.done();
+    });
+    
+};
+
+exports['nonExistent'] = function (test) {
+	query="beef stew";
+	var result;
+	console.log("starting nonExistent search: search for beef stew and chicken doesn't show up");
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      console.log(s.indexOf(query));
+      if(s.indexOf("chicken")==-1){
+      	console.log('item that was searched for not showing in API call');
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+      console.log("result is "+result);
+	  test.equal(result,-1,query+"chicken parmesean should not be a result of searching for beef stew!");
+	  test.done();
+    });  
 };
