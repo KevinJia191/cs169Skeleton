@@ -4,10 +4,10 @@ var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
 
-var UserController = require("./usercontroller.js");
-var IngredientController = require('./ingredientcontroller.js');
-var HistoryController = require('./historycontroller.js');
-var SearchController = require('./searchcontroller.js');
+var UserController = require("./UserController.js");
+var IngredientController = require('./IngredientController.js');
+var HistoryController = require('./HistoryController.js');
+var SearchController = require('./SearchController.js');
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -22,11 +22,33 @@ app.get('/', function(req, res) {
   res.write('<html><body>');
   res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
   res.write('<form action="recipes/history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
-  
+  res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="Login" onclick=this.form.action="recipes/search"></form>');
   res.write('<form action="recipes/deleteAllHistory" method="post"><input type="text" name="username">Clear History<input type="submit" value="delete all history post Button"></form>');
   res.write('<form action="recipes/make" method="post"><input type="text" name="username">Make <input type="submit" value="delete all history post Button"></form>');
 
   res.end('</body></html>');
+});
+
+app.get('/test2', function(req,res) {
+    res.writeHead(200);
+    /*
+    UNDERSTANDING OF HOW CALLBACKS WORK
+    IT NEEDS THE CALLBACK TO BE CALLED AT THE END SO IT KNOWS TO START THE NEXT ONE, THATS HOW SERIES
+    */
+    
+    console.log(52);
+    console.log(53);
+    console.log(54);
+    var searchController = new SearchController(null);
+    searchController.search(function(result){
+      res.end(result);
+    });
+
+    /*
+    SearchController.search(function(result){
+      res.end(result);
+    });
+    */
 });
 
 
@@ -184,10 +206,11 @@ app.post('/recipes/search', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
     //process req, res to get stuff
+    var q = req.body.q;
     var searchController = new SearchController(null);
-    var jsonObject = searchController.search(null);
-    var jsonForm = JSON.stringify(jsonObject);
-    res.end(jsonForm);
+    searchController.search(q,function(result){
+      res.end(result);
+    });
 });
 
 app.get('/recipes/getRecipeData', function(req, res) {

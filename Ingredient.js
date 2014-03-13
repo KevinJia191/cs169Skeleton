@@ -44,7 +44,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * null parameters are treated as wild cards. username, ingredient_name, expiration_date cannot be null.
      * result will be a boolean that is true if it is found, and false otherwise.
      */
-    this.contains = functions(callback) {
+    this.contains = function(callback) {
 
     }
 
@@ -65,3 +65,5 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 
     }
 }
+
+module.exports = Ingredient;
