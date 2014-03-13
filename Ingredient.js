@@ -107,6 +107,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	for (index = 0; index < result.rows.length; index++) {
 	    var rows = result.rows[index];
 	    console.log("DB user:"+rows["user"]);
+	    console.log("ingredient_name:"+rows["ingredient_name"]);
 	    var ingredient = new Ingredient(rows["user"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
 	    ingredients[index] = ingredient;
 	}
