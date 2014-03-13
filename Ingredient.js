@@ -11,6 +11,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.expiration_date = expiration_date;
     this.quantity = quantity;
     this.unit = unit;
+    this.connnection = null;
     //this.attributes = {"username":username, "ingredient_name": ingredient_name, "expiration_date":expiration_date, "quantity":quantity, "unit":unit};
     
     /* 
@@ -48,28 +49,60 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      */
     this.get = function(callback) {
 	var connection = new pg.Client(process.env.DATABASE_URL);
+	var selectQuery = this.createSelectQuery();
+	console.log(selectQuery);
+	console.log("The username is: "+this.username);
 	connection.connect();
-	var addQuery = "select * from ingredients where";
-	var isFirst = true;
-	if (this.username != null) {
-	    if (!isFirst) {
-		addQuery = addQuery + " AND";
-		isFirst = false;
-	    }
-	    addQuery = addQuery + " username " + " = " + "'" + this.username;
-	}
-	if (this.username != null) {
-	    if (!isFirst) {
-		addQuery = addQuery + " AND";
-		isFirst = false;
-	    }
-	    addQuery = addQuery + " username " + " = " + "'" + this.username;
-	}
-	connection.query(addQuery, function(err, result) {
+	connection.query(selectQuery, function(err, result) {
 	    console.log(err);
+	    console.log("Result length: "+result.rows.length);
 	    connection.end();
+	    console.log(this.parseDatabaseResult(result));
 	    callback(Ingredient.SUCCESS_ADDED, null);
 	});
+    }
+
+    this.parseDatabaseResult = function(result) {
+	var ingredients = new Array();
+	if (result.rows.length == 0) {
+	    return ingredients;
+	}
+	for (index = 0; index < result.rows.length; index++) {
+	    var rows = result.rows[index];
+	    console.log("DB user:"+rows["user"]);
+	    var ingredient = new Ingredient(rows["user"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
+	    ingredients[index] = ingredient;
+	}
+	return ingredients;
+    }
+
+    this.createSelectQuery = function() {
+	var addQuery = "select * from ingredients where ";
+	var index = 0;
+	var constraints = new Array();
+	var isFirst = true;
+	if (this.username != null) {
+	    constraints[index] = "username " + " = " + "'" + this.username + "' ";
+	    index = index + 1;
+	}
+	if (this.ingredient_name != null) {
+	    constraints[index] =  "ingredient_name " + " = " + "'" + this.ingredient_name + "' ";
+	    index = index + 1;
+	}
+	if (this.expiration_date != null) {
+	    constraints[index] =  "expiration_date " + " = " + "'" + this.expiration_date + "' ";
+	    index = index + 1;
+	}
+	for (index = 0; index < constraints.length; index++) {
+	    if (!isFirst) {
+		addQuery = addQuery + " AND ";
+	    }
+	    else {
+		isFirst = false;
+	    }
+	    addQuery = addQuery + constraints[index];
+	}
+	return addQuery;
     }
 
     /*
@@ -87,7 +120,18 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      */
 
     this.setDatabaseModel = function(model) {
+	this.connection = model;
+    }
 
+    this.getDatabaseModel = function() {
+	return this.connection;
+    }
+
+
+    this.setParser = function(parser) {
+    }
+
+    this.getParser = function() {
     }
 
     /*
@@ -104,6 +148,11 @@ Ingredient.SUCCESS_UPDATED = 2;
 Ingredient.NEGATIVE_QUANTITY = -1;
 Ingredient.DATE_ERROR = -2;
 Ingredient.ERROR = -3;
+
+Ingredient.prototype.toString = function() {
+    var ret = "Ingredient is: "+this.ingredient_name+", and is owned by: "+this.username;
+  return ret;
+}
 
 
 module.exports = Ingredient;

@@ -7,7 +7,7 @@ var IngredientController = function(res) {
     this.addIngredient = function(postRequest) {
 	console.log(postRequest);
 	var ingredientModel = new IngredientModel(postRequest["user"], postRequest["ingredient_name"], postRequest["expiration_date"], postRequest["quantity"], postRequest["unit"]);
-	ingredientModel.add(function (err, result) {
+	ingredientModel.get(function (err, result) {
 	    var json = {errCode : err};
 	    res.header('Content-Type', 'application/json');
 	    res.end(JSON.stringify(json));
