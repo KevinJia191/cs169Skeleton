@@ -145,11 +145,11 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.getParser = function() {
     }
 
-    this.connect() {
+    this.connect = function() {
 	var connection = new pg.Client(process.env.DATABASE_URL);
 	connection.connect();
     }
-    this.end() {
+    this.end = function() {
 	connection.end();
     }
 
