@@ -11,6 +11,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.expiration_date = expiration_date;
     this.quantity = quantity;
     this.unit = unit;
+    this.connnection = null;
     //this.attributes = {"username":username, "ingredient_name": ingredient_name, "expiration_date":expiration_date, "quantity":quantity, "unit":unit};
     
     /* 
@@ -20,13 +21,26 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * the ingredient.
      */
     this.add = function(callback) {
-	var connection = new pg.Client(process.env.DATABASE_URL);
-	connection.connect();
-	var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
-	connection.query(addQuery, function(err, result) {
-	    console.log(err);
-	    connection.end();
-	    callback(Ingredient.SUCCESS_ADDED, null);
+	if (quantity < 0) {
+	    callback(Ingredient.NEGATIVE_QUANTITY, null);
+	    return;
+	}
+	this.get(function(err, result) {
+	    // the item is not currently in the database, so we can directly insert it.
+	    if (result.length == 0) { 
+		var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
+		this.connection.query(addQuery, function(err, result) {
+		    callback(Ingredient.SUCCESS_ADDED, null);
+		});
+	    }
+	    // ingredient is already in the db, so update its quantity
+	    else {
+		var newQuantity = result[0]["quantity"] + this.quantity;
+		var updateQuery = "update ingredients set quantity ="+newQuantity+"where username = '"+user+"' AND ingredient_name = '"+this.ingredient_name+"' AND expiration_date= '"+this.expiration_date+"'";
+		this.connection.query(updateQuery, function(err, result) {
+		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
+		});
+	    }
 	});
     }
     /* 
@@ -47,29 +61,58 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * is not guaranteed.
      */
     this.get = function(callback) {
-	var connection = new pg.Client(process.env.DATABASE_URL);
-	connection.connect();
-	var addQuery = "select * from ingredients where";
+	var selectQuery = this.createSelectQuery();
+	var self = this;
+	console.log(selectQuery);
+	console.log("The username is: "+this.username);
+	this.connection.query(selectQuery, function(err, result) {
+	    console.log(err);
+	    callback(Ingredient.SUCCESS, self.parseDBResult(result));
+	});
+    }
+
+    this.createSelectQuery = function() {
+	var addQuery = "select * from ingredients where ";
+	var index = 0;
+	var constraints = new Array();
 	var isFirst = true;
 	if (this.username != null) {
+	    constraints[index] = "username " + " = " + "'" + this.username + "' ";
+	    index = index + 1;
+	}
+	if (this.ingredient_name != null) {
+	    constraints[index] =  "ingredient_name " + " = " + "'" + this.ingredient_name + "' ";
+	    index = index + 1;
+	}
+	if (this.expiration_date != null) {
+	    constraints[index] =  "expiration_date " + " = " + "'" + this.expiration_date + "' ";
+	    index = index + 1;
+	}
+	for (index = 0; index < constraints.length; index++) {
 	    if (!isFirst) {
-		addQuery = addQuery + " AND";
+		addQuery = addQuery + " AND ";
+	    }
+	    else {
 		isFirst = false;
 	    }
-	    addQuery = addQuery + " username " + " = " + "'" + this.username;
+	    addQuery = addQuery + constraints[index];
 	}
-	if (this.username != null) {
-	    if (!isFirst) {
-		addQuery = addQuery + " AND";
-		isFirst = false;
-	    }
-	    addQuery = addQuery + " username " + " = " + "'" + this.username;
+	return addQuery;
+    }
+    
+    this.parseDBResult = function(result) {
+	var ingredients = new Array();
+	if (result.rows.length == 0) {
+	    return ingredients;
 	}
-	connection.query(addQuery, function(err, result) {
-	    console.log(err);
-	    connection.end();
-	    callback(Ingredient.SUCCESS_ADDED, null);
-	});
+	for (index = 0; index < result.rows.length; index++) {
+	    var rows = result.rows[index];
+	    console.log("DB user:"+rows["user"]);
+	    console.log("ingredient_name:"+rows["ingredient_name"]);
+	    var ingredient = new Ingredient(rows["user"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
+	    ingredients[index] = ingredient;
+	}
+	return ingredients;
     }
 
     /*
@@ -87,7 +130,26 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      */
 
     this.setDatabaseModel = function(model) {
+	this.connection = model;
+    }
 
+    this.getDatabaseModel = function() {
+	return this.connection;
+    }
+
+
+    this.setParser = function(parser) {
+    }
+
+    this.getParser = function() {
+    }
+
+    this.connect = function() {
+	this.connection = new pg.Client(process.env.DATABASE_URL);
+	this.connection.connect();
+    }
+    this.end = function() {
+	this.connection.end();
     }
 
     /*
@@ -99,11 +161,13 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     }
 }
 
+Ingredient.SUCCESS = 3;
 Ingredient.SUCCESS_ADDED = 1;
 Ingredient.SUCCESS_UPDATED = 2;
 Ingredient.NEGATIVE_QUANTITY = -1;
 Ingredient.DATE_ERROR = -2;
 Ingredient.ERROR = -3;
+
 
 
 module.exports = Ingredient;
