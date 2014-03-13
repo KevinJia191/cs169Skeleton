@@ -155,10 +155,13 @@ Ingredient.NEGATIVE_QUANTITY = -1;
 Ingredient.DATE_ERROR = -2;
 Ingredient.ERROR = -3;
 
+
+/*
 Ingredient.prototype.toString = function() {
     var ret = "Ingredient is: "+this.ingredient_name+", and is owned by: "+this.username;
   return ret;
 }
+*/
 
 
 module.exports = Ingredient;
