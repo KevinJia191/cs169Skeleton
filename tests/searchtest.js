@@ -196,6 +196,51 @@ exports['nameSearch2'] = function (test) {
     });
     
 };
+/*
+
+For the next 2 tests, the word yummly should be in the api call since the API is from
+yummly
+
+*/
+exports['isYummlyInJSON'] = function (test) {
+  query="chicken";
+  var result;
+  var noItemsERROR = 2;
+  var s;
+  var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      if(s.indexOf("yummly")==-1){
+        result = -1;
+      }
+      else{
+        result = 1;
+      }
+    test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+    test.done();
+    });
+    
+};
+
+exports['isYummlyInJSON2'] = function (test) {
+  query="beef";
+  var result;
+  var noItemsERROR = 2;
+  var s;
+  var searchController = new SearchController(null);
+    searchController.search(query,function(result){
+      s = result;
+      if(s.indexOf("yummly")==-1){
+        result = -1;
+      }
+      else{
+        result = 1;
+      }
+    test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
+    test.done();
+    });
+    
+};
 
 exports['IFALLFAIL'] = function (test) {
 	console.log("important note! If all tests fail, could be API Failure");
