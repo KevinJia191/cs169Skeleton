@@ -40,6 +40,21 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     
     }
 
+        this.parseDatabaseResult = function(result) {
+	var ingredients = new Array();
+	if (result.rows.length == 0) {
+	    return ingredients;
+	}
+	for (index = 0; index < result.rows.length; index++) {
+	    var rows = result.rows[index];
+	    console.log("DB user:"+rows["user"]);
+	    var ingredient = new Ingredient(rows["user"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
+	    ingredients[index] = ingredient;
+	}
+	return ingredients;
+	}
+
+
     /*
      * Gets the ingredient with the specified parameters passed into the constructor. 
      * For example, if you only specify username and all other fields are null,
@@ -60,20 +75,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    console.log(this.parseDatabaseResult(result));
 	    callback(Ingredient.SUCCESS_ADDED, null);
 	});
-    }
-
-    this.parseDatabaseResult = function(result) {
-	var ingredients = new Array();
-	if (result.rows.length == 0) {
-	    return ingredients;
-	}
-	for (index = 0; index < result.rows.length; index++) {
-	    var rows = result.rows[index];
-	    console.log("DB user:"+rows["user"]);
-	    var ingredient = new Ingredient(rows["user"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
-	    ingredients[index] = ingredient;
-	}
-	return ingredients;
     }
 
     this.createSelectQuery = function() {
