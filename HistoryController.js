@@ -44,7 +44,7 @@ var HistoryController = function(request) {
                             return;
                         }
                     });
-                });
+                }
                 else{
                     jsonObject.errCode = INVAL_USER;
                     var jsonForm = JSON.stringify(jsonObject);
