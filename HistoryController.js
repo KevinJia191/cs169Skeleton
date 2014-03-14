@@ -11,10 +11,7 @@ var HistoryModel = require('./Recipe.js');
 var HistoryController = function(request, unitTesting) {
 
     this.request = request;
-    var SUCCESS = "SUCCESS";
-    var INVAL_USER = "INVAL_USER"
-    var ERR_CREATED_ALREADY = "ERR_CREATED_ALREADY";
-    var ERROR = "ERROR";
+
     
     // postRequest is a json containing the fields: user, recipe_name, current_date, rating
     this.make = function(postRequest, callback) {
