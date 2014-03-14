@@ -9,8 +9,8 @@ function UserModel(username, password){
     this.signUp = function(callback) { 
         var jsonObject = {};
         
-        var inputQuery = "INSERT INTO users (username, hashed_password) VALUES ("+ this.username + "," +this.password +")";
-        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
+        var inputQuery = "INSERT INTO users (username, hashed_password) VALUES ("+ "\'" + this.username + "\'" + ","+ "\'" + this.password + "\'" +")";
+        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'";
         console.log("WHY YOU NO WORK "+this.connection==undefined);
         this.connection.query(testUserQuery, function(err, result){
             // return error, user already in database
@@ -20,40 +20,33 @@ function UserModel(username, password){
                 callback(jsonForm);
                 return;
             }
-            //add user to database
-            else{
-                //this.connection.query(inputQuery, function (err, result) {
-                    jsonObject.errCode = UserModel.SUCCESS;
-                    var jsonForm = JSON.stringify(jsonObject);
-                    callback(jsonForm);
-                    return;
-                //});
-            }// ELSE END
-        });//TestUserQuery END
+        });
+        this.connection.query(inputQuery, function (err, result) {
+            jsonObject.errCode = UserModel.SUCCESS;
+            var jsonForm = JSON.stringify(jsonObject);
+            callback(jsonForm);
+            return;
+        });// input query
     }// signup END
 
     this.login = function(callback) {
         var jsonObject = {};
-        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
+        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'";
         this.connection.query(testUserQuery, function(err, result){
             if(result.rows.length>0){
 
-                //CASE: PASSWORD NOT CORRECT
-                if(result.rows.hashed_password != this.password) {
-                    jsonObject.errCode = UserModel.ERR_INVAL_CRED;
+                //CASE: PASSWORD CORRECT
+                if(result.rows[0].hashed_password === password) {
+                    //CASE: PASSWORD CORRECT
+                    //return success
+                    jsonObject.errCode = UserModel.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 }
-
-                //CASE: PASSWORD CORRECT
-                //return success
-                jsonObject.errCode = UserModel.SUCCESS;
-                var jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
-                return;
+                
             }
-            //CASE: USER NOT IN DATABASE
+            //CASE: USER NOT IN DATABASE OR PASSWORD NOT CORRECT
             jsonObject.errCode = UserModel.ERR_INVAL_CRED;
             var jsonForm = JSON.stringify(jsonObject);
             callback(jsonForm);
@@ -73,6 +66,8 @@ function UserModel(username, password){
     this.connect = function(callback) {
         console.log("CONNECTION OCCURED");
         this.connection = new pg.Client(process.env.DATABASE_URL);
+        //var params = { host: 'ec2-54-197-238-8.compute-1.amazonaws.com',user: 'zbbaxdqhmzxnwh',password: '8WEQZA6SCS4P911KYoKY0lNvpO',database: 'de0l8cfdtcishp',ssl: true };
+        //this.connection = new pg.Client(params);
         this.connection.connect();
         console.log(this.connection==undefined);
         callback();
