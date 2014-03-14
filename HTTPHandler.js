@@ -181,7 +181,7 @@ app.post('/users/signup', function(req, res) {
   
 app.post('/users/login', function(req, res) {
   
-  console.log(req.body);
+  console.log("FUNCTION 1"+req.body);
 
   //START JSON HEADER
   res.header('Content-Type', 'application/json');
@@ -193,7 +193,7 @@ app.post('/users/login', function(req, res) {
   //START REQUEST
   userController.login(loginJSON, function(resultingJson) {
     //RETURN RESULT
-    res.end(resultingJson);
+    res.end("SUPERMAN"+resultingJson);
   });
   
  
