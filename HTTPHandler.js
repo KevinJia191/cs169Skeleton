@@ -178,13 +178,8 @@ app.post('/ingredients/add', function(req, res) {
 });
 
 app.post('/ingredients/remove', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
     var ingredientController = new IngredientController(res);
     var jsonObject = ingredientController.removeIngredient(req.body);
-    var jsonForm = JSON.stringify(jsonObject);
-    res.end(jsonForm);
 });
 
 app.post('/ingredients/removeAll', function(req, res) {
