@@ -1,4 +1,4 @@
-var Ingredient = require('./Ingredient.js');
+var Ingredient = require('../Ingredient.js');
 function SQLite3Parser() {    
     this.parseIngredient = function(result) {
 	var ingredients = new Array();

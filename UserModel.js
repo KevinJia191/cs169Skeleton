@@ -6,12 +6,12 @@ function UserModel(username, password){
     this.password = password
     this.connection = null;
     
-    this.signUp = function(postRequest, callback) { 
+    this.signUp = function(callback) { 
         var jsonObject = {};
         
         var inputQuery = "INSERT INTO users (username, hashed_password) VALUES ("+ this.username + "," +this.password +")";
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
-
+        console.log("WHY YOU NO WORK "+this.connection==undefined);
         this.connection.query(testUserQuery, function(err, result){
             // return error, user already in database
             if(result.rows.length>0){
@@ -22,20 +22,19 @@ function UserModel(username, password){
             }
             //add user to database
             else{
-                this.connection.query(inputQuery, function (err, result) {
+                //this.connection.query(inputQuery, function (err, result) {
                     jsonObject.errCode = UserModel.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
-                });
+                //});
             }// ELSE END
         });//TestUserQuery END
     }// signup END
 
-    this.login = function(postRequest, callback) {
+    this.login = function(callback) {
         var jsonObject = {};
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
-        
         this.connection.query(testUserQuery, function(err, result){
             if(result.rows.length>0){
 
@@ -71,9 +70,12 @@ function UserModel(username, password){
     this.setSort = function(sortby) {
     }
     
-    this.connect = function() {
+    this.connect = function(callback) {
+        console.log("CONNECTION OCCURED");
         this.connection = new pg.Client(process.env.DATABASE_URL);
         this.connection.connect();
+        console.log(this.connection==undefined);
+        callback();
     }
     
     this.end = function(){

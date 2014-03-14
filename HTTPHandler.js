@@ -174,7 +174,7 @@ app.post('/users/signup', function(req, res) {
 
     });
   
-  console.log(res.body);
+  console.log("FUNCTION 1"+res.body);
 });
 
 
