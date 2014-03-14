@@ -40,6 +40,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
 		console.log(addQuery);
 		self.connection.query(addQuery, function(err, result) {
+		    if (err) {
+			callback(Constants.ERROR);
+			return;
+		    }
 		    callback(Constants.SUCCESS);
 		});
 	    }
@@ -48,6 +52,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
 		var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
 		self.connection.query(updateQuery, function(err, result) {
+		    if (err) {
+			callback(Constants.ERROR);
+			return;
+		    }
 		    callback(Constants.SUCCESS_UPDATED, newQuantity);
 		});
 	    }
@@ -78,6 +86,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		    var removeQuery = "delete from ingredients where "+self.createConstraints();
 		    console.log(removeQuery);
 		    self.connection.query(removeQuery, function(err, result) {
+			if (err) {
+			    callback(Constants.ERROR);
+			    return;
+			}
 			callback(Constants.SUCCESS, null);
 		    });
 		}
@@ -85,6 +97,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		else {
 		    var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
 		    self.connection.query(updateQuery, function(err, result) {
+			if (err) {
+			    callback(Constants.ERROR);
+			    return;
+			}
 			callback(Constants.SUCCESS_UPDATED, newQuantity);
 		    });
 		}
