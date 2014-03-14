@@ -30,7 +30,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.add = function(callback) {
 	var self = this;
 	if (quantity < 0) {
-	    callback(Ingredient.NEGATIVE_QUANTITY, null);
+	    callback(Constants.NEGATIVE_QUANTITY, null);
 	    return;
 	}
 	this.get(function(err, result) {
@@ -40,7 +40,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
 		console.log(addQuery);
 		self.connection.query(addQuery, function(err, result) {
-		    callback(Ingredient.SUCCESS);
+		    callback(Constants.SUCCESS);
 		});
 	    }
 	    // ingredient is already in the db, so update its quantity
@@ -48,7 +48,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
 		var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
 		self.connection.query(updateQuery, function(err, result) {
-		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
+		    callback(Constants.SUCCESS_UPDATED, newQuantity);
 		});
 	    }
 	});
@@ -62,13 +62,13 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.remove = function(callback) {
 	var self = this;
 	if (quantity < 0) {
-	    callback(Ingredient.NEGATIVE_QUANTITY, null);
+	    callback(Constants.NEGATIVE_QUANTITY, null);
 	    return;
 	}
 	this.get(function(err, result) {
 	    // the item is not currently in the database, so we can't remove it
 	    if (result.length == 0) { 
-		callback(Ingredient.DOESNT_EXIST, null);
+		callback(Constants.DOESNT_EXIST, null);
 	    }
 	    // ingredient is already in the db, so update its quantity
 	    else {
@@ -78,14 +78,14 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		    var removeQuery = "delete from ingredients where "+self.createConstraints();
 		    console.log(removeQuery);
 		    self.connection.query(removeQuery, function(err, result) {
-			callback(Ingredient.SUCCESS, null);
+			callback(Constants.SUCCESS, null);
 		    });
 		}
 		// decrease the quantity of the item
 		else {
 		    var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
 		    self.connection.query(updateQuery, function(err, result) {
-			callback(Ingredient.SUCCESS_UPDATED, newQuantity);
+			callback(Constants.SUCCESS_UPDATED, newQuantity);
 		    });
 		}
 	    }
@@ -101,7 +101,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	var removeQuery = "delete from ingredients where "+self.createConstraints();
 	console.log(removeQuery);
 	self.connection.query(removeQuery, function(err, result) {
-	    callback(Ingredient.SUCCESS, null);
+	    callback(Constants.SUCCESS, null);
 	});
     }
 
@@ -125,7 +125,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.connection.query(selectQuery, function(err, result) {
 	    var x = self.parser.parseIngredient(result);
 	    console.log("erp");
-	    callback(Ingredient.SUCCESS, x);
+	    callback(Constants.SUCCESS, x);
 	});
     }
 
