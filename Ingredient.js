@@ -32,17 +32,13 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
 		console.log(addQuery);
 		self.connection.query(addQuery, function(err, result) {
-		    console.log("Error:"+err);
 		    callback(Ingredient.SUCCESS_ADDED, null);
 		});
 	    }
 	    // ingredient is already in the db, so update its quantity
 	    else {
-		console.log("Update ocurring");
-		console.log(result[0]["quantity"]);
 		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
-		var updateQuery = "update ingredients set quantity ="+newQuantity+"where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
-		console.log(updateQuery);
+		var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
 		self.connection.query(updateQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		});

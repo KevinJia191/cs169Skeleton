@@ -12,6 +12,9 @@ var IngredientController = function(res) {
 	ingredientModel.add(function (err, result) {
 	    ingredientModel.end();
 	    var json = {errCode : err};
+	    if (result != null) {
+		json["new_quantity"] = result;
+	    }
 	    res.header('Content-Type', 'application/json');
 	    res.end(JSON.stringify(json));
 	});
