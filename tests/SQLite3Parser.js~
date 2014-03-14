@@ -13,4 +13,4 @@ function SQLite3Parser() {
 	return ingredients;
     }
 }
-module.exports = SQLite3Parser;
+module.exports = PostgreSQLParser;

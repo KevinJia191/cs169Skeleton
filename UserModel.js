@@ -22,16 +22,12 @@ function UserModel(username, password){
             }
             //add user to database
             else{
-
-                this.connection.query(inputQuery, function () {
-
+                this.connection.query(inputQuery, function (err, result) {
                     jsonObject.errCode = UserModel.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 });
-
-                
             }// ELSE END
         });//TestUserQuery END
     }// signup END

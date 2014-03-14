@@ -270,7 +270,7 @@ app.post('/recipes/make', function(req, res) {
                     rating : 3
                    };
     
-    historyController.getHistory(stubJson);
+    historyController.make(stubJson);
 
 });
 
