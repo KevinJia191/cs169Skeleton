@@ -7,6 +7,8 @@ var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database(file);
 */
 var HistoryModel = require('./Recipe.js');
+var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('./PostgreSQLParser.js');
 
 var HistoryController = function(res) {
 
@@ -23,6 +25,7 @@ var HistoryController = function(res) {
 
         var jsonObject = {};     
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
+        historyModel.setDatabaseModel(new PostgreSQLDatabaseModel());
         historyModel.connect();
         historyModel.make(function (resultingJson) {
             console.log('hi1' + resultingJson);

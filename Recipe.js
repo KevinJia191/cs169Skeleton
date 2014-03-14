@@ -146,7 +146,7 @@ function Recipe(username, recipe_name, date_created, rating){
     }
     
     this.connect = function() {
-        this.connection = new pg.Client(process.env.DATABASE_URL);
+        //this.connection = new pg.Client(process.env.DATABASE_URL);
         this.connection.connect();
     }
     
