@@ -15,6 +15,7 @@ var HistoryController = function(res) {
     
     // postRequest is a json containing the fields: user, recipe_name, current_date, rating
     this.make = function(postRequest) {
+        console.log(postRequest);
         var jsonObject = {};     
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();

@@ -256,7 +256,7 @@ app.get('/recipes/history', function(req, res) {
 
 app.post('/recipes/make', function(req, res) {    
     var historyController = new HistoryController(res); 
-    console.log(req.body);
+    console.log("req.body is " + req.body);
     historyController.make(req.body);
 
 });
@@ -264,7 +264,7 @@ app.post('/recipes/make', function(req, res) {
 app.post('/recipes/deleteAllHistory', function(req, res) {
     var historyController = new HistoryController(res);
     var stubJson = {user:"testUser"};
-    historyController.clearHistory(stubJson);
+    historyController.clearHistory(req.body);
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
