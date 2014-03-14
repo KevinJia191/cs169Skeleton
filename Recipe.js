@@ -11,8 +11,8 @@ function Recipe(username, recipe_name, date_created, rating){
     this.make = function(postRequest, callback) {
         var jsonObject = {};     
         
-        var testUserQuery = "SELECT * FROM users U WHERE username=\'" + this.username + "/'"
-        var testAlreadyMadeQuery = "SELECT * FROM history H WHERE username=\'" + this.username + "\'" + "AND recipe_name=\'" + this.recipe_name + "\'" + "AND current_date=" + this.current_date
+        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'"
+        var testAlreadyMadeQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'" + "AND H.recipe_name=\'" + this.recipe_name + "\'" + "AND H.current_date=" + this.current_date
         var makeQuery = "INSERT INTO HISTORY VALUES(" + this.username + "," + this.recipe_name + "," + this.current_date + "," + this.rating + ")"
         
         this.connection.query(testUserQuery, function(err, result){
@@ -74,8 +74,8 @@ function Recipe(username, recipe_name, date_created, rating){
 
     this.getAllHistoryFromUser = function(postRequest, callback){
         var jsonObject = {};
-        var testUserQuery = "SELECT * FROM users U WHERE username=\'" + this.username + "/'";
-        var getHistoryQuery = "SELECT * FROM history H WHERE username=\'" + this.username + "\'";
+        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
+        var getHistoryQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'";
         this.connection.query(testUserQuery, function(err, result){
             if(result.rows.length > 0){
                 this.connection.query(getHistoryQuery, function(err, result){
