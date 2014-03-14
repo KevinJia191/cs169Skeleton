@@ -4,7 +4,7 @@ cd down to the functest folder
 
 then type the command
 
-make func_tests TEST_SERVER=http://radiant-dusk-5060.herokuapp.com/
+make func_tests TEST_SERVER=http://radiant-dusk-5060.herokuapp.com
 
 or generally
 
