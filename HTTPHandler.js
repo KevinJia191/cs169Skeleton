@@ -20,11 +20,12 @@ app.use(logfmt.requestLogger());
 app.get('/', function(req, res) {
   res.writeHead(200);
   res.write('<html><body>');
-  res.write('<form action="login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
+  res.write('<form action="users/login" method="post">Username <input type="text" name="username"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
   res.write('<form action="recipes/history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
-  res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="Login" onclick=this.form.action="recipes/search"></form>');
+  res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="TestSearch" onclick=this.form.action="recipes/search"></form>');
   res.write('<form action="recipes/deleteAllHistory" method="post"><input type="text" name="username">Clear History<input type="submit" value="delete all history post Button"></form>');
   res.write('<form action="recipes/make" method="post"><input type="text" name="username">Make <input type="submit" value="delete all history post Button"></form>');
+  res.write('<form action="TESTAPI/resetFixture" method="post"><input type="text" name="username">RESET API <input type="submit" value="RESETTABLES"></form>');
 
   res.end('</body></html>');
 });
@@ -251,12 +252,10 @@ app.get('/recipes/getRecipeData', function(req, res) {
 app.get('/recipes/history', function(req, res) {
     res.header('Content-Type', 'application/json');
 
-    var historyController = new HistoryController(null);
+    var historyController = new HistoryController(res);
     var stubJson = {user : "testUser"};
     
-    historyController.getHistory(stubJson, function(resultingJson){
-        res.end(resultingJson);
-    });
+    historyController.getHistory(stubJson);
 });
 
 app.post('/recipes/make', function(req, res) {
@@ -264,16 +263,15 @@ app.post('/recipes/make', function(req, res) {
     //example
     //process req, res to get stuff
     
-    var historyController = new HistoryController(null);
+    var historyController = new HistoryController(res);
     var stubJson = {user : "testUser",
                     recipe_name : "Onion Soup",
                     current_date : "2/2/2",
                     rating : 3
                    };
     
-    historyController.make(stubJson, function(resultingJson){
-        res.end(resultingJson);
-    });
+    historyController.getHistory(stubJson);
+
 });
 
 app.post('/recipes/deleteAllHistory', function(req, res) {
@@ -281,15 +279,35 @@ app.post('/recipes/deleteAllHistory', function(req, res) {
     //example
     //process req, res to get stuff
     
-    var historyController = new HistoryController(null);
+    var historyController = new HistoryController(res);
     var stubJson = {user : "testUser"};
     
-    historyController.clearHistory(stubJson, function(resultingJson){
-        res.end(resultingJson);
-    });
+    historyController.clearHistory(stubJson);
 });
 
+app.post('/TESTAPI/resetFixture', function(req, res) {
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('DELETE from users', function(err, result) {
+        done();
+        if(err) return console.error(err);
+      });
+      client.query('DELETE from history', function(err, result) {
+        done();
+        if(err) return console.error(err);
+      });
+      client.query('DELETE from ingredients', function(err, result) {
+        done();
+        if(err) return console.error(err);
+      });
+    });
+    var new_son = {
+      errCode: 1
+    }
+    var format_son = JSON.stringify(new_son);
+    res.write(format_son);
+    res.end();
 
+});
 
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {

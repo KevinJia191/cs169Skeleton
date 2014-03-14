@@ -1,6 +1,9 @@
 var pg = require('pg');
 
-//should extend the ActiveRecord class
+/*
+Model for a "History" element : primary key'd by (username, recipe_name, date_created), to ensure one recipe per day by each user
+All callbacks are of the form: function(returningJson)
+*/
 function Recipe(username, recipe_name, date_created, rating){
     this.username = username;
     this.recipe_name = recipe_name;
@@ -8,7 +11,10 @@ function Recipe(username, recipe_name, date_created, rating){
     this.rating = rating;
     this.connection = null;
     
-    this.make = function(postRequest, callback) {
+    /*
+    Make's this Recipe object and inserts into a user's history table
+    */
+    this.make = function(callback) {
         var jsonObject = {};     
         
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'"
@@ -53,7 +59,7 @@ function Recipe(username, recipe_name, date_created, rating){
         });
     }
 
-    this.clearAllHistoryFromUser = function(postRequest, callback) {
+    this.clearAllHistoryFromUser = function(callback) {
         var jsonObject = {};
         var deleteQuery = "DELETE FROM HISTORY WHERE username=\' " + this.username + "\'"
         this.connection.query(deleteQuery, function(err, result){
@@ -72,7 +78,7 @@ function Recipe(username, recipe_name, date_created, rating){
         });
     }
 
-    this.getAllHistoryFromUser = function(postRequest, callback){
+    this.getAllHistoryFromUser = function(callback){
         var jsonObject = {};
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
         var getHistoryQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'";
