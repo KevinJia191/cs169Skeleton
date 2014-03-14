@@ -1,73 +1,48 @@
 var HistoryController = require('../HistoryController.js');
 
 
-var fs = require("fs");
-var file = "test.db";
-var exists = fs.existsSync(file);
-var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database(file);
+var SQLite3Model = require('./SQLite3DatabaseModel.js');
+var HistoryModel = require('../Recipe.js');
+var SQLite3Parser = require('./SQLite3Parser.js');
+var Constants = require('../Constants.js');
 
-exports['makeErrorCodetest'] = function (test) {
-    var stubJson = {user : "testUser",
-                    recipe_name : "Onion Soup",
-                    current_date : "2/2/2",
-                    rating : 3
-                   };
-
-    
-    var unitTesting = true;
-	var historyController = new HistoryController(null, unitTesting);
-    
-    //Sets up DB if never called before, else does nothing
-    historyController.unitTestSetup();
-
-    historyController.make(stubJson, function(resultingJson){
-        //console.log(resultingJson);
-        var errCodeNameLength = "{\"errCode\":".length;
-        var errCodeStringPos = (resultingJson.indexOf("errCode"));
-        var temp = (resultingJson.substr(1+errCodeNameLength, resultingJson.length)).indexOf("\"");
-        //console.log((resultingJson.substr(1+errCodeNameLength, resultingJson.length)));
-        var errCode = resultingJson.substr(1+errCodeNameLength,temp);
-
-        //console.log("errCode is " + errCode);
-        //console.log(errCode == "SUCCESS");
-        test.equal(errCode, "SUCCESS", "ERRCODE WAS NOT SUCCESS");
-        test.done();
-    });
-    
-};
-
-exports['maketest'] = function (test) {
-    var stubJson = {user : "user1",
-                    recipe_name : "Onion Soup",
-                    current_date : "2/2/2",
-                    rating : 3
-                   };
-
-    
-    var unitTesting = true;
-	var historyController = new HistoryController(null, unitTesting);
-    
-    //Sets up DB if never called before, else does nothing
-    historyController.unitTestSetup();
-
-    historyController.make(stubJson, function(resultingJson){
-        //console.log(resultingJson);
-        var errCodeNameLength = "{\"errCode\":".length;
-        var errCodeStringPos = (resultingJson.indexOf("errCode"));
-        var temp = (resultingJson.substr(1+errCodeNameLength, resultingJson.length)).indexOf("\"");
-        //console.log((resultingJson.substr(1+errCodeNameLength, resultingJson.length)));
-        var errCode = resultingJson.substr(1+errCodeNameLength,temp);
-
-        //console.log("errCode is " + errCode);
-        //console.log(errCode == "SUCCESS");
-        test.equal(errCode, "SUCCESS", "ERRCODE WAS NOT SUCCESS");
-    });
-    
-    var stubJson2 = {user : "user1"};
-    historyController.getHistory(stubJson2, function(resultingJson){
-        console.log(resultingJson);
-        test.done();
+exports["testMakeRecipe"] = function(test){
+    var db = new SQLite3Model();
+    test.expect(3);
+    console.log("1");
+    doSetup(db, function(err, results) {
+        console.log("2");
+        console.log(err);
+        var historyModel = new HistoryModel('testUser', 'OnionSoup', '5/21/17', 4);
+        historyModel.setDatabaseModel(db);
+        historyModel.setParser(new SQLite3Parser());
+        historyModel.connect();
+        historyModel.make(function(resultingJson) {
+            console.log("whatsup");
+            test.equal(resultingJson.errCode, Constants.SUCCESS, "Make has not been added");
+            db.query("select * from history", function(err, rows) {
+                db.end();
+                test.equal(rows.length, 1, "Length of returns did not match");
+                var exp = { username: 'testUser', recipe_name: 'OnionSoup', dateCreated: '5/21/17', rating: 4};
+                var row = rows[0];
+                test.done();
+            });
+        });
     });
 };
 
+function doSetup(db, callback) {
+    db.connect();
+    var createUsers = "Create table users (username text primary key,hashed_password text);"
+    db.query(createUsers, function(err, results) {
+        console.log(err);
+        db.query("Create table ingredients (username text references users(username),ingredient_name text,expiration_date text,quantity decimal check(quantity>0),unit text, primary key(username,ingredient_name,expiration_date)); ", function(err, results) {
+            var createHistory = "Create table history (username text references users(username), recipe_name text, dateCreated text, rating int check(rating > 0 AND rating <= 5), primary key(username,recipe_name,dateCreated));";
+            db.query(createHistory, function(err, results){
+                console.log('hey did we get here');
+                var createUser = "Insert into users values ('testUser', 'testPass');";
+                db.query(createUser, callback);
+            });
+        });
+    });
+}
