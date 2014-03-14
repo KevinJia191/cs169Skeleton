@@ -24,12 +24,12 @@ function SQLite3Parser() {
         }
         for (index = 0; index < result.length; index++) {
             var row = result[index];
-            console.log("thisrow is " + row);
+            //console.log("thisrow is " + row);
             var user = new UserModel(row.username, row.hashed_password);
-            console.log("thisuser is" + user);
+            //console.log("thisuser is" + user);
             users[index] = user;
         }
-        console.log("hello"+users);
+        //console.log("hello"+users);
         return users;
     }
     
