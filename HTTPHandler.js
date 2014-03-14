@@ -250,30 +250,18 @@ app.get('/recipes/getRecipeData', function(req, res) {
 });
 
 app.get('/recipes/history', function(req, res) {
-    res.header('Content-Type', 'application/json');
-
     var historyController = new HistoryController(res);
     historyController.getHistory(req.body);
 });
 
-app.post('/recipes/make', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
-    
+app.post('/recipes/make', function(req, res) {    
     var historyController = new HistoryController(res);    
     historyController.make(req.body);
 
 });
 
 app.post('/recipes/deleteAllHistory', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
-    
     var historyController = new HistoryController(res);
-    //var stubJson = {user : "testUser"};
-    
     historyController.clearHistory(req.body);
 });
 
