@@ -26,6 +26,8 @@ function Recipe(username, recipe_name, date_created, rating){
         
         this.connection.query(testUserQuery, function(err, result){
             console.log("1");
+            console.log(result.rows);
+            console.log(result.rows.length);
             if(result.rows.length>0){
                 console.log("2");
                 this.connection.query(testAlreadyMadeQuery, function(err, result){
