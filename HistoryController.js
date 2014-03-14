@@ -26,13 +26,13 @@ var HistoryController = function(request, unitTesting) {
                 callback(jsonForm);
                 return;
             });
-        } 
+        }
         
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();
         historyModel.make(function(jsonForm){
             callback(jsonForm);
-        }
+        });
     }
 
     // postRequest is a json containing the fields: user
