@@ -30,6 +30,6 @@ Constants.GET_RECIPE_DATA = '/recipes/getRecipeData';
 Constants.GET_HISTORY = '/recipes/history';
 Constants.MAKE_RECIPE = '/recipes/make';
 Constants.CLEAR_HISTORY = '/recipes/deleteAllHistory';
-Constatnts.RESET_FIXTURE = '/TESTAPI/resetFixture';
+Constants.RESET_FIXTURE = '/TESTAPI/resetFixture';
 
 module.exports = ErrorModel;
