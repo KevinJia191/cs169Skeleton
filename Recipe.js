@@ -21,7 +21,7 @@ function Recipe(username, recipe_name, date_created, rating){
         var jsonObject = {};     
         
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'";
-        var testAlreadyMadeQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'" + "AND H.recipe_name=\'" + this.recipe_name + "\'" + "AND H.date_created='" + this.current_date +"'";
+        var testAlreadyMadeQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'" + "AND H.recipe_name=\'" + this.recipe_name + "\'" + "AND H.dateCreated='" + this.current_date +"'";
         var makeQuery = "INSERT INTO HISTORY VALUES('" + this.username + "','" + this.recipe_name + "','" + this.current_date + "'," + this.rating + ")";
         
         console.log(testUserQuery);
