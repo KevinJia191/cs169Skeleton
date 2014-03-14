@@ -28,6 +28,7 @@ var HistoryController = function(res) {
         var jsonObject = {};     
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
+        historyModel.setParser(new PostgreSQLParser());
         historyModel.connect();
         historyModel.make(function (resultingJson) {
             historyModel.end();
@@ -41,6 +42,7 @@ var HistoryController = function(res) {
         var jsonObject = {};
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
+        historyModel.setParser(new PostgreSQLParser());
         historyModel.connect();
         historyModel.getAllHistoryFromUser(function (resultingJson) {
             historyModel.end();
@@ -54,7 +56,7 @@ var HistoryController = function(res) {
         var jsonObject = {};
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
-
+        historyModel.setParser(new PostgreSQLParser());
         historyModel.connect();
         historyModel.clearAllHistoryFromUser(function (resultingJson) {
             historyModel.end();
