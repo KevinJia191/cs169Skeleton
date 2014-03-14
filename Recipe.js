@@ -117,4 +117,9 @@ function Recipe(username, recipe_name, date_created, rating){
         this.connection.end();
     }
 }
+Recipe.SUCCESS = "SUCCESS";
+Recipe.INVAL_USER = "INVAL_USER"
+Recipe.ERR_CREATED_ALREADY = "ERR_CREATED_ALREADY";
+Recipe.ERROR = "ERROR";
+
 module.exports = Recipe;
