@@ -12,7 +12,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.quantity = quantity;
     this.unit = unit;
     this.connnection = null;
-    //this.attributes = {"username":username, "ingredient_name": ingredient_name, "expiration_date":expiration_date, "quantity":quantity, "unit":unit};
+    this.sortField = null;
+    this.sortBy = null;
+    this.start = null;
+    this.end = null;
     
     /* 
      * Adds the ingredient to the User's inventory.
@@ -32,13 +35,13 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
 		console.log(addQuery);
 		self.connection.query(addQuery, function(err, result) {
-		    callback(Ingredient.SUCCESS, null);
+		    callback(Ingredient.SUCCESS);
 		});
 	    }
 	    // ingredient is already in the db, so update its quantity
 	    else {
 		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
-		var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
+		var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
 		self.connection.query(updateQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		});
@@ -58,7 +61,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    return;
 	}
 	this.get(function(err, result) {
-	    // the item is not currently in the database, it 
+	    // the item is not currently in the database, so we can't remove it
 	    if (result.length == 0) { 
 		callback(Ingredient.DOESNT_EXIST, null);
 	    }
@@ -67,7 +70,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var newQuantity = parseInt(result[0]["quantity"]) - self.quantity;
 		// remove the item
 		if (newQuantity <= 0) {
-		    var removeQuery = "delete from ingredients where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'"
+		    var removeQuery = "delete from ingredients where "+self.createConstraints();
 		    console.log(removeQuery);
 		    self.connection.query(removeQuery, function(err, result) {
 			callback(Ingredient.SUCCESS, null);
@@ -75,7 +78,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		}
 		// decrease the quantity of the item
 		else {
-		    var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
+		    var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
 		    self.connection.query(updateQuery, function(err, result) {
 			callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		    });
@@ -85,22 +88,41 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     }
 
     /*
+     * Clears all records that match the given constraints on primary key fields. For example you can delete all records for someone of a given username, or
+     * delete all records of a given username and a given ingredient name. Warning: if all primary key fields are null, the whole database will be cleared.
+     */
+    this.clear = function(callback) {
+	var self = this;
+	var removeQuery = "delete from ingredients where "+self.createConstraints();
+	console.log(removeQuery);
+	self.connection.query(removeQuery, function(err, result) {
+	    callback(Ingredient.SUCCESS, null);
+	});
+    }
+
+    /*
      * Gets the ingredient with the specified parameters passed into the constructor. 
      * For example, if you only specify username and all other fields are null,
      * then all ingredients possessed by that user will be stored in result.
      * result will be a list of ingredients. If sortby was set, the list will be sorted, otherwise order
-     * is not guaranteed.
+     * is not guaranteed. If start and end are not set, all returned records are fair game.
      */
     this.get = function(callback) {
-	var selectQuery = this.createSelectQuery();
+	var selectQuery = "select * from ingredients where " + this.createConstraints();
 	var self = this;
+	if (this.sortField != null) {
+	    selectQuery = selectQuery + " order by "+this.sortfield;
+	    if (this.sortBy != null) {
+		selectQuery = selectQuery + " "+this.sortBy;
+	    }
+	}
 	this.connection.query(selectQuery, function(err, result) {
 	    callback(Ingredient.SUCCESS, self.parseDBResult(result));
 	});
     }
 
-    this.createSelectQuery = function() {
-	var addQuery = "select * from ingredients where ";
+    this.createConstraints = function() {
+	var query = "";
 	var index = 0;
 	var constraints = new Array();
 	var isFirst = true;
@@ -118,14 +140,14 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	}
 	for (index = 0; index < constraints.length; index++) {
 	    if (!isFirst) {
-		addQuery = addQuery + " AND ";
+		query = query + " AND ";
 	    }
 	    else {
 		isFirst = false;
 	    }
-	    addQuery = addQuery + constraints[index];
+	    query = query + constraints[index];
 	}
-	return addQuery;
+	return query;
     }
     
     this.parseDBResult = function(result) {
@@ -134,8 +156,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    return ingredients;
 	}
 	for (index = 0; index < result.rows.length; index++) {
-	    var rows = result.rows[index];
-	    var ingredient = new Ingredient(rows["username"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
+	    var row = result.rows[index];
+	    var ingredient = new Ingredient(row["username"], row["ingredient_name"], row["expiration_date"], row["quantity"], row["unit"]);
 	    ingredients[index] = ingredient;
 	}
 	return ingredients;
@@ -179,11 +201,13 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     }
 
     /*
-     * Sets how the list returned by get is sorted by.
-     *
+     * Sets how the list returned by get is sorted by. sortField is the field to sort on. sortBy is either "ASC" or "DESC" (ascending/descending).
+     * Display the inventory starting from the start to end element.
      */
-    this.setSort = function(sortby) {
-
+    this.setSort = function(sortField, sortBy, start, end) {
+	this.sortField = sortField;
+	this.sortBy = sortBy;
+	this.limit = limit;
     }
 }
 
