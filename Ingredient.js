@@ -38,7 +38,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    // ingredient is already in the db, so update its quantity
 	    else {
 		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
-		var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
+		var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
 		self.connection.query(updateQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		});
@@ -67,7 +67,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var newQuantity = parseInt(result[0]["quantity"]) - self.quantity;
 		// remove the item
 		if (newQuantity <= 0) {
-		    var removeQuery = "delete from ingredients where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'"
+		    var removeQuery = "delete from ingredients where "+self.createConstraints();
 		    console.log(removeQuery);
 		    self.connection.query(removeQuery, function(err, result) {
 			callback(Ingredient.SUCCESS, null);
@@ -75,7 +75,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		}
 		// decrease the quantity of the item
 		else {
-		    var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
+		    var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
 		    self.connection.query(updateQuery, function(err, result) {
 			callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		    });
@@ -92,15 +92,15 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * is not guaranteed.
      */
     this.get = function(callback) {
-	var selectQuery = this.createSelectQuery();
+	var selectQuery = "select * from ingredients where " + this.createConstraints();
 	var self = this;
 	this.connection.query(selectQuery, function(err, result) {
 	    callback(Ingredient.SUCCESS, self.parseDBResult(result));
 	});
     }
 
-    this.createSelectQuery = function() {
-	var addQuery = "select * from ingredients where ";
+    this.createConstraints = function() {
+	var query = "";
 	var index = 0;
 	var constraints = new Array();
 	var isFirst = true;
