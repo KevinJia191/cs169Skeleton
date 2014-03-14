@@ -4,7 +4,7 @@ var Constants = require('./Constants.js');
 //should extend the ActiveRecord class
 function UserModel(username, password){
     this.username = username;
-    this.password = password
+    this.password = password;
     this.connection = null;
     
     this.signUp = function(callback) { 
@@ -65,10 +65,7 @@ function UserModel(username, password){
     }
     
     this.connect = function(callback) {
-        console.log("CONNECTION OCCURED");
         //this.connection = new pg.Client(process.env.DATABASE_URL);
-        var params = { host: 'ec2-54-197-238-8.compute-1.amazonaws.com',user: 'zbbaxdqhmzxnwh',password: '8WEQZA6SCS4P911KYoKY0lNvpO',database: 'de0l8cfdtcishp',ssl: true };
-        this.connection = new pg.Client(process.env.DATABASE_URL);
         this.connection.connect();
         callback();
     }

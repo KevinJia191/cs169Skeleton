@@ -24,10 +24,6 @@ function Recipe(username, recipe_name, date_created, rating){
         var testAlreadyMadeQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'" + "AND H.recipe_name=\'" + this.recipe_name + "\'" + "AND H.dateCreated='" + this.current_date +"'";
         var makeQuery = "INSERT INTO HISTORY VALUES('" + this.username + "','" + this.recipe_name + "','" + this.current_date + "'," + this.rating + ")";
         
-        console.log(testUserQuery);
-        console.log(testAlreadyMadeQuery);
-        console.log(makeQuery);
-        
         this.connection.query(testUserQuery, function(err, result){
             if(err){
                 console.error(err);
@@ -36,7 +32,13 @@ function Recipe(username, recipe_name, date_created, rating){
                 callback(jsonForm);
                 return;
             }
+            console.log("hi");
+            console.log(self.parser);
+            console.log("result is " + result);
             var queryResult1 = self.parser.parseUser(result);
+            console.log("result is " + result);
+            console.log("hi#2");
+            console.log("hello" + queryResult1);
             if(queryResult1.length>0){
                 self.connection.query(testAlreadyMadeQuery, function(err, result){
                     if(err){
@@ -57,7 +59,7 @@ function Recipe(username, recipe_name, date_created, rating){
                                 callback(jsonForm);
                                 return;
                             }
-                            
+                            console.log("SUCCESS");
                             jsonObject.errCode = constantModel.SUCCESS;
                             var jsonForm = JSON.stringify(jsonObject);
                             callback(jsonForm);
