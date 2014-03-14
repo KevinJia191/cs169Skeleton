@@ -263,7 +263,8 @@ app.post('/recipes/make', function(req, res) {
 
 app.post('/recipes/deleteAllHistory', function(req, res) {
     var historyController = new HistoryController(res);
-    historyController.clearHistory(req.body);
+    var stubJson = {user:"testUser"};
+    historyController.clearHistory(stubJson);
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
