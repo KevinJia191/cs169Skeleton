@@ -37,17 +37,12 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    }
 	    // ingredient is already in the db, so update its quantity
 	    else {
-		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
-		self.updateQuantity(self, newQuantity);
-	    }
-	});
-    }
-
-    this.updateQuantity = function (self, newQuantity) {
-	var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
+		var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
 		self.connection.query(updateQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		});
+	    }
+	});
     }
     /* 
      * Removes a quantity of an ingredient from  the User's inventory.
@@ -77,7 +72,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		});
 		}
 		else {
-		    self.updateQuantity(newQuantity);
+		    var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
+		self.connection.query(updateQuery, function(err, result) {
+		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
+		});
 		}
 	    }
 	});
