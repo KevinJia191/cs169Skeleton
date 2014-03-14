@@ -50,7 +50,7 @@ var HistoryController = function(request, unitTesting) {
         } 
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();
-        historyModel.getAllFromUser(postRequest, function (resultingJson) {
+        historyModel.getAllHistoryFromUser(postRequest, function (resultingJson) {
             historyModel.end();
             callback(resultingJson);
         });
@@ -69,7 +69,7 @@ var HistoryController = function(request, unitTesting) {
         } 
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();
-        historyModel.clearAllFromUser(postRequest, function (resultingJson) {
+        historyModel.clearAllHistoryFromUser(postRequest, function (resultingJson) {
             historyModel.end();
             callback(resultingJson);
         });
