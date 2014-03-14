@@ -56,6 +56,7 @@ function Recipe(username, recipe_name, date_created, rating){
                         });
                     }
                     else{
+                        console.log("ERROR RECIPE CREATED ALREADY");
                         jsonObject.errCode = CONSTANTS.ERR_RECIPE_CREATED_ALREADY;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
