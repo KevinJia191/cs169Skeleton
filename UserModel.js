@@ -72,6 +72,7 @@ function UserModel(username, password){
     }
     
     this.connect = function() {
+        console.log("CONNECTION OCCURED");
         this.connection = new pg.Client(process.env.DATABASE_URL);
         this.connection.connect();
     }

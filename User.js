@@ -19,5 +19,9 @@ function User(username, password){
     }
     this.setSort = function(sortby) {
     }
+    this.connect = function() {
+        this.connection = new pg.Client(process.env.DATABASE_URL);
+        this.connection.connect();
+    }
     
 }
