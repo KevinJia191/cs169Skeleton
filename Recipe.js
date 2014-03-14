@@ -6,14 +6,14 @@ function Recipe(username, recipe_name, date_created, rating){
     this.recipe_name = recipe_name;
     this.date_created = date_created;
     this.rating = rating;
-    this.connection=null;
+    this.connection = null;
     
     this.make = function(postRequest, callback) {
         var jsonObject = {};     
         
-        var testUserQuery = "SELECT * FROM users U WHERE username=\'" + postRequest.user + "/'"
-        var testAlreadyMadeQuery = "SELECT * FROM history H WHERE username=\'" + postRequest.user + "\'" + "AND recipe_name=\'" + postRequest.recipe_name + "\'" + "AND current_date=" + postRequest.current_date
-        var makeQuery = "INSERT INTO HISTORY VALUES(" + postRequest.user + "," + postRequest.recipe_name + "," + postRequest.current_date + "," + postRequest.rating + ")"
+        var testUserQuery = "SELECT * FROM users U WHERE username=\'" + this.username + "/'"
+        var testAlreadyMadeQuery = "SELECT * FROM history H WHERE username=\'" + this.username + "\'" + "AND recipe_name=\'" + this.recipe_name + "\'" + "AND current_date=" + this.current_date
+        var makeQuery = "INSERT INTO HISTORY VALUES(" + this.username + "," + this.recipe_name + "," + this.current_date + "," + this.rating + ")"
         
         this.connection.query(testUserQuery, function(err, result){
             if(result.rows.length>0){
@@ -29,7 +29,7 @@ function Recipe(username, recipe_name, date_created, rating){
                                 return;
                             }
                             jsonObject.errCode = Recipe.SUCCESS;
-                            var madeEntry = "(" + postRequest.user + "," + postRequest.recipe_name + "," + postRequest.current_date + "," + postRequest.rating + ")";
+                            var madeEntry = "(" + this.username + "," + this.recipe_name + "," + this.current_date + "," + this.rating + ")";
                             jsonObject.madeEntry = madeEntry;
                             var jsonForm = JSON.stringify(jsonObject);
                             callback(jsonForm);
@@ -55,7 +55,7 @@ function Recipe(username, recipe_name, date_created, rating){
 
     this.clearAllHistoryFromUser = function(postRequest, callback) {
         var jsonObject = {};
-        var deleteQuery = "DELETE FROM HISTORY WHERE username=\' " + postRequest.user + "\'"
+        var deleteQuery = "DELETE FROM HISTORY WHERE username=\' " + this.username + "\'"
         this.connection.query(deleteQuery, function(err, result){
             if(err){
                 console.error(err);
@@ -74,8 +74,8 @@ function Recipe(username, recipe_name, date_created, rating){
 
     this.getAllHistoryFromUser = function(postRequest, callback){
         var jsonObject = {};
-        var testUserQuery = "SELECT * FROM users U WHERE username=\'" + postRequest.user + "/'";
-        var getHistoryQuery = "SELECT * FROM history H WHERE username=\'" + postRequest.user + "\'";
+        var testUserQuery = "SELECT * FROM users U WHERE username=\'" + this.username + "/'";
+        var getHistoryQuery = "SELECT * FROM history H WHERE username=\'" + this.username + "\'";
         this.connection.query(testUserQuery, function(err, result){
             if(result.rows.length > 0){
                 this.connection.query(getHistoryQuery, function(err, result){
