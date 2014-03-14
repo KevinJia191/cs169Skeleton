@@ -118,14 +118,14 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	}
 	for (index = 0; index < constraints.length; index++) {
 	    if (!isFirst) {
-		addQuery = addQuery + " AND ";
+		query = query + " AND ";
 	    }
 	    else {
 		isFirst = false;
 	    }
-	    addQuery = addQuery + constraints[index];
+	    query = query + constraints[index];
 	}
-	return addQuery;
+	return query;
     }
     
     this.parseDBResult = function(result) {
