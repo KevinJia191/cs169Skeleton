@@ -2,6 +2,10 @@ var pg = require('pg');
 var IngredientModel = require('./Ingredient.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 var PostgreSQLParser = require('./PostgreSQLParser.js');
+/*
+ * Controller for the Ingredient model that takes in json requests and responds with json.
+ * @author Christopher
+ */
 var IngredientController = function(res) {
 
     this.res = res;

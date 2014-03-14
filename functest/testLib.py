@@ -15,12 +15,12 @@ class RestTestCase(unittest.TestCase):
     Superclass for our functional tests. Defines the boilerplate for the tests
     """
 
-    SUCCESS =              1     # : a success
-    ERR_BAD_CREDENTIALS = -1     # : (for login only) cannot find the user/password pair in the database
-    ERR_USER_EXISTS     = -2     #: (for add only) trying to add a user that already exists
-    ERR_BAD_USERNAME    = -3     #: (for add, or login) invalid user name (only empty string is invalid for now)
-    ERR_BAD_PASSWORD    = -4
-    INGREDIENT_SUCCESS  = 1
+    SUCCESS =              "SUCCESS"     # : a success
+    ERR_BAD_CREDENTIALS = "ERR_INVAL_CRED"     # : (for login only) cannot find the user/password pair in the database
+    ERR_USER_EXISTS     = "ERR_USER_EXISTS"     #: (for add only) trying to add a user that already exists
+    ERR_BAD_USERNAME    = "ERR_BAD_USERNAME"     #: (for add, or login) invalid user name (only empty string is invalid for now)
+    ERR_BAD_PASSWORD    = "ERR_BAD_PASSWORD"
+    INGREDIENT_SUCCESS  = "SUCCESS"
     
     # Lookup the name of the server to test
     serverToTest = "localhost:5000"

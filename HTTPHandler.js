@@ -55,8 +55,6 @@ app.get('/test2', function(req,res) {
 
 app.get('/search', function(req, res) {
   res.writeHead(200);
-  console.log("YUMMLY WORKS");
-  
   /*
     TODO: MOVE THIS TO THE SEARCHCONTROLLER
 
@@ -90,14 +88,12 @@ app.get('/search', function(req, res) {
       if (error) {
         console.error(error);
       } else if (response.statusCode === 200) {
-        console.log("FRUITCAKES");
         console.log(json.matches[0].id);
         var new_son = {
           errCode: UserModel.ERR_BAD_CREDENTIALS,
           count: result.rows[0].count
         };
         for (var i=0;i<10;i++) {
-            console.log("for loop");
             recArray.push(json.matches[i].id);
             recnameArray.push(json.matches[i].recipeName);
             siuArray.push(json.matches[i].smallImageUrls);
@@ -268,6 +264,10 @@ app.post('/recipes/deleteAllHistory', function(req, res) {
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
+  res.header('Content-Type', 'application/json');
+  ///////
+  var params = { host: 'ec2-54-197-238-8.compute-1.amazonaws.com',user: 'zbbaxdqhmzxnwh',password: '8WEQZA6SCS4P911KYoKY0lNvpO',database: 'de0l8cfdtcishp',ssl: true };
+    ////pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       client.query('DELETE from users', function(err, result) {
         done();
