@@ -1,4 +1,7 @@
 var Ingredient = require('./Ingredient.js');
+var UserModel = require('./UserModel.js');
+var Recipe = require('./Recipe.js');
+
 function PostgreSQLParser() {    
     this.parseIngredient = function(result) {
 	var ingredients = new Array();
