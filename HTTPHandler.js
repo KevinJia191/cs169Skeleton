@@ -255,7 +255,8 @@ app.get('/recipes/history', function(req, res) {
 });
 
 app.post('/recipes/make', function(req, res) {    
-    var historyController = new HistoryController(res);    
+    var historyController = new HistoryController(res); 
+    console.log(req.body);
     historyController.make(req.body);
 
 });
