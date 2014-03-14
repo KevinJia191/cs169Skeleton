@@ -87,9 +87,12 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	});
     }
 
+    /*
+     * Clears all records that match the given constraints on primary key fields. For example you can delete all records for someone of a given username, or
+     * delete all records of a given username and a given ingredient name. Warning: if all primary key fields are null, the whole database will be cleared.
+     */
     this.clear = function(callback) {
 	var self = this;
-	console.log("YO THIS RAN BRO");
 	var removeQuery = "delete from ingredients where "+self.createConstraints();
 	console.log(removeQuery);
 	self.connection.query(removeQuery, function(err, result) {

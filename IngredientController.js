@@ -44,6 +44,18 @@ var IngredientController = function(res) {
 	    res.end(JSON.stringify(json));
 	});
     }
+
+    this.clearAll = function(postRequest) {
+	var ingredientModel = new IngredientModel();
+	ingredientModel.connect();
+	ingredientModel.clear(function (err, result) {
+	    ingredientModel.end();
+	    var json = {errCode : err};
+	    res.header('Content-Type', 'application/json');
+	    res.end(JSON.stringify(json));
+	});
+    }
+
     // postRequest is a json containing the fields: user
     this.getInventory = function(postRequest) {
         var ingredientModel = new IngredientModel(postRequest["user"]);
