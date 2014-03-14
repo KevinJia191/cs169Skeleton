@@ -1,4 +1,6 @@
 var pg = require('pg');
+var constantModel = require('./Constants.js');
+var CONSTANTS = new constantModel();
 
 /*
 Model for a "History" element : primary key'd by (username, recipe_name, date_created), to ensure one recipe per day by each user
@@ -29,21 +31,21 @@ function Recipe(username, recipe_name, date_created, rating){
                         this.connection.query(makeQuery, function(err, result){
                             if(err){
                                 console.error(err);
-                                jsonObject.errCode = Recipe.ERROR;
+                                jsonObject.errCode = CONSTANTS.ERROR;
                                 var jsonForm = JSON.stringify(jsonObject);
                                 callback(jsonForm);
                                 return;
                             }
-                            jsonObject.errCode = Recipe.SUCCESS;
-                            var madeEntry = "(" + this.username + "," + this.recipe_name + "," + this.current_date + "," + this.rating + ")";
-                            jsonObject.madeEntry = madeEntry;
+                            jsonObject.errCode = CONSTANTS.SUCCESS;
+                            //var madeEntry = "(" + this.username + "," + this.recipe_name + "," + this.current_date + "," + this.rating + ")";
+                            //jsonObject.madeEntry = madeEntry;
                             var jsonForm = JSON.stringify(jsonObject);
                             callback(jsonForm);
                             return;
                         });
                     }
                     else{
-                        jsonObject.errCode = Recipe.ERR_CREATED_ALREADY;
+                        jsonObject.errCode = CONSTANTS.ERR_RECIPE_CREATED_ALREADY;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
                         return;
@@ -51,7 +53,7 @@ function Recipe(username, recipe_name, date_created, rating){
                 });
             }
             else{
-                jsonObject.errCode = Recipe.INVAL_USER;
+                jsonObject.errCode = CONSTANTS.ERR_USER_NOTFOUND;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
@@ -65,14 +67,13 @@ function Recipe(username, recipe_name, date_created, rating){
         this.connection.query(deleteQuery, function(err, result){
             if(err){
                 console.error(err);
-                jsonObject.errCode = Recipe.ERROR;
+                jsonObject.errCode = CONSTANTS.ERROR;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
             }
             
-            jsonObject.errCode = Recipe.SUCCESS;
-            jsonObject.deletedEntry = "deletedAll";
+            jsonObject.errCode = CONSTANTS.SUCCESS;
             var jsonForm = JSON.stringify(jsonObject);
             callback(jsonForm);
         });
@@ -87,20 +88,20 @@ function Recipe(username, recipe_name, date_created, rating){
                 this.connection.query(getHistoryQuery, function(err, result){
                     if(err){
                         console.error(err);
-                        jsonObject.errCode = Recipe.ERROR;
+                        jsonObject.errCode = CONSTANTS.ERROR;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
                         return;
                     }
                     jsonObject.userHistory = result.rows;
-                    jsonObject.errCode = Recipe.SUCCESS;
+                    jsonObject.errCode = CONSTANTS.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 });
             }
             else{
-                jsonObject.errCode = Recipe.INVAL_USER;
+                jsonObject.errCode = CONSTANTS.INVAL_USER;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
@@ -127,9 +128,10 @@ function Recipe(username, recipe_name, date_created, rating){
         this.connection.end();
     }
 }
+/*
 Recipe.SUCCESS = "SUCCESS";
 Recipe.INVAL_USER = "INVAL_USER"
 Recipe.ERR_CREATED_ALREADY = "ERR_CREATED_ALREADY";
 Recipe.ERROR = "ERROR";
-
+*/
 module.exports = Recipe;
