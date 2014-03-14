@@ -23,12 +23,12 @@ function Recipe(username, recipe_name, date_created, rating){
                         this.connection.query(makeQuery, function(err, result){
                             if(err){
                                 console.error(err);
-                                jsonObject.errCode = ERROR;
+                                jsonObject.errCode = Recipe.ERROR;
                                 var jsonForm = JSON.stringify(jsonObject);
                                 callback(jsonForm);
                                 return;
                             }
-                            jsonObject.errCode = SUCCESS;
+                            jsonObject.errCode = Recipe.SUCCESS;
                             var madeEntry = "(" + postRequest.user + "," + postRequest.recipe_name + "," + postRequest.current_date + "," + postRequest.rating + ")";
                             jsonObject.madeEntry = madeEntry;
                             var jsonForm = JSON.stringify(jsonObject);
@@ -37,7 +37,7 @@ function Recipe(username, recipe_name, date_created, rating){
                         });
                     }
                     else{
-                        jsonObject.errCode = ERR_CREATED_ALREADY;
+                        jsonObject.errCode = Recipe.ERR_CREATED_ALREADY;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
                         return;
@@ -45,7 +45,7 @@ function Recipe(username, recipe_name, date_created, rating){
                 });
             }
             else{
-                jsonObject.errCode = INVAL_USER;
+                jsonObject.errCode = Recipe.INVAL_USER;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
@@ -58,13 +58,13 @@ function Recipe(username, recipe_name, date_created, rating){
         this.connection.query("DELETE FROM HISTORY WHERE username=\' " + postRequest.user + "\'", function(err, result){
             if(err){
                 console.error(err);
-                jsonObject.errCode = ERROR;
+                jsonObject.errCode = Recipe.ERROR;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
             }
             
-            jsonObject.errCode = SUCCESS;
+            jsonObject.errCode = Recipe.SUCCESS;
             jsonObject.deletedEntry = "deletedAll";
             var jsonForm = JSON.stringify(jsonObject);
             callback(jsonForm);
@@ -77,20 +77,20 @@ function Recipe(username, recipe_name, date_created, rating){
                 this.connection.query("SELECT * FROM history H WHERE username=\'" + postRequest.user + "\'", function(err, result){
                     if(err){
                         console.error(err);
-                        jsonObject.errCode = ERROR;
+                        jsonObject.errCode = Recipe.ERROR;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
                         return;
                     }
                     jsonObject.userHistory = result.rows;
-                    jsonObject.errCode = SUCCESS;
+                    jsonObject.errCode = Recipe.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 });
             }
             else{
-                jsonObject.errCode = INVAL_USER;
+                jsonObject.errCode = Recipe.INVAL_USER;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
