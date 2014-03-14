@@ -68,9 +68,8 @@ function UserModel(username, password){
         console.log("CONNECTION OCCURED");
         //this.connection = new pg.Client(process.env.DATABASE_URL);
         var params = { host: 'ec2-54-197-238-8.compute-1.amazonaws.com',user: 'zbbaxdqhmzxnwh',password: '8WEQZA6SCS4P911KYoKY0lNvpO',database: 'de0l8cfdtcishp',ssl: true };
-        this.connection = new pg.Client(params);
+        this.connection = new pg.Client(process.env.DATABASE_URL);
         this.connection.connect();
-        console.log(this.connection==undefined);
         callback();
     }
     
