@@ -251,12 +251,10 @@ app.get('/recipes/getRecipeData', function(req, res) {
 app.get('/recipes/history', function(req, res) {
     res.header('Content-Type', 'application/json');
 
-    var historyController = new HistoryController(null);
+    var historyController = new HistoryController(res);
     var stubJson = {user : "testUser"};
     
-    historyController.getHistory(stubJson, function(resultingJson){
-        res.end(resultingJson);
-    });
+    historyController.getHistory(stubJson);
 });
 
 app.post('/recipes/make', function(req, res) {
@@ -264,16 +262,15 @@ app.post('/recipes/make', function(req, res) {
     //example
     //process req, res to get stuff
     
-    var historyController = new HistoryController(null);
+    var historyController = new HistoryController(res);
     var stubJson = {user : "testUser",
                     recipe_name : "Onion Soup",
                     current_date : "2/2/2",
                     rating : 3
                    };
     
-    historyController.make(stubJson, function(resultingJson){
-        res.end(resultingJson);
-    });
+    historyController.getHistory(stubJson);
+
 });
 
 app.post('/recipes/deleteAllHistory', function(req, res) {
@@ -281,12 +278,10 @@ app.post('/recipes/deleteAllHistory', function(req, res) {
     //example
     //process req, res to get stuff
     
-    var historyController = new HistoryController(null);
+    var historyController = new HistoryController(res);
     var stubJson = {user : "testUser"};
     
-    historyController.clearHistory(stubJson, function(resultingJson){
-        res.end(resultingJson);
-    });
+    historyController.clearHistory(stubJson);
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {

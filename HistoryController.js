@@ -8,46 +8,48 @@ var db = new sqlite3.Database(file);
 */
 var HistoryModel = require('./Recipe.js');
 
-var HistoryController = function(request, unitTesting) {
+var HistoryController = function(res, unitTesting) {
 
-    this.request = request;
+    this.res = res;
 
     
     // postRequest is a json containing the fields: user, recipe_name, current_date, rating
-    this.make = function(postRequest, callback) {
+    this.make = function(postRequest) {
         var jsonObject = {};     
   
         if(unitTesting){
             unitTestMake(postRequest, function(){
                 jsonObject.errCode = SUCCESS;
                 jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
+                res.header('Content-Type', 'application/json');
+                res.end(JSON.stringify(json));
                 return;
             });
         } 
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();
-        historyModel.make(postRequest, function (resultingJson) {
+        historyModel.make(function (resultingJson) {
             historyModel.end();
             callback(resultingJson);
         });
     }
 
     // postRequest is a json containing the fields: user
-    this.getHistory = function(postRequest, callback) {
+    this.getHistory = function(postRequest) {
         var jsonObject = {};
         if(unitTesting){
-            unitTestGetHistory(postRequest, function(history){
+            unitTestGetHistory(function(history){
                 jsonObject.errCode = SUCCESS;
                 jsonObject.history = history;
                 jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
+                res.header('Content-Type', 'application/json');
+                res.end(JSON.stringify(json));
                 return;
             });
         } 
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();
-        historyModel.getAllHistoryFromUser(postRequest, function (resultingJson) {
+        historyModel.getAllHistoryFromUser(function (resultingJson) {
             historyModel.end();
             callback(resultingJson);
         });
@@ -60,13 +62,14 @@ var HistoryController = function(request, unitTesting) {
             unitTestClearHistory(postRequest, function(){
                 jsonObject.errCode = SUCCESS;
                 jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
+                res.header('Content-Type', 'application/json');
+                res.end(JSON.stringify(json));               
                 return;
             });
         } 
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();
-        historyModel.clearAllHistoryFromUser(postRequest, function (resultingJson) {
+        historyModel.clearAllHistoryFromUser(function (resultingJson) {
             historyModel.end();
             callback(resultingJson);
         });
