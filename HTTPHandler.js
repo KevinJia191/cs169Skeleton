@@ -291,14 +291,10 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
         done();
         if(err) return console.error(err);
       });
-    });
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       client.query('DELETE from history', function(err, result) {
         done();
         if(err) return console.error(err);
       });
-    });
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       client.query('DELETE from ingredients', function(err, result) {
         done();
         if(err) return console.error(err);
