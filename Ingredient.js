@@ -12,10 +12,14 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.quantity = quantity;
     this.unit = unit;
     this.connnection = null;
+    this.parser = null;
     this.sortField = null;
     this.sortBy = null;
     this.start = null;
     this.end = null;
+    this.validUnits = { "oz" : true, "count": true};
+    // null means conversion isn't allowed. This contains all combinations where [a,b] means that a is lexicographically less than b.
+    this.conversion = {"count/oz": null} 
     
     /* 
      * Adds the ingredient to the User's inventory.
@@ -117,7 +121,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    }
 	}
 	this.connection.query(selectQuery, function(err, result) {
-	    callback(Ingredient.SUCCESS, self.parseDBResult(result));
+	    callback(Ingredient.SUCCESS, self.parser.parseIngredient(result));
 	});
     }
 
@@ -149,19 +153,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	}
 	return query;
     }
-    
-    this.parseDBResult = function(result) {
-	var ingredients = new Array();
-	if (result.rows.length == 0) {
-	    return ingredients;
-	}
-	for (index = 0; index < result.rows.length; index++) {
-	    var row = result.rows[index];
-	    var ingredient = new Ingredient(row["username"], row["ingredient_name"], row["expiration_date"], row["quantity"], row["unit"]);
-	    ingredients[index] = ingredient;
-	}
-	return ingredients;
-    }
 
     /*
      * Checks whether an ingredient exists with the specified parameters passed into the constructor.
@@ -187,9 +178,11 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 
 
     this.setParser = function(parser) {
+	this.parser = parser;
     }
 
     this.getParser = function() {
+	return this.parser;
     }
 
     this.connect = function() {

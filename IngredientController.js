@@ -1,6 +1,7 @@
 var pg = require('pg');
 var IngredientModel = require('./Ingredient.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('./PostgreSQLParser.js');
 var IngredientController = function(res) {
 
     this.res = res;
@@ -9,6 +10,7 @@ var IngredientController = function(res) {
 	var ingredientModel = new IngredientModel(postRequest["user"], postRequest["ingredient_name"], postRequest["expiration_date"], postRequest["quantity"], postRequest["unit"]);
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new PostgreSQLParser());
 	ingredientModel.connect();
 	ingredientModel.add(function (err, result) {
 	    ingredientModel.end();
@@ -26,6 +28,7 @@ var IngredientController = function(res) {
 	var ingredientModel = new IngredientModel(postRequest["user"], postRequest["ingredient_name"], postRequest["expiration_date"], postRequest["quantity"], postRequest["unit"]);
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new PostgreSQLParser());
 	ingredientModel.connect();
 	ingredientModel.remove(function (err, result) {
 	    ingredientModel.end();
@@ -43,6 +46,7 @@ var IngredientController = function(res) {
 	var ingredientModel = new IngredientModel(postRequest["user"]);
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new PostgreSQLParser());
 	ingredientModel.connect();
 	ingredientModel.clear(function (err, result) {
 	    ingredientModel.end();
@@ -56,6 +60,7 @@ var IngredientController = function(res) {
 	var ingredientModel = new IngredientModel(postRequest["user"]);
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new PostgreSQLParser());
 	ingredientModel.connect();
 	ingredientModel.clear(function (err, result) {
 	    ingredientModel.end();
@@ -70,6 +75,7 @@ var IngredientController = function(res) {
         var ingredientModel = new IngredientModel(postRequest["user"]);
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new PostgreSQLParser());
 	ingredientModel.connect();
 	ingredientModel.get(function (err, result) {
 	    ingredientModel.end();
