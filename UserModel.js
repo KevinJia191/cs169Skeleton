@@ -6,7 +6,7 @@ function UserModel(username, password){
     this.password = password
     this.connection = null;
     
-    this.signUp = function(postRequest, callback) { 
+    this.signUp = function(callback) { 
         var jsonObject = {};
         
         var inputQuery = "INSERT INTO users (username, hashed_password) VALUES ("+ this.username + "," +this.password +")";
