@@ -37,6 +37,7 @@ function Recipe(username, recipe_name, date_created, rating){
                                 callback(jsonForm);
                                 return;
                             }
+                            console.log("WE HAVE A SUCESS");
                             jsonObject.errCode = CONSTANTS.SUCCESS;
                             //var madeEntry = "(" + this.username + "," + this.recipe_name + "," + this.current_date + "," + this.rating + ")";
                             //jsonObject.madeEntry = madeEntry;
