@@ -1,11 +1,14 @@
 var pg = require('pg');
 var IngredientModel = require('./Ingredient.js');
+var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 var IngredientController = function(res) {
 
     this.res = res;
     // postRequest is a json containing fields: user, ingredient_name, quantity, unit, expiration_date
     this.addIngredient = function(postRequest) {
 	var ingredientModel = new IngredientModel(postRequest["user"], postRequest["ingredient_name"], postRequest["expiration_date"], postRequest["quantity"], postRequest["unit"]);
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+	ingredientModel.setDatabaseModel(db);
 	ingredientModel.connect();
 	ingredientModel.add(function (err, result) {
 	    ingredientModel.end();
@@ -21,6 +24,8 @@ var IngredientController = function(res) {
     // postRequest is a json containing fields: user, ingredient_name, quantity, expiration_date
     this.removeIngredient = function(postRequest) {
 	var ingredientModel = new IngredientModel(postRequest["user"], postRequest["ingredient_name"], postRequest["expiration_date"], postRequest["quantity"], postRequest["unit"]);
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+	ingredientModel.setDatabaseModel(db);
 	ingredientModel.connect();
 	ingredientModel.remove(function (err, result) {
 	    ingredientModel.end();
@@ -36,6 +41,8 @@ var IngredientController = function(res) {
     // postRequest is a json containing the fields: user
     this.removeAll = function(postRequest) {
 	var ingredientModel = new IngredientModel(postRequest["user"]);
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+	ingredientModel.setDatabaseModel(db);
 	ingredientModel.connect();
 	ingredientModel.clear(function (err, result) {
 	    ingredientModel.end();
@@ -44,9 +51,25 @@ var IngredientController = function(res) {
 	    res.end(JSON.stringify(json));
 	});
     }
+
+    this.clearAll = function(postRequest) {
+	var ingredientModel = new IngredientModel();
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+	ingredientModel.setDatabaseModel(db);
+	ingredientModel.connect();
+	ingredientModel.clear(function (err, result) {
+	    ingredientModel.end();
+	    var json = {errCode : err};
+	    res.header('Content-Type', 'application/json');
+	    res.end(JSON.stringify(json));
+	});
+    }
+
     // postRequest is a json containing the fields: user
     this.getInventory = function(postRequest) {
         var ingredientModel = new IngredientModel(postRequest["user"]);
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+	ingredientModel.setDatabaseModel(db);
 	ingredientModel.connect();
 	ingredientModel.get(function (err, result) {
 	    ingredientModel.end();

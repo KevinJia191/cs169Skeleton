@@ -87,9 +87,9 @@ function UserModel(username, password){
     //{errCode:SUCCESS} if success
     //{errCode:ERR_USER_EXISTS} if user exists
     //{errcode:ERR_INVAL_CRED} if username exists but password does not match
-USER.SUCCESS = "SUCCESS";
-USER.ERR_USER_EXISTS = "ERR_USER_EXISTS"
-USER.ERR_INVAL_CRED = "ERR_INVAL_CRED";
+UserModel.SUCCESS = "SUCCESS";
+UserModel.ERR_USER_EXISTS = "ERR_USER_EXISTS"
+UserModel.ERR_INVAL_CRED = "ERR_INVAL_CRED";
 
 module.exports = UserModel;
 
