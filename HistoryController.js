@@ -22,7 +22,7 @@ var HistoryController = function(res, unitTesting) {
                 jsonObject.errCode = SUCCESS;
                 jsonForm = JSON.stringify(jsonObject);
                 res.header('Content-Type', 'application/json');
-                res.end(JSON.stringify(json));
+                res.end(jsonForm);
                 return;
             });
         } 
@@ -30,7 +30,8 @@ var HistoryController = function(res, unitTesting) {
         historyModel.connect();
         historyModel.make(function (resultingJson) {
             historyModel.end();
-            callback(resultingJson);
+            res.header('Content-Type', 'application/json');
+            res.end(resultingJson);
         });
     }
 
@@ -43,7 +44,7 @@ var HistoryController = function(res, unitTesting) {
                 jsonObject.history = history;
                 jsonForm = JSON.stringify(jsonObject);
                 res.header('Content-Type', 'application/json');
-                res.end(JSON.stringify(json));
+                res.end(jsonForm);
                 return;
             });
         } 
@@ -51,7 +52,8 @@ var HistoryController = function(res, unitTesting) {
         historyModel.connect();
         historyModel.getAllHistoryFromUser(function (resultingJson) {
             historyModel.end();
-            callback(resultingJson);
+            res.header('Content-Type', 'application/json');
+            res.end(resultingJson);
         });
     }
     
@@ -63,7 +65,7 @@ var HistoryController = function(res, unitTesting) {
                 jsonObject.errCode = SUCCESS;
                 jsonForm = JSON.stringify(jsonObject);
                 res.header('Content-Type', 'application/json');
-                res.end(JSON.stringify(json));               
+                res.end(jsonForm);               
                 return;
             });
         } 
@@ -71,7 +73,8 @@ var HistoryController = function(res, unitTesting) {
         historyModel.connect();
         historyModel.clearAllHistoryFromUser(function (resultingJson) {
             historyModel.end();
-            callback(resultingJson);
+            res.header('Content-Type', 'application/json');
+            res.end(resultingJson);
         });
     }
     /*

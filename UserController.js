@@ -17,7 +17,7 @@ var UserController = function(request) {
 
         var user = postRequest.username;
         //Checking if name formatted correctly
-        if(username === null || username.length > 128 || typeof username === 'undefined') {
+        if(user === null || user.length > 128 || typeof user === 'undefined') {
             callback(JSON.stringify({errCode:'ERROR'}));
             return;
         }
@@ -43,7 +43,7 @@ var UserController = function(request) {
 
         var user = postRequest.username;
         //Checking if name formatted correctly
-        if(username === null || username.length > 128 || typeof username === 'undefined') {
+        if(user === null || user.length > 128 || typeof user === 'undefined') {
             callback(JSON.stringify({errCode:'ERR_INVAL_CRED'}));
             return;
         }
