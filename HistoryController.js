@@ -1,11 +1,11 @@
 var pg = require('pg');
-
+/*
 var fs = require("fs");
 var file = "test.db";
 var exists = fs.existsSync(file);
 var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database(file);
-
+*/
 var HistoryModel = require('./Recipe.js');
 
 var HistoryController = function(request, unitTesting) {
@@ -143,7 +143,7 @@ var HistoryController = function(request, unitTesting) {
             });
         });
     }
-    
+    /*
     this.unitTestSetup = function(){
         db.serialize(function() {
             if(!exists) {
@@ -217,6 +217,7 @@ var HistoryController = function(request, unitTesting) {
         db.close();
         callback();
     }
+    */
 }
 
 
