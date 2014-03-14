@@ -40,8 +40,9 @@ var UserController = function(request) {
     //{errCode:SUCCESS} if login succeeds
     //{errcode:ERR_INVAL_CRED}
     this.login = function (postRequest,callback) {
-
+        console.log(postRequest);
         var user = postRequest.username;
+        console.log("User is " + user);
         //Checking if name formatted correctly
         if(user === null || user.length > 128 || typeof user === 'undefined') {
             callback(JSON.stringify({errCode:'ERR_INVAL_CRED'}));
