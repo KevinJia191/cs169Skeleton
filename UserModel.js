@@ -9,7 +9,7 @@ function UserModel(username, password){
     this.signUp = function(postRequest, callback) { 
         var jsonObject = {};
         
-        var inputQuery = "INSERT INTO the table ";
+        var inputQuery = "INSERT INTO users (username, hashed_password) VALUES ("+ this.username + "," +this.password +")";
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
 
         this.connection.query(testUserQuery, function(err, result){
@@ -43,8 +43,8 @@ function UserModel(username, password){
         this.connection.query(testUserQuery, function(err, result){
             if(result.rows.length>0){
 
-                //check password
-                if("password not correct") {
+                //CASE: PASSWORD NOT CORRECT
+                if(result.rows.hashed_password != this.password) {
                     jsonObject.errCode = USER.ERR_INVAL_CRED;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
