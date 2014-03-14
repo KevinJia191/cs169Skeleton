@@ -24,7 +24,7 @@ app.get('/', function(req, res) {
   res.write('<form action="recipes/history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
   res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="TestSearch" onclick=this.form.action="recipes/search"></form>');
   res.write('<form action="recipes/deleteAllHistory" method="post"><input type="text" name="username">Clear History<input type="submit" value="delete all history post Button"></form>');
-  res.write('<form action="recipes/make" method="post"><input type="text" name="username">Make <input type="submit" value="delete all history post Button"></form>');
+  res.write('<form action="recipes/make" method="post"><input type="text" name="username"><input type="text" name="recipe_name"><input type="text" name="date_created"><input type="text" name="rating">Make <input type="submit" value="Make"></form>');
   res.write('<form action="TESTAPI/resetFixture" method="post"><input type="text" name="username">RESET API <input type="submit" value="RESETTABLES"></form>');
 
   res.end('</body></html>');
@@ -253,9 +253,7 @@ app.get('/recipes/history', function(req, res) {
     res.header('Content-Type', 'application/json');
 
     var historyController = new HistoryController(res);
-    var stubJson = {user : "testUser"};
-    
-    historyController.getHistory(stubJson);
+    historyController.getHistory(req.body);
 });
 
 app.post('/recipes/make', function(req, res) {
@@ -263,14 +261,8 @@ app.post('/recipes/make', function(req, res) {
     //example
     //process req, res to get stuff
     
-    var historyController = new HistoryController(res);
-    var stubJson = {user : "testUser",
-                    recipe_name : "Onion Soup",
-                    current_date : "2/2/2",
-                    rating : 3
-                   };
-    
-    historyController.make(stubJson);
+    var historyController = new HistoryController(res);    
+    historyController.make(req.body);
 
 });
 
@@ -280,9 +272,9 @@ app.post('/recipes/deleteAllHistory', function(req, res) {
     //process req, res to get stuff
     
     var historyController = new HistoryController(res);
-    var stubJson = {user : "testUser"};
+    //var stubJson = {user : "testUser"};
     
-    historyController.clearHistory(stubJson);
+    historyController.clearHistory(req.body);
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {

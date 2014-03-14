@@ -8,7 +8,7 @@ var db = new sqlite3.Database(file);
 */
 var HistoryModel = require('./Recipe.js');
 
-var HistoryController = function(res, unitTesting) {
+var HistoryController = function(res) {
 
     this.res = res;
 
@@ -17,15 +17,6 @@ var HistoryController = function(res, unitTesting) {
     this.make = function(postRequest) {
         var jsonObject = {};     
   
-        if(unitTesting){
-            unitTestMake(postRequest, function(){
-                jsonObject.errCode = SUCCESS;
-                jsonForm = JSON.stringify(jsonObject);
-                res.header('Content-Type', 'application/json');
-                res.end(jsonForm);
-                return;
-            });
-        } 
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();
         historyModel.make(function (resultingJson) {
@@ -38,16 +29,6 @@ var HistoryController = function(res, unitTesting) {
     // postRequest is a json containing the fields: user
     this.getHistory = function(postRequest) {
         var jsonObject = {};
-        if(unitTesting){
-            unitTestGetHistory(function(history){
-                jsonObject.errCode = SUCCESS;
-                jsonObject.history = history;
-                jsonForm = JSON.stringify(jsonObject);
-                res.header('Content-Type', 'application/json');
-                res.end(jsonForm);
-                return;
-            });
-        } 
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();
         historyModel.getAllHistoryFromUser(function (resultingJson) {
@@ -60,15 +41,6 @@ var HistoryController = function(res, unitTesting) {
     // postRequest is a json containing the fields: user
     this.clearHistory = function(postRequest, callback) {
         var jsonObject = {};
-        if(unitTesting){
-            unitTestClearHistory(postRequest, function(){
-                jsonObject.errCode = SUCCESS;
-                jsonForm = JSON.stringify(jsonObject);
-                res.header('Content-Type', 'application/json');
-                res.end(jsonForm);               
-                return;
-            });
-        } 
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
         historyModel.connect();
         historyModel.clearAllHistoryFromUser(function (resultingJson) {

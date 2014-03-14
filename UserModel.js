@@ -1,4 +1,5 @@
 var pg = require('pg');
+var Constants = require('./Constants.js');
 
 //should extend the ActiveRecord class
 function UserModel(username, password){
@@ -15,14 +16,14 @@ function UserModel(username, password){
         this.connection.query(testUserQuery, function(err, result){
             // return error, user already in database
             if(result.rows.length>0){
-                jsonObject.errCode = UserModel.ERR_USER_EXISTS;
+                jsonObject.errCode = Constants.ERR_USER_EXISTS;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
             }
         });
         this.connection.query(inputQuery, function (err, result) {
-            jsonObject.errCode = UserModel.SUCCESS;
+            jsonObject.errCode = Constants.SUCCESS;
             var jsonForm = JSON.stringify(jsonObject);
             callback(jsonForm);
             return;
@@ -39,7 +40,7 @@ function UserModel(username, password){
                 if(result.rows[0].hashed_password === password) {
                     //CASE: PASSWORD CORRECT
                     //return success
-                    jsonObject.errCode = UserModel.SUCCESS;
+                    jsonObject.errCode = Constants.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
@@ -47,7 +48,7 @@ function UserModel(username, password){
                 
             }
             //CASE: USER NOT IN DATABASE OR PASSWORD NOT CORRECT
-            jsonObject.errCode = UserModel.ERR_INVAL_CRED;
+            jsonObject.errCode = Constants.ERR_INVAL_CRED;
             var jsonForm = JSON.stringify(jsonObject);
             callback(jsonForm);
             return;
@@ -80,9 +81,6 @@ function UserModel(username, password){
     //{errCode:SUCCESS} if success
     //{errCode:ERR_USER_EXISTS} if user exists
     //{errcode:ERR_INVAL_CRED} if username exists but password does not match
-UserModel.SUCCESS = "SUCCESS";
-UserModel.ERR_USER_EXISTS = "ERR_USER_EXISTS"
-UserModel.ERR_INVAL_CRED = "ERR_INVAL_CRED";
 
 module.exports = UserModel;
 
