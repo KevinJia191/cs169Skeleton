@@ -61,7 +61,7 @@ class TestLogin(testLib.RestTestCase):
         respData2 = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'wrong password'} )
         self.assertResponse(respData2, None, testLib.RestTestCase.ERR_BAD_CREDENTIALS)
  
- """
+"""
 class TestFail(testLib.RestTestCase):
     def assertResponse(self, respData, count = 1, errCode = testLib.RestTestCase.ERR_BAD_USERNAME):
         expected = { 'errCode' : errCode }

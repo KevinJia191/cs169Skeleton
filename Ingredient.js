@@ -1,5 +1,5 @@
 var pg = require('pg');
-
+var Constants = require('./Constants.js');
 /*
 * Model for an ingredient. username, ingredient_name, expiration_date are primary keys.
 * All methods in here have a callback function of format function(err, result);
@@ -36,7 +36,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.get(function(err, result) {
 	    // the item is not currently in the database, so we can directly insert it.
 	    if (result.length == 0) { 
-		console.log("YOLO");
 		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
 		console.log(addQuery);
 		self.connection.query(addQuery, function(err, result) {
@@ -124,7 +123,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	}
 	this.connection.query(selectQuery, function(err, result) {
 	    var x = self.parser.parseIngredient(result);
-	    console.log("erp");
 	    callback(Constants.SUCCESS, x);
 	});
     }
@@ -206,15 +204,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.limit = limit;
     }
 }
-
-Ingredient.SUCCESS = 3;
-Ingredient.SUCCESS_ADDED = 1;
-Ingredient.SUCCESS_UPDATED = 2;
-Ingredient.NEGATIVE_QUANTITY = -1;
-Ingredient.DATE_ERROR = -2;
-Ingredient.ERROR = -3;
-Ingredient.DOESNT_EXIST = -4;
-
 
 
 module.exports = Ingredient;
