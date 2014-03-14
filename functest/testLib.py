@@ -20,6 +20,7 @@ class RestTestCase(unittest.TestCase):
     ERR_USER_EXISTS     = -2     #: (for add only) trying to add a user that already exists
     ERR_BAD_USERNAME    = -3     #: (for add, or login) invalid user name (only empty string is invalid for now)
     ERR_BAD_PASSWORD    = -4
+    INGREDIENT_SUCCESS  = 1
     
     # Lookup the name of the server to test
     serverToTest = "localhost:5000"
@@ -94,7 +95,7 @@ class RestTestCase(unittest.TestCase):
         
     def setUp(self):
         self.conn = httplib.HTTPConnection(RestTestCase.serverToTest, timeout=1)
-        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        #self.makeRequest("/TESTAPI/resetFixture", method="POST")
         
     def tearDown(self):
         self.conn.close ()
