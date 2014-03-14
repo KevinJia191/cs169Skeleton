@@ -38,7 +38,7 @@ function Recipe(username, recipe_name, date_created, rating){
                     console.log("err2 is " + err);
                     console.log("result is " + result);
                     console.log("3");
-                    if(result == undefined){
+                    if(result.rows.length == 0){
                         //Did not fail already made today check
                         self.connection.query(makeQuery, function(err, result){
                             if(err){
