@@ -167,12 +167,12 @@ app.post('/users/signup', function(req, res) {
   var userController = new UserController(null);
   
   //START REQUEST
-  var jsonToReturn = userController.signup(signinJSON);
-  var jsonForm = JSON.stringify(jsonToReturn);
+  userController.signup(signinJSON, function(resultingJson){
+    //RETURN RESULT
+    res.end(resultingJson);
 
-  //RETURN RESULT
-  res.end(jsonForm);
-
+    });
+  
   console.log(res.body);
 });
 
@@ -190,11 +190,11 @@ app.post('/users/login', function(req, res) {
   var userController = new UserController(null);
   
   //START REQUEST
-  var jsonToReturn = userController.login(loginJSON);
-  var jsonForm = JSON.stringify(jsonToReturn);
-
-  //RETURN RESULT
-  res.end(jsonForm);
+  userController.login(loginJSON, function(resultingJson) {
+    //RETURN RESULT
+    res.end(resultingJson);
+  });
+  
  
   console.log(res.body);
 });
