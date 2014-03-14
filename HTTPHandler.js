@@ -290,16 +290,31 @@ app.post('/recipes/deleteAllHistory', function(req, res) {
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
-    
-    var historyController = new HistoryController(null);
-    var stubJson = {user : "testUser"};
-    
-    historyController.clearHistory(stubJson, function(resultingJson){
-        res.end(resultingJson);
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('DELETE from users', function(err, result) {
+        done();
+        if(err) return console.error(err);
+      });
     });
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('DELETE from history', function(err, result) {
+        done();
+        if(err) return console.error(err);
+      });
+    });
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('DELETE from ingredients', function(err, result) {
+        done();
+        if(err) return console.error(err);
+      });
+    });
+    var new_son = {
+      errCode: 1
+    }
+    var format_son = JSON.stringify(new_son);
+    res.write(format_son);
+    res.end();
+
 });
 
 var port = Number(process.env.PORT || 5000);
