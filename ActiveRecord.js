@@ -1,7 +1,7 @@
 /*
  * Abstract base class of all models.
  * The callback function taken by each function should be of the form
- * function(err, result); where err is an error message and result is the returned object.
+ * function(err, result); where err is an error message and result is the returned object representing the result.
 */
 
 function ActiveRecord() {
@@ -13,7 +13,7 @@ function ActiveRecord() {
     }
 
     /*
-     * Removes the record from the database set with setDatabaseModel.
+     * Removes the records from the database set with setDatabaseModel.
      */
     this.remove = function(callback) {
     }
@@ -39,11 +39,32 @@ function ActiveRecord() {
 
     }
 
+    this.getDatabaseModel = function() {
+    }
+
+    this.setParser = function(parser) {
+    }
+
+    this.getParser = function() {
+    }
+
+
     /*
-     * Sets how the list returned by get is sorted by.
+     * Connect to the database. It must be set to call this, or it will fail.
+     */
+    this.connect = function() {
+    }
+
+    /*
+     * End the connection started when connect is called.
+     */
+    this.end = function() {
+    }
+
+    /*
+     * Sets how the list returned by get is sorted by. sortField is the field to sort on. sortBy is either "ASC" or "DESC" (ascending/descending). limit 
      *
      */
-    this.setSort = function(sortby) {
-
+    this.setSort = function(sortField, sortBy, limit) {
     }
 }

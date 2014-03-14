@@ -212,13 +212,13 @@ app.post('/ingredients/remove', function(req, res) {
 });
 
 app.post('/ingredients/removeAll', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    //example
-    //process req, res to get stuff
-    var ingredientController = new IngredientController(null);
-    var jsonObject = ingredientController.removeAll(null);
-    var jsonForm = JSON.stringify(jsonObject);
-    res.end(jsonForm);
+    var ingredientController = new IngredientController(res);
+    var jsonObject = ingredientController.removeAll(req.body);
+});
+
+app.post('/ingredients/get', function(req, res) {
+    var ingredientController = new IngredientController(res);
+    var jsonObject = ingredientController.getInventory(req.body);
 });
 
 app.post('/recipes/search', function(req, res) {
