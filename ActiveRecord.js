@@ -32,6 +32,14 @@ function ActiveRecord() {
     this.contains = function(callback) {
     }
 
+
+    /*
+     * Clears all specified records from the database.
+     */
+    this.clear = function(callback)  {
+
+    }
+
     /*
      * Sets the database that this object will connect to.
      */
@@ -62,9 +70,9 @@ function ActiveRecord() {
     }
 
     /*
-     * Sets how the list returned by get is sorted by. sortField is the field to sort on. sortBy is either "ASC" or "DESC" (ascending/descending). limit 
+     * Sets how the list returned by get is sorted by. sortField is the field to sort on. sortBy is either "ASC" or "DESC" (ascending/descending).
      *
      */
-    this.setSort = function(sortField, sortBy, limit) {
+    this.setSort = function(sortField, sortBy, start, end) {
     }
 }

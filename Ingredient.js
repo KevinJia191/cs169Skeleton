@@ -17,6 +17,9 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.sortBy = null;
     this.start = null;
     this.end = null;
+    this.validUnits = { "oz" : true, "count": true};
+    // null means conversion isn't allowed. This contains all combinations where [a,b] means that a is lexicographically less than b.
+    this.conversion = {"count/oz": null} 
     
     /* 
      * Adds the ingredient to the User's inventory.
