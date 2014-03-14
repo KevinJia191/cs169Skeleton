@@ -21,7 +21,6 @@ function Recipe(username, recipe_name, date_created, rating){
                     if(result.rows.length == 0){
                         //Did not fail already made today check
                         this.connection.query(makeQuery, function(err, result){
-                            done();
                             if(err){
                                 console.error(err);
                                 jsonObject.errCode = ERROR;
@@ -57,7 +56,6 @@ function Recipe(username, recipe_name, date_created, rating){
     this.clearAllHistoryFromUser = function(postRequest, callback) {
         var jsonObject = {};
         this.connection.query("DELETE FROM HISTORY WHERE username=\' " + postRequest.user + "\'", function(err, result){
-            done();
             if(err){
                 console.error(err);
                 jsonObject.errCode = ERROR;
@@ -77,7 +75,6 @@ function Recipe(username, recipe_name, date_created, rating){
         this.connection.query("SELECT * FROM users U WHERE username=\'" + postRequest.user + "/'", function(err, result){
             if(result.rows.length > 0){
                 this.connection.query("SELECT * FROM history H WHERE username=\'" + postRequest.user + "\'", function(err, result){
-                    done();
                     if(err){
                         console.error(err);
                         jsonObject.errCode = ERROR;
