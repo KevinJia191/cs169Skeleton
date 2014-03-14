@@ -1,5 +1,5 @@
 var pg = require('pg');
-var constantModel = require('./constantModel.js');
+var constantModel = require('./Constants.js');
 
 /*
 Model for a "History" element : primary key'd by (username, recipe_name, date_created), to ensure one recipe per day by each user
