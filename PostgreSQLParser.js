@@ -1,4 +1,7 @@
 var Ingredient = require('./Ingredient.js');
+var UserModel = require('./UserModel.js');
+var Recipe = require('./Recipe.js');
+
 function PostgreSQLParser() {    
     this.parseIngredient = function(result) {
 	var ingredients = new Array();
@@ -12,5 +15,32 @@ function PostgreSQLParser() {
 	}
 	return ingredients;
     }
+    
+    this.parseUser = function(result) {
+        var users = new Array();
+        if (result.rows.length == 0) {
+            return users;
+        }
+        for (index = 0; index < result.rows.length; index++) {
+            var row = result.rows[index];
+            var user = new UserModel(row["username"], row["hashed_password"]);
+            users[index] = user;
+        }
+        return users;
+    }
+    
+    this.parseHistory = function(result) {
+        var histories = new Array();
+        if (result.rows.length == 0) {
+            return histories;
+        }
+        for (index = 0; index < result.rows.length; index++) {
+            var row = result.rows[index];
+            var history = new Recipe(row["username"], row["recipe_name"], row["dateCreated"], row["rating"]);
+            histories[index] = history;
+        }
+        return histories;
+    }
+    
 }
 module.exports = PostgreSQLParser;

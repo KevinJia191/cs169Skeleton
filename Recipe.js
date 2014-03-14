@@ -1,6 +1,5 @@
 var pg = require('pg');
 var constantModel = require('./Constants.js');
-var CONSTANTS = new constantModel();
 
 /*
 Model for a "History" element : primary key'd by (username, recipe_name, date_created), to ensure one recipe per day by each user
@@ -9,43 +8,67 @@ All callbacks are of the form: function(returningJson)
 function Recipe(username, recipe_name, date_created, rating){
     this.username = username;
     this.recipe_name = recipe_name;
-    this.date_created = date_created;
+    this.current_date = date_created;
     this.rating = rating;
     this.connection = null;
+    this.parser = null;
     
+    var self = this;
     /*
     Make's this Recipe object and inserts into a user's history table
     */
     this.make = function(callback) {
         var jsonObject = {};     
         
-        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'"
-        var testAlreadyMadeQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'" + "AND H.recipe_name=\'" + this.recipe_name + "\'" + "AND H.current_date=" + this.current_date
-        var makeQuery = "INSERT INTO HISTORY VALUES(" + this.username + "," + this.recipe_name + "," + this.current_date + "," + this.rating + ")"
+        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'";
+        var testAlreadyMadeQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'" + "AND H.recipe_name=\'" + this.recipe_name + "\'" + "AND H.dateCreated='" + this.current_date +"'";
+        var makeQuery = "INSERT INTO HISTORY VALUES('" + this.username + "','" + this.recipe_name + "','" + this.current_date + "'," + this.rating + ")";
         
         this.connection.query(testUserQuery, function(err, result){
-            if(result.rows.length>0){
-                this.connection.query(testAlreadyMadeQuery, function(err, result){
-                    if(result.rows.length == 0){
+            if(err){
+                console.error(err);
+                jsonObject.errCode = constantModel.ERROR;
+                var jsonForm = JSON.stringify(jsonObject);
+                callback(jsonForm);
+                return;
+            }
+            console.log("hi");
+            console.log(self.parser);
+            console.log("result is " + result);
+            var queryResult1 = self.parser.parseUser(result);
+            console.log("result is " + result);
+            console.log("hi#2");
+            console.log("hello" + queryResult1);
+            if(queryResult1.length>0){
+                self.connection.query(testAlreadyMadeQuery, function(err, result){
+                    if(err){
+                        console.error(err);
+                        jsonObject.errCode = constantModel.ERROR;
+                        var jsonForm = JSON.stringify(jsonObject);
+                        callback(jsonForm);
+                        return;
+                    }
+                    var queryResult2 = self.parser.parseHistory(result);
+                    if(queryResult2.length == 0){
                         //Did not fail already made today check
-                        this.connection.query(makeQuery, function(err, result){
+                        self.connection.query(makeQuery, function(err, result){
                             if(err){
                                 console.error(err);
-                                jsonObject.errCode = CONSTANTS.ERROR;
+                                jsonObject.errCode = constantModel.ERROR;
                                 var jsonForm = JSON.stringify(jsonObject);
                                 callback(jsonForm);
                                 return;
                             }
-                            jsonObject.errCode = CONSTANTS.SUCCESS;
-                            //var madeEntry = "(" + this.username + "," + this.recipe_name + "," + this.current_date + "," + this.rating + ")";
-                            //jsonObject.madeEntry = madeEntry;
+                            console.log("SUCCESS");
+                            jsonObject.errCode = constantModel.SUCCESS;
                             var jsonForm = JSON.stringify(jsonObject);
                             callback(jsonForm);
                             return;
                         });
                     }
                     else{
-                        jsonObject.errCode = CONSTANTS.ERR_RECIPE_CREATED_ALREADY;
+                        console.log("ERROR RECIPE CREATED ALREADY");
+                        jsonObject.errCode = constantModel.ERR_RECIPE_CREATED_ALREADY;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
                         return;
@@ -53,7 +76,8 @@ function Recipe(username, recipe_name, date_created, rating){
                 });
             }
             else{
-                jsonObject.errCode = CONSTANTS.ERR_USER_NOTFOUND;
+                console.log("CURRENT USER NOT FOUND");
+                jsonObject.errCode = constantModel.ERR_USER_NOTFOUND;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
@@ -67,13 +91,13 @@ function Recipe(username, recipe_name, date_created, rating){
         this.connection.query(deleteQuery, function(err, result){
             if(err){
                 console.error(err);
-                jsonObject.errCode = CONSTANTS.ERROR;
+                jsonObject.errCode = constantModel.ERROR;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
             }
             
-            jsonObject.errCode = CONSTANTS.SUCCESS;
+            jsonObject.errCode = constantModel.SUCCESS;
             var jsonForm = JSON.stringify(jsonObject);
             callback(jsonForm);
         });
@@ -84,24 +108,26 @@ function Recipe(username, recipe_name, date_created, rating){
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
         var getHistoryQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'";
         this.connection.query(testUserQuery, function(err, result){
-            if(result.rows.length > 0){
-                this.connection.query(getHistoryQuery, function(err, result){
+            var queryResult1 = self.parser.parseUser(result);
+            if(queryResult1.length > 0){
+                self.connection.query(getHistoryQuery, function(err, result){
                     if(err){
                         console.error(err);
-                        jsonObject.errCode = CONSTANTS.ERROR;
+                        jsonObject.errCode = constantModel.ERROR;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
                         return;
                     }
-                    jsonObject.userHistory = result.rows;
-                    jsonObject.errCode = CONSTANTS.SUCCESS;
+                    var queryResult2 = self.parser.parseHistory(result);
+                    jsonObject.userHistory = queryResult2;
+                    jsonObject.errCode = constantModel.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 });
             }
             else{
-                jsonObject.errCode = CONSTANTS.INVAL_USER;
+                jsonObject.errCode = constantModel.INVAL_USER;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
@@ -119,8 +145,18 @@ function Recipe(username, recipe_name, date_created, rating){
     this.setSort = function(sortby) {
     }
     
+    this.setParser = function(parser) {
+        this.parser = parser;
+    }
+
+    this.getParser = function() {
+        return this.parser;
+    }
+
+
+    
     this.connect = function() {
-        this.connection = new pg.Client(process.env.DATABASE_URL);
+        //this.connection = new pg.Client(process.env.DATABASE_URL);
         this.connection.connect();
     }
     

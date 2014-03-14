@@ -3,6 +3,8 @@
 //
 
 var UserModel = require('./UserModel.js');
+var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('./PostgreSQLParser.js');
 
 var UserController = function(request) {
 
@@ -23,6 +25,9 @@ var UserController = function(request) {
         }
 
         var userModel = new UserModel(postRequest.user, postRequest.password);
+        userModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
+        userModel.setParser(new PostgreSQLParser());
+        
         userModel.connect(function(){
             userModel.signUp(function(resultingJson) {
             userModel.end();
@@ -52,6 +57,9 @@ var UserController = function(request) {
         }
 
         var userModel = new UserModel(postRequest.user, postRequest.password);
+        userModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
+        userModel.setParser(new PostgreSQLParser());
+        
         userModel.connect(function(){
             userModel.login(function(resultingJson) {
                 userModel.end();
