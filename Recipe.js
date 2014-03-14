@@ -9,7 +9,7 @@ All callbacks are of the form: function(returningJson)
 function Recipe(username, recipe_name, date_created, rating){
     this.username = username;
     this.recipe_name = recipe_name;
-    this.date_created = date_created;
+    this.current_date = date_created;
     this.rating = rating;
     this.connection = null;
     
@@ -22,7 +22,7 @@ function Recipe(username, recipe_name, date_created, rating){
         
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'"
         var testAlreadyMadeQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'" + "AND H.recipe_name=\'" + this.recipe_name + "\'" + "AND H.current_date=" + this.current_date
-        var makeQuery = "INSERT INTO HISTORY VALUES(" + this.username + "," + this.recipe_name + "," + this.current_date + "," + this.rating + ")"
+        var makeQuery = "INSERT INTO HISTORY VALUES('" + this.username + "','" + this.recipe_name + "','" + this.current_date + "','" + this.rating + "')"
         
         console.log(testUserQuery);
         console.log(testAlreadyMadeQuery);
