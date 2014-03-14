@@ -253,9 +253,8 @@ app.get('/recipes/history', function(req, res) {
     res.header('Content-Type', 'application/json');
 
     var historyController = new HistoryController(res);
-    var stubJson = {user : "testUser"};
     
-    historyController.getHistory(stubJson);
+    historyController.getHistory(req.body);
 });
 
 app.post('/recipes/make', function(req, res) {
@@ -264,13 +263,9 @@ app.post('/recipes/make', function(req, res) {
     //process req, res to get stuff
     
     var historyController = new HistoryController(res);
-    var stubJson = {user : "testUser",
-                    recipe_name : "Onion Soup",
-                    current_date : "2/2/2",
-                    rating : 3
-                   };
+
     
-    historyController.make(stubJson);
+    historyController.make(req.body);
 
 });
 
@@ -280,9 +275,9 @@ app.post('/recipes/deleteAllHistory', function(req, res) {
     //process req, res to get stuff
     
     var historyController = new HistoryController(res);
-    var stubJson = {user : "testUser"};
+    //var stubJson = {user : "testUser"};
     
-    historyController.clearHistory(stubJson);
+    historyController.clearHistory(req.body);
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
