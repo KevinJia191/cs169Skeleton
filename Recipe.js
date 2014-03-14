@@ -119,6 +119,5 @@ function Recipe(username, recipe_name, date_created, rating){
     this.end = function(){
         this.connection.end();
     }
-    
-    
 }
+module.exports = Recipe;
