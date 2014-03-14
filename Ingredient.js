@@ -39,7 +39,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    // ingredient is already in the db, so update its quantity
 	    else {
 		console.log("Update ocurring");
-		var newQuantity = result[0]["quantity"] + self.quantity;
+		console.log(result[0]["quantity"]);
+		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
 		var updateQuery = "update ingredients set quantity ="+newQuantity+"where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
 		console.log(updateQuery);
 		self.connection.query(updateQuery, function(err, result) {
