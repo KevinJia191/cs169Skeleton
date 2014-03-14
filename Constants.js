@@ -1,9 +1,3 @@
-Meeting shit to go over
-    -ERRORMODEL/CONSTANTS
-    -ITEARTIONPLANDOC
-    -res.END
-    -PLANNING ITERATION 2
-    -other stuff
 
 function Constants(){
 }
