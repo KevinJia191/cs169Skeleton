@@ -24,7 +24,7 @@ var UserController = function(request) {
 
         var userModel = new UserModel(postRequest.username, postRequest.password);
         userModel.connect();
-        console.log("connection is over, now going to try to signup");
+        //console.log("connection is over, now going to try to signup");
         userModel.signUp(function(resultingJson) {
             userModel.end();
             callback(resultingJson);
