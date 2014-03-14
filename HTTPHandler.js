@@ -274,9 +274,10 @@ app.post('/recipes/deleteAllHistory', function(req, res) {
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {
-  res.header('Content-Type', 'application/json');
+    console.log("/TESTAPI/resetFixture");
+    res.header('Content-Type', 'application/json');
   ///////
-  var params = { host: 'ec2-54-197-238-8.compute-1.amazonaws.com',user: 'zbbaxdqhmzxnwh',password: '8WEQZA6SCS4P911KYoKY0lNvpO',database: 'de0l8cfdtcishp',ssl: true };
+  //var params = { host: 'ec2-54-197-238-8.compute-1.amazonaws.com',user: 'zbbaxdqhmzxnwh',password: '8WEQZA6SCS4P911KYoKY0lNvpO',database: 'de0l8cfdtcishp',ssl: true };
     ////pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       client.query('DELETE from users', function(err, result) {
