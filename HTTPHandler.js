@@ -158,7 +158,7 @@ app.get('/search', function(req, res) {
 
 app.post('/users/signup', function(req, res) {
 
-  console.log("FUNCTION 1"+req.body);
+  console.log(req.body);
    
   //START JSON HEADER
   res.header('Content-Type', 'application/json');
@@ -181,7 +181,7 @@ app.post('/users/signup', function(req, res) {
   
 app.post('/users/login', function(req, res) {
   
-  console.log("FUNCTION 1"+req.body);
+  console.log(req.body);
 
   //START JSON HEADER
   res.header('Content-Type', 'application/json');
@@ -193,7 +193,7 @@ app.post('/users/login', function(req, res) {
   //START REQUEST
   userController.login(loginJSON, function(resultingJson) {
     //RETURN RESULT
-    res.end("SUPERMAN"+resultingJson);
+    res.end(resultingJson);
   });
   
  
