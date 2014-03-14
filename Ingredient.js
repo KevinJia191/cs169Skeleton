@@ -36,6 +36,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.get(function(err, result) {
 	    // the item is not currently in the database, so we can directly insert it.
 	    if (result.length == 0) { 
+		console.log("YOLO");
 		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
 		console.log(addQuery);
 		self.connection.query(addQuery, function(err, result) {
@@ -113,6 +114,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      */
     this.get = function(callback) {
 	var selectQuery = "select * from ingredients where " + this.createConstraints();
+	console.log(selectQuery);
 	var self = this;
 	if (this.sortField != null) {
 	    selectQuery = selectQuery + " order by "+this.sortfield;
@@ -121,7 +123,9 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    }
 	}
 	this.connection.query(selectQuery, function(err, result) {
-	    callback(Ingredient.SUCCESS, self.parser.parseIngredient(result));
+	    var x = self.parser.parseIngredient(result);
+	    console.log("erp");
+	    callback(Ingredient.SUCCESS, x);
 	});
     }
 
