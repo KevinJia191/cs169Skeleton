@@ -32,7 +32,7 @@ function UserModel(username, password){
         });//TestUserQuery END
     }// signup END
 
-    this.login = function(postRequest, callback) {
+    this.login = function(callback) {
         var jsonObject = {};
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
         this.connection.query(testUserQuery, function(err, result){

@@ -51,12 +51,14 @@ var UserController = function(request) {
         }
 
         var userModel = new UserModel(postRequest.username, postRequest.password);
-        userModel.connect();
-        userModel.login(function(resultingJson) {
-            userModel.end();
-            callback(resultingJson);
-            return;
+        userModel.connect(function(){
+            userModel.login(function(resultingJson) {
+                userModel.end();
+                callback(resultingJson);
+                return;
+            });
         });
+        
 
         //return {'errCode' : 1};
     }
