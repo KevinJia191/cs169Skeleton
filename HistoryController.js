@@ -17,18 +17,19 @@ var HistoryController = function(res) {
     
     // postRequest is a json containing the fields: user, recipe_name, current_date, rating
     this.make = function(postRequest) {
+        /*
         console.log("postRequest is" + postRequest);
         console.log("postRequest is" + postRequest.user);
         console.log("postRequest is" + postRequest.recipe_name);
         console.log("postRequest is" + postRequest.current_date);
         console.log("postRequest is" + postRequest.rating);
+        */
 
         var jsonObject = {};     
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
-        historyModel.setDatabaseModel(new PostgreSQLDatabaseModel());
+        historyModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
         historyModel.connect();
         historyModel.make(function (resultingJson) {
-            console.log('hi1' + resultingJson);
             historyModel.end();
             res.header('Content-Type', 'application/json');
             res.end(resultingJson);
