@@ -29,12 +29,13 @@ function Recipe(username, recipe_name, date_created, rating){
         console.log(makeQuery);
         
         this.connection.query(testUserQuery, function(err, result){
-            console.log("1");
+            console.log("err1 is " + err);
             console.log(result.rows);
             console.log(result.rows.length);
             if(result.rows.length>0){
                 console.log("2");
                 self.connection.query(testAlreadyMadeQuery, function(err, result){
+                    console.log("err2 is " + err);
                     console.log("result is " + result);
                     console.log("3");
                     if(result == undefined){
