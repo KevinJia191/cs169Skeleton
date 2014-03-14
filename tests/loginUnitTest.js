@@ -8,15 +8,11 @@ exports["testSignup"] = function(test){
     test.expect(1);
     doSetup(db, function(err, results) {
         //console.log(err);
-        console.log('hierwerwer');
         var userModel = new UserModel('testUser', 'testPass');
         userModel.setDatabaseModel(db);
         userModel.setParser(new SQLite3Parser());
-        console.log('hierwerwer');
         userModel.connect(function(){
-            console.log('hierwerwer');
-            userModel.signup(function(resultingJson) {
-                console.log('hierwerwer');
+            userModel.signUp(function(resultingJson) {
                 db.query("select * from users", function(err, rows) {
                     db.end();
                     test.equal(rows.length, 1, "Length of returns did not match");
