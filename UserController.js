@@ -23,14 +23,15 @@ var UserController = function(request) {
         }
 
         var userModel = new UserModel(postRequest.username, postRequest.password);
-        userModel.connect();
-        //console.log("connection is over, now going to try to signup");
-        userModel.signUp(function(resultingJson) {
+        userModel.connect(function(){
+            userModel.signUp(function(resultingJson) {
             userModel.end();
             callback(resultingJson);
             return;
-
+            });
         });
+        //console.log("connection is over, now going to try to signup");
+        
 
         //return {'errCode' : 1};
     } // end of THIS.SIGNUP

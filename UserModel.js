@@ -70,11 +70,12 @@ function UserModel(username, password){
     this.setSort = function(sortby) {
     }
     
-    this.connect = function() {
+    this.connect = function(callback) {
         console.log("CONNECTION OCCURED");
         this.connection = new pg.Client(process.env.DATABASE_URL);
         this.connection.connect();
         console.log(this.connection==undefined);
+        callback();
     }
     
     this.end = function(){
