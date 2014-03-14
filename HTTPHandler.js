@@ -284,7 +284,18 @@ app.post('/recipes/deleteAllHistory', function(req, res) {
     historyController.clearHistory(stubJson);
 });
 
-
+app.post('/TESTAPI/resetFixture', function(req, res) {
+    res.header('Content-Type', 'application/json');
+    //example
+    //process req, res to get stuff
+    
+    var historyController = new HistoryController(null);
+    var stubJson = {user : "testUser"};
+    
+    historyController.clearHistory(stubJson, function(resultingJson){
+        res.end(resultingJson);
+    });
+});
 
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {

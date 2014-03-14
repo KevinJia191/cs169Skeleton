@@ -53,7 +53,7 @@ var IngredientController = function(res) {
     }
 
     this.clearAll = function(postRequest) {
-	var ingredientModel = new IngredientModel();
+	var ingredientModel = new IngredientModel(postRequest["user"]);
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.connect();
