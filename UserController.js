@@ -15,14 +15,14 @@ var UserController = function(request) {
     //{errCode:ERROR} if name is null or longer than 128 characters
     this.signup = function (postRequest, callback) {
 
-        var user = postRequest.username;
+        var user = postRequest.user;
         //Checking if name formatted correctly
         if(user === null || user.length > 128 || typeof user === 'undefined') {
             callback(JSON.stringify({errCode:'ERROR'}));
             return;
         }
 
-        var userModel = new UserModel(postRequest.username, postRequest.password);
+        var userModel = new UserModel(postRequest.user, postRequest.password);
         userModel.connect(function(){
             userModel.signUp(function(resultingJson) {
             userModel.end();
@@ -43,7 +43,7 @@ var UserController = function(request) {
     //{errcode:ERR_INVAL_CRED}
     this.login = function (postRequest,callback) {
         console.log(postRequest);
-        var user = postRequest.username;
+        var user = postRequest.user;
         console.log("User is " + user);
         //Checking if name formatted correctly
         if(user === null || user.length > 128 || typeof user === 'undefined') {
@@ -51,7 +51,7 @@ var UserController = function(request) {
             return;
         }
 
-        var userModel = new UserModel(postRequest.username, postRequest.password);
+        var userModel = new UserModel(postRequest.user, postRequest.password);
         userModel.connect(function(){
             userModel.login(function(resultingJson) {
                 userModel.end();
