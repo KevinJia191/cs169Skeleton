@@ -6,6 +6,7 @@ function UserModel(username, password){
     this.username = username;
     this.password = password;
     this.connection = null;
+    this.parser = null;
     
     this.signUp = function(callback) { 
         var jsonObject = {};
@@ -15,7 +16,8 @@ function UserModel(username, password){
         console.log("WHY YOU NO WORK "+this.connection==undefined);
         this.connection.query(testUserQuery, function(err, result){
             // return error, user already in database
-            if(result.rows.length>0){
+            var queryResult = parser.parseUser(result);
+            if(queryResult.length>0){
                 jsonObject.errCode = Constants.ERR_USER_EXISTS;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
@@ -34,8 +36,8 @@ function UserModel(username, password){
         var jsonObject = {};
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'";
         this.connection.query(testUserQuery, function(err, result){
-            if(result.rows.length>0){
-
+            var queryResult = parser.parseUser(result);
+            if(queryResult.length>0){
                 //CASE: PASSWORD CORRECT
                 if(result.rows[0].hashed_password === password) {
                     //CASE: PASSWORD CORRECT
