@@ -16,7 +16,7 @@ exports["testSignup"] = function(test){
         userModel.connect(function(){
             console.log('hierwerwer');
             userModel.signup(function(resultingJson) {
-            console.log('hierwerwer');
+                console.log('hierwerwer');
                 db.query("select * from users", function(err, rows) {
                     db.end();
                     test.equal(rows.length, 1, "Length of returns did not match");
