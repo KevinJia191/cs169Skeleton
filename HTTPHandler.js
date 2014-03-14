@@ -158,7 +158,7 @@ app.get('/search', function(req, res) {
 
 app.post('/users/signup', function(req, res) {
 
-  console.log(req.body);
+  console.log("FUNCTION 1"+req.body);
    
   //START JSON HEADER
   res.header('Content-Type', 'application/json');
@@ -174,7 +174,7 @@ app.post('/users/signup', function(req, res) {
 
     });
   
-  console.log(res.body);
+  console.log("FUNCTION 1"+res.body);
 });
 
 
