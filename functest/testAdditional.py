@@ -52,13 +52,15 @@ class TestLogin(testLib.RestTestCase):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        self.assertResponse(respData, count=2)
+        self.assertResponse(respData, None ,testLib.RestTestCase.SUCCESS)
        
     def testWrongPassword(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData1 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         #self.assertResponse(respData1, count=1)
         respData2 = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'wrong password'} )
+        print respData1
+        print respData2
         self.assertResponse(respData2, None, testLib.RestTestCase.ERR_BAD_CREDENTIALS)
  
 """
