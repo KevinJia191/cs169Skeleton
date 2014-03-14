@@ -4,6 +4,7 @@ var Constants = require('./Constants.js');
 * Model for an ingredient. username, ingredient_name, expiration_date are primary keys.
 * All methods in here have a callback function of format function(err, result);
 * A database model must be set in order to execute add, remove, etc.
+*@author Christopher
 */
 function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.username = username;
