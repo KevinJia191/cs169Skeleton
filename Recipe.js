@@ -26,23 +26,17 @@ function Recipe(username, recipe_name, date_created, rating){
         
         this.connection.query(testUserQuery, function(err, result){
             if(err){
-                console.error(err);
+                //console.error(err);
                 jsonObject.errCode = constantModel.ERROR;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
             }
-            console.log("hi");
-            console.log(self.parser);
-            console.log("result is " + result);
             var queryResult1 = self.parser.parseUser(result);
-            console.log("result is " + result);
-            console.log("hi#2");
-            console.log("hello" + queryResult1);
             if(queryResult1.length>0){
                 self.connection.query(testAlreadyMadeQuery, function(err, result){
                     if(err){
-                        console.error(err);
+                        //console.error(err);
                         jsonObject.errCode = constantModel.ERROR;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
@@ -153,8 +147,6 @@ function Recipe(username, recipe_name, date_created, rating){
         return this.parser;
     }
 
-
-    
     this.connect = function() {
         //this.connection = new pg.Client(process.env.DATABASE_URL);
         this.connection.connect();
