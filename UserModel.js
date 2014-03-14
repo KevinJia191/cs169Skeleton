@@ -56,6 +56,13 @@ function UserModel(username, password){
         });
     }
 
+    this.setParser = function(parser) {
+        this.parser = parser;
+    }
+
+    this.getParser = function() {
+        return this.parser;
+    }
     
     this.setDatabaseModel = function(model) {
         this.connection = model;
