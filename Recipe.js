@@ -11,6 +11,7 @@ function Recipe(username, recipe_name, date_created, rating){
     this.current_date = date_created;
     this.rating = rating;
     this.connection = null;
+    this.parser = null;
     
     var self = this;
     /*
@@ -144,6 +145,16 @@ function Recipe(username, recipe_name, date_created, rating){
 
     this.setSort = function(sortby) {
     }
+    
+    this.setParser = function(parser) {
+        this.parser = parser;
+    }
+
+    this.getParser = function() {
+        return this.parser;
+    }
+
+
     
     this.connect = function() {
         //this.connection = new pg.Client(process.env.DATABASE_URL);

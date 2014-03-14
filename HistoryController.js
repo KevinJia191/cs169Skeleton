@@ -40,6 +40,7 @@ var HistoryController = function(res) {
     this.getHistory = function(postRequest) {
         var jsonObject = {};
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
+        historyModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
         historyModel.connect();
         historyModel.getAllHistoryFromUser(function (resultingJson) {
             historyModel.end();
@@ -52,6 +53,8 @@ var HistoryController = function(res) {
     this.clearHistory = function(postRequest, callback) {
         var jsonObject = {};
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date, postRequest.rating);
+        historyModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
+
         historyModel.connect();
         historyModel.clearAllHistoryFromUser(function (resultingJson) {
             historyModel.end();
