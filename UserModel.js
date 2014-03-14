@@ -35,7 +35,7 @@ function UserModel(username, password){
     this.login = function(postRequest, callback) {
         var jsonObject = {};
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
-        
+        console.log("WHY YOU NO WORK "+this.connection==undefined);
         this.connection.query(testUserQuery, function(err, result){
             if(result.rows.length>0){
 
