@@ -29,7 +29,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.get(function(err, result) {
 	    // the item is not currently in the database, so we can directly insert it.
 	    if (result.length == 0) { 
-		var addQuery = "insert into ingredients values('"+this.username+"', '"+this.ingredient_name+"','"+this.expiration_date+"', '"+this.quantity+"', '"+this.unit+"')";
+		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
 		console.log(addQuery);
 		self.connection.query(addQuery, function(err, result) {
 		    console.log("Error:"+err);
@@ -39,8 +39,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    // ingredient is already in the db, so update its quantity
 	    else {
 		var newQuantity = result[0]["quantity"] + this.quantity;
-		var updateQuery = "update ingredients set quantity ="+newQuantity+"where username = '"+user+"' AND ingredient_name = '"+this.ingredient_name+"' AND expiration_date= '"+this.expiration_date+"'";
-		this.connection.query(updateQuery, function(err, result) {
+		var updateQuery = "update ingredients set quantity ="+newQuantity+"where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
+		self.connection.query(updateQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		});
 	    }
@@ -107,8 +107,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	}
 	for (index = 0; index < result.rows.length; index++) {
 	    var rows = result.rows[index];
-	    console.log(rows);
-	    console.log(rows.username);
 	    var ingredient = new Ingredient(rows["username"], rows["ingredient_name"], rows["expiration_date"], rows["quantity"], rows["unit"]);
 	    ingredients[index] = ingredient;
 	}
