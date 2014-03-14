@@ -32,18 +32,22 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
 		console.log(addQuery);
 		self.connection.query(addQuery, function(err, result) {
-		    callback(Ingredient.SUCCESS_ADDED, null);
+		    callback(Ingredient.SUCCESS, null);
 		});
 	    }
 	    // ingredient is already in the db, so update its quantity
 	    else {
 		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
-		var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
+		self.updateQuantity(newQuantity);
+	    }
+	});
+    }
+
+    this.updateQuantity = function (newQuantity) {
+	var updateQuery = "update ingredients set quantity ="+newQuantity+" where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'";
 		self.connection.query(updateQuery, function(err, result) {
 		    callback(Ingredient.SUCCESS_UPDATED, newQuantity);
 		});
-	    }
-	});
     }
     /* 
      * Removes a quantity of an ingredient from  the User's inventory.
@@ -52,7 +56,31 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
      * result will be the amount of the ingredient left.
      */
     this.remove = function(callback) {
-    
+	var self = this;
+	if (quantity < 0) {
+	    callback(Ingredient.NEGATIVE_QUANTITY, null);
+	    return;
+	}
+	this.get(function(err, result) {
+	    // the item is not currently in the database, it 
+	    if (result.length == 0) { 
+		callback(Ingredient.DOESNT_EXIST, null);
+	    }
+	    // ingredient is already in the db, so update its quantity
+	    else {
+		var newQuantity = parseInt(result[0]["quantity"]) - self.quantity;
+		if (newQuantity <= 0) {
+		    var removeQuery = "delete from ingredients where username = '"+self.username+"' AND ingredient_name = '"+self.ingredient_name+"' AND expiration_date= '"+self.expiration_date+"'"
+		console.log(removeQuery);
+		self.connection.query(removeQuery, function(err, result) {
+		    callback(Ingredient.SUCCESS, null);
+		});
+		}
+		else {
+		    self.updateQuantity(newQuantity);
+		}
+	    }
+	});
     }
 
     /*
@@ -164,6 +192,7 @@ Ingredient.SUCCESS_UPDATED = 2;
 Ingredient.NEGATIVE_QUANTITY = -1;
 Ingredient.DATE_ERROR = -2;
 Ingredient.ERROR = -3;
+Ingredient.DOESNT_EXIST = -4;
 
 
 
