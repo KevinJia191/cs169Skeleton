@@ -36,11 +36,8 @@ function Recipe(username, recipe_name, date_created, rating){
                 callback(jsonForm);
                 return;
             }
-            console.log("err1 is " + err);
-            console.log(result.rows);
-            console.log(result.rows.length);
-            if(result.rows.length>0){
-                console.log("2");
+            var queryResult1 = self.parser.parseUser(result);
+            if(queryResult1.length>0){
                 self.connection.query(testAlreadyMadeQuery, function(err, result){
                     if(err){
                         console.error(err);
@@ -49,11 +46,9 @@ function Recipe(username, recipe_name, date_created, rating){
                         callback(jsonForm);
                         return;
                     }
-                    console.log("err2 is " + err);
-                    console.log("result is " + result);
-                    console.log("3");
-                    if(result.rows.length == 0){
-                        console.log("Did not fail already made today check");
+                    var queryResult2 = self.parser.parseHistory(result);
+                    if(queryResult2.length == 0){
+                        //Did not fail already made today check
                         self.connection.query(makeQuery, function(err, result){
                             if(err){
                                 console.error(err);
@@ -62,7 +57,7 @@ function Recipe(username, recipe_name, date_created, rating){
                                 callback(jsonForm);
                                 return;
                             }
-                            console.log("WE HAVE A SUCESS");
+                            
                             jsonObject.errCode = constantModel.SUCCESS;
                             var jsonForm = JSON.stringify(jsonObject);
                             callback(jsonForm);
@@ -111,7 +106,8 @@ function Recipe(username, recipe_name, date_created, rating){
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
         var getHistoryQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'";
         this.connection.query(testUserQuery, function(err, result){
-            if(result.rows.length > 0){
+            var queryResult1 = self.parser.parseUser(result);
+            if(queryResult1.length > 0){
                 self.connection.query(getHistoryQuery, function(err, result){
                     if(err){
                         console.error(err);
@@ -120,7 +116,8 @@ function Recipe(username, recipe_name, date_created, rating){
                         callback(jsonForm);
                         return;
                     }
-                    jsonObject.userHistory = result.rows;
+                    var queryResult2 = self.parser.parseHistory(result);
+                    jsonObject.userHistory = queryResult2;
                     jsonObject.errCode = constantModel.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
