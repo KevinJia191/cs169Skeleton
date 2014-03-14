@@ -15,7 +15,7 @@ function UserModel(username, password){
         this.connection.query(testUserQuery, function(err, result){
             // return error, user already in database
             if(result.rows.length>0){
-                jsonObject.errCode = USER.ERR_USER_EXISTS;
+                jsonObject.errCode = UserModel.ERR_USER_EXISTS;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
@@ -25,7 +25,7 @@ function UserModel(username, password){
 
                 this.connection.query(inputQuery, function () {
 
-                    jsonObject.errCode = USER.SUCCESS;
+                    jsonObject.errCode = UserModel.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
@@ -45,7 +45,7 @@ function UserModel(username, password){
 
                 //CASE: PASSWORD NOT CORRECT
                 if(result.rows.hashed_password != this.password) {
-                    jsonObject.errCode = USER.ERR_INVAL_CRED;
+                    jsonObject.errCode = UserModel.ERR_INVAL_CRED;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
@@ -53,13 +53,13 @@ function UserModel(username, password){
 
                 //CASE: PASSWORD CORRECT
                 //return success
-                jsonObject.errCode = USER.SUCCESS;
+                jsonObject.errCode = UserModel.SUCCESS;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
             }
             //CASE: USER NOT IN DATABASE
-            jsonObject.errCode = USER.ERR_INVAL_CRED;
+            jsonObject.errCode = UserModel.ERR_INVAL_CRED;
             var jsonForm = JSON.stringify(jsonObject);
             callback(jsonForm);
             return;
@@ -87,9 +87,9 @@ function UserModel(username, password){
     //{errCode:SUCCESS} if success
     //{errCode:ERR_USER_EXISTS} if user exists
     //{errcode:ERR_INVAL_CRED} if username exists but password does not match
-USER.SUCCESS = "SUCCESS";
-USER.ERR_USER_EXISTS = "ERR_USER_EXISTS"
-USER.ERR_INVAL_CRED = "ERR_INVAL_CRED";
+UserModel.SUCCESS = "SUCCESS";
+UserModel.ERR_USER_EXISTS = "ERR_USER_EXISTS"
+UserModel.ERR_INVAL_CRED = "ERR_INVAL_CRED";
 
 module.exports = UserModel;
 
