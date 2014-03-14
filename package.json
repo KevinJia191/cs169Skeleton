@@ -6,7 +6,8 @@
   "dependencies": {
     "pg": "~2.11.1",
     "express": "~3.4.8",
-    "logfmt": "~0.21.0"
+    "logfmt": "~0.21.0",
+    "sqlite3": "~2.2.0"
   },
   "devDependencies": {},
   "scripts": {
