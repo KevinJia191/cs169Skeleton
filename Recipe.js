@@ -1,6 +1,5 @@
 var pg = require('pg');
-var constantModel = require('./Constants.js');
-var CONSTANTS = new constantModel();
+var constantModel = require('./constantModel.js');
 
 /*
 Model for a "History" element : primary key'd by (username, recipe_name, date_created), to ensure one recipe per day by each user
@@ -39,17 +38,17 @@ function Recipe(username, recipe_name, date_created, rating){
                     console.log("result is " + result);
                     console.log("3");
                     if(result.rows.length == 0){
-                        //Did not fail already made today check
+                        console.log("Did not fail already made today check");
                         self.connection.query(makeQuery, function(err, result){
                             if(err){
                                 console.error(err);
-                                jsonObject.errCode = CONSTANTS.ERROR;
+                                jsonObject.errCode = constantModel.ERROR;
                                 var jsonForm = JSON.stringify(jsonObject);
                                 callback(jsonForm);
                                 return;
                             }
                             console.log("WE HAVE A SUCESS");
-                            jsonObject.errCode = CONSTANTS.SUCCESS;
+                            jsonObject.errCode = constantModel.SUCCESS;
                             var jsonForm = JSON.stringify(jsonObject);
                             callback(jsonForm);
                             return;
@@ -57,7 +56,7 @@ function Recipe(username, recipe_name, date_created, rating){
                     }
                     else{
                         console.log("ERROR RECIPE CREATED ALREADY");
-                        jsonObject.errCode = CONSTANTS.ERR_RECIPE_CREATED_ALREADY;
+                        jsonObject.errCode = constantModel.ERR_RECIPE_CREATED_ALREADY;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
                         return;
@@ -65,7 +64,8 @@ function Recipe(username, recipe_name, date_created, rating){
                 });
             }
             else{
-                jsonObject.errCode = CONSTANTS.ERR_USER_NOTFOUND;
+                console.log("CURRENT USER NOT FOUND");
+                jsonObject.errCode = constantModel.ERR_USER_NOTFOUND;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
@@ -79,13 +79,13 @@ function Recipe(username, recipe_name, date_created, rating){
         this.connection.query(deleteQuery, function(err, result){
             if(err){
                 console.error(err);
-                jsonObject.errCode = CONSTANTS.ERROR;
+                jsonObject.errCode = constantModel.ERROR;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
             }
             
-            jsonObject.errCode = CONSTANTS.SUCCESS;
+            jsonObject.errCode = constantModel.SUCCESS;
             var jsonForm = JSON.stringify(jsonObject);
             callback(jsonForm);
         });
@@ -100,20 +100,20 @@ function Recipe(username, recipe_name, date_created, rating){
                 self.connection.query(getHistoryQuery, function(err, result){
                     if(err){
                         console.error(err);
-                        jsonObject.errCode = CONSTANTS.ERROR;
+                        jsonObject.errCode = constantModel.ERROR;
                         var jsonForm = JSON.stringify(jsonObject);
                         callback(jsonForm);
                         return;
                     }
                     jsonObject.userHistory = result.rows;
-                    jsonObject.errCode = CONSTANTS.SUCCESS;
+                    jsonObject.errCode = constantModel.SUCCESS;
                     var jsonForm = JSON.stringify(jsonObject);
                     callback(jsonForm);
                     return;
                 });
             }
             else{
-                jsonObject.errCode = CONSTANTS.INVAL_USER;
+                jsonObject.errCode = constantModel.INVAL_USER;
                 var jsonForm = JSON.stringify(jsonObject);
                 callback(jsonForm);
                 return;
