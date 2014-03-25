@@ -15,9 +15,9 @@ var IngredientController = function(res) {
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new PostgreSQLParser());
-	ingredientModel.connect();
+	db.connect();
 	ingredientModel.add(function (err, result) {
-	    ingredientModel.end();
+	    db.end();
 	    var json = {errCode : err};
 	    if (result != null) {
 		json["new_quantity"] = result;
@@ -33,9 +33,9 @@ var IngredientController = function(res) {
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new PostgreSQLParser());
-	ingredientModel.connect();
+	db.connect();
 	ingredientModel.remove(function (err, result) {
-	    ingredientModel.end();
+	    db.end();
 	    var json = {errCode : err};
 	    if (result != null) {
 		json["new_quantity"] = result;
@@ -51,9 +51,9 @@ var IngredientController = function(res) {
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new PostgreSQLParser());
-	ingredientModel.connect();
+	db.connect();
 	ingredientModel.clear(function (err, result) {
-	    ingredientModel.end();
+	    db.end();
 	    var json = {errCode : err};
 	    res.header('Content-Type', 'application/json');
 	    res.end(JSON.stringify(json));
@@ -65,9 +65,9 @@ var IngredientController = function(res) {
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new PostgreSQLParser());
-	ingredientModel.connect();
+	db.connect();
 	ingredientModel.clear(function (err, result) {
-	    ingredientModel.end();
+	    db.end();
 	    var json = {errCode : err};
 	    res.header('Content-Type', 'application/json');
 	    res.end(JSON.stringify(json));
@@ -80,9 +80,9 @@ var IngredientController = function(res) {
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new PostgreSQLParser());
-	ingredientModel.connect();
+	db.connect();
 	ingredientModel.get(function (err, result) {
-	    ingredientModel.end();
+	    db.end();
 	    var json = {errCode : err};
 	    var inventory = new Array();
 	    for (index = 0; index < result.length; index++) {

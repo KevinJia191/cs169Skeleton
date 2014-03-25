@@ -1,5 +1,6 @@
 var pg = require('pg');
 var Constants = require('./Constants.js');
+var ActiveRecord = require('./ActiveRecord.js');
 /*
 * Model for an ingredient. username, ingredient_name, expiration_date are primary keys.
 * All methods in here have a callback function of format function(err, result);
@@ -19,6 +20,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.start = null;
     this.end = null;
     this.validUnits = { "oz" : true, "count": true};
+    this.fields = { "username": username, "ingredient_name":ingredient_name, "expiration_date":expiration_date, "quantity":quantity, "unit":unit};
     // null means conversion isn't allowed. This contains all combinations where [a,b] means that a is lexicographically less than b.
     this.conversion = {"count/oz": null} 
     
@@ -34,9 +36,18 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    callback(Constants.NEGATIVE_QUANTITY, null);
 	    return;
 	}
+	var ingredientRecord = new ActiveRecord();
+	ingredientRecord.setDatabaseModel(this.connection);
+	ingredientRecord.setParser(this.parser);
+	ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
+	for (field in this.fields) {
+	    ingredientRecord.put(field, this.fields[field]);
+	}
 	this.get(function(err, result) {
 	    // the item is not currently in the database, so we can directly insert it.
-	    if (result.length == 0) { 
+	    if (result.length == 0) {
+		ingredientRecord.insert(callback);
+		/*
 		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
 		console.log(addQuery);
 		self.connection.query(addQuery, function(err, result) {
@@ -46,6 +57,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		    }
 		    callback(Constants.SUCCESS);
 		});
+		*/
 	    }
 	    // ingredient is already in the db, so update its quantity
 	    else {
@@ -203,14 +215,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.getParser = function() {
 	return this.parser;
     }
-
-    this.connect = function() {
-	this.connection.connect();
-    }
-    this.end = function() {
-	this.connection.end();
-    }
-
     /*
      * Sets how the list returned by get is sorted by. sortField is the field to sort on. sortBy is either "ASC" or "DESC" (ascending/descending).
      * Display the inventory starting from the start to end element.
