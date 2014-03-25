@@ -3,8 +3,17 @@ import os
 import testLib
 import testSimple
        
-
+#error codes for signing up
 SUCCESS = "SUCCESS"; 
+USER_EXISTS= "ERR_USER_EXISTS"
+
+#error codes for logging in
+
+#NOTE: FOR NOW (3/27/13), we are assuming that 
+ERR_USER_NOTFOUND = "ERR_USER_NOTFOUND";
+ERR_USER_EXISTS = "ERR_USER_EXISTS";
+CERR_INVAL_CRED = "ERR_INVAL_CRED";
+
 
 ERR_RECIPE_CREATED_ALREADY = "ERR_RECIPE_CREATED_ALREADY";
 ERROR = "ERROR";
@@ -20,63 +29,67 @@ CERR_INVAL_CRED = "ERR_INVAL_CRED";
 class TestYummly(testLib.RestTestCase):
     def assertResponse(self, respData, code):
         all_dishes = respData["recipe_id"]
+        self.assertNotEqual(len(all_dishes),0)
+        #make sure each recipie contains chicken in it!
+        for dish in all_dishes:
+            if ("Chicken" not in dish and "chicken" not in dish and "CHICKEN" not in dish):
+                print(dish)
+                print("chicken was not found in the name of the dish!")
+                self.assertEqual(1,0)
         print(all_dishes)
     def testYummlycall(self):
         respData = self.makeRequest("/recipes/search", method="POST", data = { 'q' : 'chicken'})
         self.assertResponse(respData,42)
 
-"""
+
 class TestAdd(testLib.RestTestCase):
     #global long_user = 'dsjkfhadsjfgasjdfgajksdfgasdfgaksdfghasdfgajsdhfgahsdjfgjashdfgasjdhgfahjsdfgadshjfasdfajshdfgasdjhfasdjfgasdjkfagsdfkasdhfgasdkfgashdfjgasdhjfgasjdfhasdjfgasdhjfgashdfahsdfasgdfkjasgfja'
     #global long_pass = 'dsjkfhadsjfgasjdfgajksdfgasdfgaksdfghasdfgajsdhfgahsdjfgjashdfgasjdhgfahjsdfgadshjfasdfajshdfgasdjhfasdjfgasdjkfagsdfkasdhfgasdkfgashdfjgasdhjfgasjdfhasdjfgasdhjfgashdfahsdfasgdfkjasgfja'
-    def assertResponse(self, respData, count = 1, errCode = testLib.RestTestCase.SUCCESS):
-        expected = { 'errCode' : errCode }
-        if count is not None:
-            expected['count']  = count
-        self.assertDictEqual(expected, respData)
+    def assertResponse(self, respData, correctCode):
+        code = respData["errCode"]
+        print(code)
+        self.assertEqual(code,correctCode);
     def testAdd1(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'password'} )
-        self.assertResponse(respData, count = 1)
+        self.assertResponse(respData, SUCCESS)
     def testAddTwo(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData1 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData2 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user2', 'password' : 'user2'} )
-        self.assertResponse(respData1, count = 1)
-        self.assertResponse(respData2, count = 1)    
+        self.assertResponse(respData1, SUCCESS)
+        self.assertResponse(respData2, SUCCESS)
     def testSame(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData1 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData2 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        self.assertResponse(respData1, count = 1)
-        self.assertResponse(respData2, None, testLib.RestTestCase.ERR_USER_EXISTS)
-"""
-      
+        self.assertResponse(respData1, SUCCESS)
+        self.assertResponse(respData2, USER_EXISTS)
+
+   
 
 class TestLogin(testLib.RestTestCase):
-    def assertResponse(self, respData, count = 1, errCode = testLib.RestTestCase.SUCCESS):
-        expected = { 'errCode' : errCode }
-        if count is not None:
-            expected['count']  = count
-        self.assertDictEqual(expected, respData)
+    def assertResponse(self, respData, correctCode):
+        code = respData["errCode"]
+        print(code)
+        self.assertEqual(code,correctCode);
     def testNoAddLog(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'baduser', 'password' : 'password'} )
-        self.assertResponse(respData, None, testLib.RestTestCase.ERR_BAD_CREDENTIALS)  
-           
+        self.assertResponse(respData, CERR_INVAL_CRED)  
     def testAddthenLog(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        self.assertResponse(respData, None ,testLib.RestTestCase.SUCCESS)
-       
+        self.assertResponse(respData, SUCCESS)
     def testWrongPassword(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData1 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        #self.assertResponse(respData1, count=1)
         respData2 = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'wrong password'} )
-        print respData1
-        print respData2
-        self.assertResponse(respData2, None, testLib.RestTestCase.ERR_BAD_CREDENTIALS)
- 
-"""
+        self.assertResponse(respData1, SUCCESS)
+        self.assertResponse(respData2, USER_EXISTS)
+ """
+
 class TestFail(testLib.RestTestCase):
     def assertResponse(self, respData, count = 1, errCode = testLib.RestTestCase.ERR_BAD_USERNAME):
         expected = { 'errCode' : errCode }
@@ -84,7 +97,6 @@ class TestFail(testLib.RestTestCase):
     def testLoginNullName(self):
         respData = self.makeRequest("/users/signup", method="POST", data = { 'user' : '', 'password' : 'noName'} )
         self.assertResponse(respData, None, testLib.RestTestCase.ERR_BAD_USERNAME)
-"""
 
 class TestIngredients(testLib.RestTestCase):
     def assertResponse(self, respData, code):
@@ -121,7 +133,7 @@ class TestIngredients(testLib.RestTestCase):
         self.assertResponse(respData,SUCCESS_UPDATED);
         self.assertQuantity(respData,7);
 
-"""
+
 class TestIngredients(testLib.RestTestCase):
     def assertResponse(self, respData, code):
         if (respData["errCode"]==code):
