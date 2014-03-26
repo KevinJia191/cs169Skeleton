@@ -23,7 +23,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.fields = { "username": username, "ingredient_name":ingredient_name, "expiration_date":expiration_date, "quantity":quantity, "unit":unit};
     // null means conversion isn't allowed. This contains all combinations where [a,b] means that a is lexicographically less than b.
     this.conversion = {"count/oz": null} 
-    
     /* 
      * Adds the ingredient to the User's inventory.
      * These fields CANNOT be null: username, ingredient_name, expiration_date, quantity, unit
@@ -40,36 +39,37 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	ingredientRecord.setDatabaseModel(this.connection);
 	ingredientRecord.setParser(this.parser);
 	ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
-	for (field in this.fields) {
-	    ingredientRecord.put(field, this.fields[field]);
-	}
 	this.get(function(err, result) {
 	    // the item is not currently in the database, so we can directly insert it.
 	    if (result.length == 0) {
-		ingredientRecord.insert(callback);
-		/*
-		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
-		console.log(addQuery);
-		self.connection.query(addQuery, function(err, result) {
+		for (field in self.fields) {
+		    ingredientRecord.put(field, self.fields[field]);
+		}
+		ingredientRecord.insert(function(err, result) {
 		    if (err) {
 			callback(Constants.ERROR);
-			return;
 		    }
-		    callback(Constants.SUCCESS);
+		    else {
+			callback(Constants.SUCCESS);
+		    }
 		});
-		*/
 	    }
-	    // ingredient is already in the db, so update its quantity
+	    // ingredient is already in the database, so update its quantity
 	    else {
 		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
-		var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
-		self.connection.query(updateQuery, function(err, result) {
+		ingredientRecord.put("username", self.fields.username);
+		ingredientRecord.put("ingredient_name", self.fields.ingredient_name);
+		ingredientRecord.put("expiration_date", self.fields.expiration_date);
+		ingredientRecord.put("unit", null);
+		ingredientRecord.put("quantity", null);
+		ingredientRecord.update(function(err, result) {
 		    if (err) {
 			callback(Constants.ERROR);
-			return;
 		    }
-		    callback(Constants.SUCCESS_UPDATED, newQuantity);
-		});
+		    else {
+			callback(Constants.SUCCESS_UPDATED, newQuantity);
+		    }
+		}, {"quantity":newQuantity});
 	    }
 	});
     }

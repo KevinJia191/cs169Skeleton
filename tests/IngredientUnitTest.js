@@ -13,7 +13,6 @@ var Constants = require('../Constants.js');
 * These tests are poorly written. Unfortunately, research time was a lot more extensive than I had anticipated.
 */
 
-
 exports["testAddIngredient"] = function(test){
     var db = new SQLite3Model();
     test.expect(7);
@@ -38,29 +37,103 @@ exports["testAddIngredient"] = function(test){
 	    
 };
 
-exports["testAddIngredient"] = function(test){
+exports["testUpdateAddIngredient"] = function(test){
     var db = new SQLite3Model();
-    test.expect(7);
     doSetup(db, function(err, results) {
 	console.log(err);
 	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 4, 'oz');
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new SQLite3Parser());
 	db.connect();
-	ingredientModel.add(function(err, result) {
-	    test.equal(err, Constants.SUCCESS, "Add should have succeeded");
-	    db.query("select * from ingredients", function(err, rows) {
-		db.end();
-		test.equal(rows.length, 1, "Length of returns did not match");
-		var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 4, unit: 'oz' };
-		var row = rows[0];
-		testIngredientEqual(row, exp, test);
-		test.done();
+	ingredientModel.add( function(err, results) {
+	    var ingredientModel2 = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
+	    ingredientModel2.setDatabaseModel(db);
+	    ingredientModel2.setParser(new SQLite3Parser());
+	    ingredientModel2.add(function(err, result) {
+		db.query("select * from ingredients", function(err, rows) {
+		    db.end();
+		    test.expect(6);
+		    test.equal(rows.length, 1, "Length of returns did not match");
+		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 16, unit: 'oz' };
+		    var row = rows[0];
+		    testIngredientEqual(row, exp, test);
+		    test.done();
+		});
 	    });
 	});
+	
     });
 	    
 };
+
+exports["testAddTwoIngredients"] = function(test){
+    var db = new SQLite3Model();
+    doSetup(db, function(err, results) {
+	console.log(err);
+	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
+	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new SQLite3Parser());
+	db.connect();
+	ingredientModel.add( function(err, results) {
+	    var ingredientModel2 = new IngredientModel('jernchr', 'salt', '5/28/17', 8, 'oz');
+	    ingredientModel2.setDatabaseModel(db);
+	    ingredientModel2.setParser(new SQLite3Parser());
+	    ingredientModel2.add(function(err, result) {
+		db.query("select * from ingredients", function(err, rows) {
+		    db.end();
+		    test.expect(11);
+		    console.log(rows.length);
+		    test.equal(rows.length, 2, "Length of returns did not match");
+		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 12, unit: 'oz' };
+		    var row = rows[0];
+		    if (row != undefined) {
+			testIngredientEqual(row, exp, test);
+		    }
+		    exp = { username: 'jernchr', ingredient_name: 'salt', expiration_date: '5/28/17', quantity: 8, unit: 'oz' };
+		    row = rows[1];
+		    if (row != undefined) {
+			testIngredientEqual(row, exp, test);
+		    }
+		    test.done();
+		});
+	    });
+	});
+	
+    });
+	    
+};
+
+exports["testUpdateRemoveIngredient"] = function(test){
+    var db = new SQLite3Model();
+    doSetup(db, function(err, results) {
+	console.log(err);
+	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
+	ingredientModel.setDatabaseModel(db);
+	
+	ingredientModel.setParser(new SQLite3Parser());
+	db.connect();
+	ingredientModel.add( function(err, results) {
+	    var ingredientModel2 = new IngredientModel('jernchr', 'pepper', '5/21/17', 10, 'oz');
+	    ingredientModel2.setDatabaseModel(db);
+	    ingredientModel2.setParser(new SQLite3Parser());
+	    ingredientModel2.remove(function(err, result) {
+		db.query("select * from ingredients", function(err, rows) {
+		    db.end();
+		    test.expect(6);
+		    test.equal(rows.length, 1, "Length of returns did not match");
+		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 2, unit: 'oz' };
+		    var row = rows[0];
+		    testIngredientEqual(row, exp, test);
+		    test.done();
+		});
+	    });
+	});
+	
+    });
+	    
+};
+
+/*
 
 exports["testAddIngredientInvalidUser"] = function(test){
     var db = new SQLite3Model();
@@ -105,106 +178,7 @@ exports["testRemoveIngredientNonExistent"] = function(test){
 
 
 
-exports["testUpdateAddIngredient"] = function(test){
-    var db = new SQLite3Model();
-    doSetup(db, function(err, results) {
-	console.log(err);
-	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 4, 'oz');
-	ingredientModel.setDatabaseModel(db);
-	
-	ingredientModel.setParser(new SQLite3Parser());
-	db.connect();
-	ingredientModel.add( function(err, results) {
-	    var ingredientModel2 = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
-	    ingredientModel2.setDatabaseModel(db);
-	    ingredientModel2.setParser(new SQLite3Parser());
-	    ingredientModel2.add(function(err, result) {
-		db.query("select * from ingredients", function(err, rows) {
-		    db.end();
-		    test.expect(6);
-		    test.equal(rows.length, 1, "Length of returns did not match");
-		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 16, unit: 'oz' };
-		    var row = rows[0];
-		    testIngredientEqual(row, exp, test);
-		    test.done();
-		});
-	    });
-	});
-	
-    });
-	    
-};
-
-exports["testUpdateRemoveIngredient"] = function(test){
-    var db = new SQLite3Model();
-    doSetup(db, function(err, results) {
-	console.log(err);
-	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
-	ingredientModel.setDatabaseModel(db);
-	
-	ingredientModel.setParser(new SQLite3Parser());
-	db.connect();
-	ingredientModel.add( function(err, results) {
-	    var ingredientModel2 = new IngredientModel('jernchr', 'pepper', '5/21/17', 10, 'oz');
-	    ingredientModel2.setDatabaseModel(db);
-	    ingredientModel2.setParser(new SQLite3Parser());
-	    ingredientModel2.remove(function(err, result) {
-		db.query("select * from ingredients", function(err, rows) {
-		    db.end();
-		    test.expect(6);
-		    test.equal(rows.length, 1, "Length of returns did not match");
-		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 2, unit: 'oz' };
-		    var row = rows[0];
-		    testIngredientEqual(row, exp, test);
-		    test.done();
-		});
-	    });
-	});
-	
-    });
-	    
-};
-
-
-exports["testAddTwoIngredients"] = function(test){
-    var db = new SQLite3Model();
-    doSetup(db, function(err, results) {
-	console.log(err);
-	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
-	ingredientModel.setDatabaseModel(db);
-	ingredientModel.setParser(new SQLite3Parser());
-	db.connect();
-	ingredientModel.add( function(err, results) {
-	    var ingredientModel2 = new IngredientModel('jernchr', 'salt', '5/28/17', 8, 'oz');
-	    ingredientModel2.setDatabaseModel(db);
-	    ingredientModel2.setParser(new SQLite3Parser());
-	    ingredientModel2.add(function(err, result) {
-		db.query("select * from ingredients", function(err, rows) {
-		    db.end();
-		    test.expect(11);
-		    console.log(rows.length);
-		    test.equal(rows.length, 2, "Length of returns did not match");
-		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 12, unit: 'oz' };
-		    var row = rows[0];
-		    if (row != undefined) {
-			testIngredientEqual(row, exp, test);
-		    }
-		    exp = { username: 'jernchr', ingredient_name: 'salt', expiration_date: '5/28/17', quantity: 8, unit: 'oz' };
-		    row = rows[1];
-		    if (row != undefined) {
-			testIngredientEqual(row, exp, test);
-		    }
-		    test.done();
-		});
-	    });
-	});
-	
-    });
-	    
-};
-
-
-
+*/
 
 
 

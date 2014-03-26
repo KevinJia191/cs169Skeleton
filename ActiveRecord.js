@@ -8,6 +8,7 @@ function ActiveRecord() {
     this.fields = {};
     this.tableName = null;
     this.connection = null;
+    this.parser = null;
     // numFields should never be 0.
     this.numFields = 0;
     this.put = function(key, value) {
@@ -20,23 +21,24 @@ function ActiveRecord() {
     }
 
     /*
-     * Adds the record to the database. No fields of the record can be null.
+     * Adds the record to the database. No fields of the record should be null.
      */
     this.insert = function(callback) {
+	var self = this;
 	var insertQuery = "insert into "+this.tableName+" values(";
 	var count = 1;
-	for (field in fields) {
+	for (field in this.fields) {
 	    if (count == this.numFields) {
-		insertQuery = insertQuery + this.getValue(field) + ")";
+		insertQuery = insertQuery + this.getValue(field, this.fields) + ")";
 	    }
 	    else {
-		insertQuery = insertQuery + this.getValue(field)+", ";
+		insertQuery = insertQuery + this.getValue(field, this.fields)+", ";
 	    }
 	    count = count + 1;
 	}
 	console.log(insertQuery);
-	self.connection.query(addQuery, function(err, result) {
-	    callback(err);
+	this.connection.query(insertQuery, function(err, result) {
+	    callback(self.parser.parseError(err));
 	});
     }
 
@@ -44,10 +46,19 @@ function ActiveRecord() {
      * Removes the records from the database set with setDatabaseModel.
      */
     this.remove = function(callback) {
-	var removeQuery = "delete from "+ this.tableName + " where "+this.createConstraints();
+	var removeQuery = "delete from "+ this.tableName + " where "+this.createConstraints(this.fields);
 	console.log(removeQuery);
-	self.connection.query(addQuery, function(err, result) {
-	    callback(err);
+	this.connection.query(removeQuery, function(err, result) {
+	    callback(this.parse.parseError(err));
+	});
+    }
+
+    this.update = function(callback, fields) {
+	var self = this;
+	var updateQuery = "update "+ this.tableName + " set " + this.createConstraints(fields) + "where " + this.createConstraints(this.fields);
+	console.log(updateQuery);
+	this.connection.query(updateQuery, function(err, result) {
+	    callback(self.parser.parseError(err));
 	});
     }
 
@@ -81,12 +92,15 @@ function ActiveRecord() {
     }
 
     this.getDatabaseModel = function() {
+	return this.connection;
     }
 
     this.setParser = function(parser) {
+	this.parser = parser;
     }
 
     this.getParser = function() {
+	return this.parser;
     }
 
     /*
@@ -104,7 +118,7 @@ function ActiveRecord() {
      * ==================================
      * ==================================
      */
-    this.getValue =  function(field) {
+    this.getValue =  function(field, fields) {
 	if (typeof(fields[field]) == "string") {
 	    return "'"+fields[field]+"'";
 	}
@@ -112,18 +126,19 @@ function ActiveRecord() {
 	    return fields[field];
 	}
     }
-    this.createConstraints = function() {
+    this.createConstraints = function(fields) {
 	var query = "";
 	var isFirst = true;
 	for (field in fields) {
 	    if (fields[field] != null) {	    
 		if (!isFirst) {
-		    query = query + " AND ";
+		    query = query + "AND ";
 		}
 		else {
 		    isFirst = false;
 		}
-		query = query + field+ " " + " = " + this.getValue(field) + " ";
+		query = query + field + " = " + this.getValue(field, fields) + " ";
+		console.log(query);
 	    }
 	}
 	return query;

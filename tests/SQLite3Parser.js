@@ -1,9 +1,21 @@
 var Ingredient = require('../Ingredient.js');
 var UserModel = require('../UserModel.js');
 var History = require('../Recipe.js');
+var DatabaseModel = require('../DatabaseModel.js');
+function SQLite3Parser() {
 
-function SQLite3Parser() {    
-        this.parseIngredient = function(rows) {
+    this.parseError = function(err) {
+	console.log("yeh");
+	if (err) {
+	    return DatabaseModel.ERROR;
+	}
+	else {
+	    return DatabaseModel.SUCCESS;
+	}
+    }
+    
+    
+    this.parseIngredient = function(rows) {
         var ingredients = new Array();
         if (rows.length == 0) {
             return ingredients;

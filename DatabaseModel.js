@@ -1,5 +1,5 @@
 // Abstract class to be extended by SQL database models
-function Database_Model() {
+function DatabaseModel() {
     /*
      * Start a connection with the db.
      */
@@ -17,3 +17,10 @@ function Database_Model() {
     this.query  = function(query, callback) {
     }
 }
+
+DatabaseModel.SUCCESS = null;
+DatabaseModel.ERROR = "ERROR";
+DatabaseModel.DUPLICATE_KEY = "DUPLICATE_KEY";
+DatabaseModel.CONSTRAINT_VIOLATED = "CONSTRAINT_VIOLATED";
+
+module.exports = DatabaseModel;
