@@ -9,8 +9,9 @@ function ActiveRecord() {
     this.tableName = null;
     this.connection = null;
     this.parser = null;
-    // numFields should never be 0.
     this.numFields = 0;
+
+
     this.put = function(key, value) {
 	this.fields[key] = value;
 	this.numFields = this.numFields + 1;
@@ -24,18 +25,27 @@ function ActiveRecord() {
      * Adds the record to the database. No fields of the record should be null.
      */
     this.insert = function(callback) {
+	if (this.numFields == 0) {
+	    callback(DatabaseModel.ERROR);
+	    return;
+	}
 	var self = this;
-	var insertQuery = "insert into "+this.tableName+" values(";
+	var insertQuery = "insert into "+this.tableName;
+	var values = " values(";
+	var columns = " (";
 	var count = 1;
 	for (field in this.fields) {
 	    if (count == this.numFields) {
-		insertQuery = insertQuery + this.getValue(field, this.fields) + ")";
+		values = values + this.getValue(field, this.fields) + ")";
+		columns = columns + field + ")";
 	    }
 	    else {
-		insertQuery = insertQuery + this.getValue(field, this.fields)+", ";
+		values = values + this.getValue(field, this.fields)+", ";
+		columns = columns + field + ", ";
 	    }
 	    count = count + 1;
 	}
+	insertQuery = insertQuery + columns + values;
 	console.log(insertQuery);
 	this.connection.query(insertQuery, function(err, result) {
 	    callback(self.parser.parseError(err));
@@ -43,16 +53,21 @@ function ActiveRecord() {
     }
 
     /*
-     * Removes the records from the database set with setDatabaseModel.
+     * Removes all records from the database matching having the given fields. Null fields are treated as wildcards.
      */
     this.remove = function(callback) {
+	var self = this;
 	var removeQuery = "delete from "+ this.tableName + " where "+this.createConstraints(this.fields);
 	console.log(removeQuery);
 	this.connection.query(removeQuery, function(err, result) {
-	    callback(this.parse.parseError(err));
+	    callback(self.parser.parseError(err));
 	});
     }
 
+    /*
+     * Updates the associated record in the database. 
+     * fields is a json of key, value pairs, such that each specified key will updated to its respective value.
+     */
     this.update = function(callback, fields) {
 	var self = this;
 	var updateQuery = "update "+ this.tableName + " set " + this.createConstraints(fields) + "where " + this.createConstraints(this.fields);
@@ -63,26 +78,17 @@ function ActiveRecord() {
     }
 
     /*
-     * Gets the records from the database set with setDatabaseModel. result is  a list of matching
-     * records that is not sorted unless a sort order is specified.
+     * Selects all records from the database exactly matching the fields of this record ordered by the specified sort. Null fields are treated as wildcards.
      */
-    this.get = function(callback) {
+    this.select = function(callback) {
+	var self = this;
+	var selectQuery = "select * from " + this.tableName  +" where "+this.createConstraints(this.fields);
+	console.log(selectQuery);
+	this.connection.query(selectQuery, function(err, result) {
+	    callback(self.parser.parseError(err), result);
+	});
     }
 
-    /*
-     * Checks if this record is in the database set with setDatabaseModel. result is true  if the specified
-     * record exists, or otherwise false.
-     */ 
-    this.contains = function(callback) {
-    }
-
-
-    /*
-     * Clears all specified records from the database.
-     */
-    this.clear = function(callback)  {
-
-    }
 
     /*
      * Sets the database that this object will connect to.
@@ -138,7 +144,6 @@ function ActiveRecord() {
 		    isFirst = false;
 		}
 		query = query + field + " = " + this.getValue(field, fields) + " ";
-		console.log(query);
 	    }
 	}
 	return query;

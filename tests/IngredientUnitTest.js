@@ -17,7 +17,7 @@ exports["testAddIngredient"] = function(test){
     var db = new SQLite3Model();
     test.expect(7);
     doSetup(db, function(err, results) {
-	console.log(err);
+
 	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 4, 'oz');
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new SQLite3Parser());
@@ -40,7 +40,6 @@ exports["testAddIngredient"] = function(test){
 exports["testUpdateAddIngredient"] = function(test){
     var db = new SQLite3Model();
     doSetup(db, function(err, results) {
-	console.log(err);
 	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 4, 'oz');
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new SQLite3Parser());
@@ -69,7 +68,6 @@ exports["testUpdateAddIngredient"] = function(test){
 exports["testAddTwoIngredients"] = function(test){
     var db = new SQLite3Model();
     doSetup(db, function(err, results) {
-	console.log(err);
 	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new SQLite3Parser());
@@ -103,10 +101,9 @@ exports["testAddTwoIngredients"] = function(test){
 	    
 };
 
-exports["testUpdateRemoveIngredient"] = function(test){
+exports["testRemoveIngredient"] = function(test){
     var db = new SQLite3Model();
     doSetup(db, function(err, results) {
-	console.log(err);
 	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
 	ingredientModel.setDatabaseModel(db);
 	
@@ -133,31 +130,37 @@ exports["testUpdateRemoveIngredient"] = function(test){
 	    
 };
 
-/*
-
-exports["testAddIngredientInvalidUser"] = function(test){
+exports["testRemoveIngredient"] = function(test){
     var db = new SQLite3Model();
-    test.expect(1);
     doSetup(db, function(err, results) {
-	console.log(err);
-	var ingredientModel = new IngredientModel('invalidname', 'pepper', '5/21/17', -23, 'oz');
+	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
 	ingredientModel.setDatabaseModel(db);
+	
 	ingredientModel.setParser(new SQLite3Parser());
 	db.connect();
-	ingredientModel.add(function(err, result) {
-	    test.equal(err, Constants.INVALID_USER, "Can't add ingredient for invalid user");
+	ingredientModel.add( function(err, results) {
+	    var ingredientModel2 = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
+	    ingredientModel2.setDatabaseModel(db);
+	    ingredientModel2.setParser(new SQLite3Parser());
+	    ingredientModel2.remove(function(err, result) {
+		db.query("select * from ingredients", function(err, rows) {
+		    db.end();
+		    test.expect(1);
+		    console.log(rows);
+		    test.equal(rows.length, 0, "Length of returns did not match");
+		    test.done();
+		});
+	    });
 	});
+	
     });
 	    
 };
-
-
 
 exports["testRemoveIngredientNonExistent"] = function(test){
     var db = new SQLite3Model();
     test.expect(2);
     doSetup(db, function(err, results) {
-	console.log(err);
 	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 10, 'oz');
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new SQLite3Parser());
@@ -176,7 +179,23 @@ exports["testRemoveIngredientNonExistent"] = function(test){
 
 
 
+/*
 
+exports["testAddIngredientInvalidUser"] = function(test){
+    var db = new SQLite3Model();
+    test.expect(1);
+    doSetup(db, function(err, results) {
+	console.log(err);
+	var ingredientModel = new IngredientModel('invalidname', 'pepper', '5/21/17', -23, 'oz');
+	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new SQLite3Parser());
+	db.connect();
+	ingredientModel.add(function(err, result) {
+	    test.equal(err, Constants.INVALID_USER, "Can't add ingredient for invalid user");
+	});
+    });
+	    
+};
 
 */
 
