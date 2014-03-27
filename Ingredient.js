@@ -67,8 +67,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		ingredientRecord.put("username", self.fields.username);
 		ingredientRecord.put("ingredient_name", self.fields.ingredient_name);
 		ingredientRecord.put("expiration_date", self.fields.expiration_date);
-		ingredientRecord.put("unit", null);
-		ingredientRecord.put("quantity", null);
 		ingredientRecord.update(function(err, result) {
 		    if (err) {
 			callback(Constants.ERROR);
@@ -100,15 +98,20 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	ingredientRecord.setDatabaseModel(this.connection);
 	ingredientRecord.setParser(this.parser);
 	ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
-	this.get(function(err, result) {
-	    // the item is not currently in the database, so we can't remove it
+	ingredientRecord.put("username", this.username);
+	ingredientRecord.put("ingredient_name", this.ingredient_name);
+	ingredientRecord.put("expiration_date", this.expiration_date);
+	ingredientRecord.select(function(err, result) {
+	    if (err) {
+		callback(Constants.ERROR);
+		return;
+	    }
+	    result = self.parser.parseIngredient(result);
 	    if (result.length == 0) { 
 		callback(Constants.DOESNT_EXIST, null);
 	    }
-	    // ingredient is already in the db, so update its quantity
-	    else {
+	    else { // ingredient is already in the db, so update its quantity
 		var newQuantity = parseInt(result[0]["quantity"]) - self.quantity;
-		// remove the item
 		if (newQuantity <= 0) {
 		    for (field in self.fields) {
 			ingredientRecord.put(field, self.fields[field]);
@@ -122,13 +125,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 			}
 		    });
 		}
-		// decrease the quantity of the item
 		else {
-		    ingredientRecord.put("username", self.fields.username);
-		    ingredientRecord.put("ingredient_name", self.fields.ingredient_name);
-		    ingredientRecord.put("expiration_date", self.fields.expiration_date);
-		    ingredientRecord.put("unit", null);
-		    ingredientRecord.put("quantity", null);
 		    ingredientRecord.update(function(err, result) {
 			if (err) {
 			    callback(Constants.ERROR);
@@ -140,6 +137,58 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		}
 	    }
 	});
+    }
+
+
+
+    this.removeAll = function(callback) {
+	var ingredientRecord = new ActiveRecord();
+	ingredientRecord.setDatabaseModel(this.connection);
+	ingredientRecord.setParser(this.parser);
+	ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
+	ingredientRecord.put("username", this.username);
+	ingredientRecord.remove(function(err, result) {
+	     if (err) {
+		 callback(Constants.ERROR);
+	     }
+	     else {
+		 callback(Constants.SUCCESS);
+	     }
+	 });
+    }
+
+    this.removeIngredient = function(callback) {
+	var ingredientRecord = new ActiveRecord();
+	ingredientRecord.setDatabaseModel(this.connection);
+	ingredientRecord.setParser(this.parser);
+	ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
+	ingredientRecord.put("username", this.username);
+	ingredientRecord.put("ingredient_name", this.ingredient_name);
+	ingredientRecord.put("expiration_date", this.expiration_date);
+	ingredientRecord.remove(function(err, result) {
+	    if (err) {
+		callback(Constants.ERROR);
+	    }
+	    else {
+		callback(Constants.SUCCESS);
+	    }
+	});
+    }
+    
+    this.getInventory = function(callback) {
+    	var ingredientRecord = new ActiveRecord();
+	ingredientRecord.setDatabaseModel(this.connection);
+	ingredientRecord.setParser(this.parser);
+	ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
+	ingredientRecord.put("username", this.username);
+	ingredientRecord.select(function(err, result) {
+	     if (err) {
+		 callback(Constants.ERROR);
+	     }
+	     else {
+		 callback(Constants.SUCCESS, self.parser.parseIngredient(result));
+	     }
+	 });
     }
 
     /*
@@ -186,6 +235,5 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.limit = limit;
     }
 }
-
 
 module.exports = Ingredient;

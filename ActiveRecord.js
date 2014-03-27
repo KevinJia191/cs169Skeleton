@@ -17,6 +17,12 @@ function ActiveRecord() {
 	this.numFields = this.numFields + 1;
     }
 
+    this.puts = function(pairs) {
+	for (key in pairs) {
+	    fields[key] = pairs[key];  
+	}
+    }
+
     this.setTable = function(name) {
 	this.tableName = name;
     }
