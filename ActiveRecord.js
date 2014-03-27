@@ -2,6 +2,7 @@
 * Base class of relations stored in a database. Each ActiveRecord has an analogous representation in a database as a record. 
 * Classes that extend ActiveRecord will have their constructors take in fields that correspond to the columns of its respective 
 * table in the database.
+* @author Christopher
 */
 
 function ActiveRecord() {
@@ -10,11 +11,18 @@ function ActiveRecord() {
     this.connection = null;
     this.parser = null;
     this.numFields = 0;
-
+    this.sortField = null;
+    this.sortBy = null;
 
     this.put = function(key, value) {
 	this.fields[key] = value;
 	this.numFields = this.numFields + 1;
+    }
+
+    this.puts = function(pairs) {
+	for (key in pairs) {
+	    fields[key] = pairs[key];  
+	}
     }
 
     this.setTable = function(name) {
@@ -83,6 +91,12 @@ function ActiveRecord() {
     this.select = function(callback) {
 	var self = this;
 	var selectQuery = "select * from " + this.tableName  +" where "+this.createConstraints(this.fields);
+	if (this.sortField != null) {
+	    selectQuery = selectQuery + "order by "+this.sortField;
+	    if (this.sortBy != null) { 
+		selectQuery = selectQuery + " " + this.sortBy;
+	    }
+	}
 	console.log(selectQuery);
 	this.connection.query(selectQuery, function(err, result) {
 	    callback(self.parser.parseError(err), result);
@@ -113,7 +127,20 @@ function ActiveRecord() {
      * Sets how the list returned by get is sorted by. sortField is the field to sort on. sortBy is either "ASC" or "DESC" (ascending/descending).
      *
      */
-    this.setSort = function(sortField, sortBy, start, end) {
+    this.setSort = function(sortField, sortBy) {
+	if (this.fields.hasOwnProperty(sortField)) {
+	    this.sortField = sortField;
+	}
+	else {
+	    return false;
+	}
+	if (sortBy == "ASC" || sortBy == "DESC") {
+	    this.sortBy = sortBy;
+	    return true;
+	}
+	else {
+	    return false;
+	}
     }
 
 

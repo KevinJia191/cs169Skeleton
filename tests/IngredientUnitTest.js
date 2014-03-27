@@ -1,5 +1,6 @@
 /*
-*@author Christopher
+* Tests for the Ingredient model.
+* @author Christopher
 *
 */
 var SQLite3Model = require('./SQLite3DatabaseModel.js');
@@ -130,7 +131,7 @@ exports["testRemoveIngredient"] = function(test){
 	    
 };
 
-exports["testRemoveIngredient"] = function(test){
+exports["testRemoveIngredient2"] = function(test){
     var db = new SQLite3Model();
     doSetup(db, function(err, results) {
 	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
@@ -139,14 +140,13 @@ exports["testRemoveIngredient"] = function(test){
 	ingredientModel.setParser(new SQLite3Parser());
 	db.connect();
 	ingredientModel.add( function(err, results) {
-	    var ingredientModel2 = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
+	    var ingredientModel2 = new IngredientModel('jernchr', 'pepper', '5/21/17');
 	    ingredientModel2.setDatabaseModel(db);
 	    ingredientModel2.setParser(new SQLite3Parser());
-	    ingredientModel2.remove(function(err, result) {
+	    ingredientModel2.removeIngredient(function(err, result) {
 		db.query("select * from ingredients", function(err, rows) {
 		    db.end();
 		    test.expect(1);
-		    console.log(rows);
 		    test.equal(rows.length, 0, "Length of returns did not match");
 		    test.done();
 		});
@@ -156,6 +156,10 @@ exports["testRemoveIngredient"] = function(test){
     });
 	    
 };
+
+
+
+
 
 exports["testRemoveIngredientNonExistent"] = function(test){
     var db = new SQLite3Model();
@@ -173,6 +177,108 @@ exports["testRemoveIngredientNonExistent"] = function(test){
 		test.done();
 	    });
 	});
+    });
+	    
+};
+
+exports["testRemoveAllIngredients"] = function(test){
+    var db = new SQLite3Model();
+    test.expect(2);
+    doSetup(db, function(err, results) {
+	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
+	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new SQLite3Parser());
+	db.connect();
+	ingredientModel.add( function(err, results) {
+	    var ingredientModel2 = new IngredientModel('jernchr', 'chicken breasts', '5/18/16', 3, 'count');
+	    ingredientModel2.setDatabaseModel(db);
+	    ingredientModel2.setParser(new SQLite3Parser());
+	    ingredientModel2.add(function(err, result) {
+		var ingredientModel3 = new IngredientModel('jernchr');
+		ingredientModel3.setDatabaseModel(db);
+		ingredientModel3.setParser(new SQLite3Parser());
+		ingredientModel3.removeAll(function(err, results) {
+		    test.equal(err, Constants.SUCCESS);
+		    db.query("select * from ingredients", function(err, rows) {
+			db.end();
+			test.equal(rows.length, 0, "Length of returns did not match");
+			test.done();
+		    });
+		});
+	    });
+	});
+	
+    });
+	    
+};
+
+exports["testRemoveAllIngredientsTwoUsers"] = function(test){
+    var db = new SQLite3Model();
+    doSetup(db, function(err, results) {
+	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
+	ingredientModel.setDatabaseModel(db);
+	
+	ingredientModel.setParser(new SQLite3Parser());
+	db.connect();
+	ingredientModel.add( function(err, results) {
+	    var ingredientModel2 = new IngredientModel('jernchr2', 'chicken breasts', '5/18/16', 3, 'count');
+	    ingredientModel2.setDatabaseModel(db);
+	    ingredientModel2.setParser(new SQLite3Parser());
+	    ingredientModel2.add(function(err, result) {
+		var ingredientModel3 = new IngredientModel('jernchr');
+		ingredientModel3.setDatabaseModel(db);
+		ingredientModel3.setParser(new SQLite3Parser());
+		ingredientModel3.removeAll(function(err, results) {
+		    db.query("select * from ingredients", function(err, rows) {
+			db.end();
+			test.expect(6);
+			test.equal(rows.length, 1, "Length of returns did not match");
+			var exp = { username: 'jernchr2', ingredient_name: 'chicken breasts', expiration_date:'5/18/16', quantity: 3, unit: 'count' };
+			var row = rows[0];
+			testIngredientEqual(row, exp, test);
+			test.done();
+		    });
+		});
+	    });
+	});
+	
+    });
+	    
+};
+
+
+exports["testGetIngredients"] = function(test){
+    var db = new SQLite3Model();
+    test.expect(12);
+    doSetup(db, function(err, results) {
+	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
+	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new SQLite3Parser());
+	db.connect();
+	ingredientModel.add( function(err, results) {
+	    var ingredientModel2 = new IngredientModel('jernchr', 'chicken breasts', '5/18/16', 3, 'count');
+	    ingredientModel2.setDatabaseModel(db);
+	    ingredientModel2.setParser(new SQLite3Parser());
+	    ingredientModel2.add(function(err, result) {
+		var ingredientModel3 = new IngredientModel('jernchr');
+		ingredientModel3.setDatabaseModel(db);
+		ingredientModel3.setParser(new SQLite3Parser());
+		ingredientModel3.getInventory(function(err, rows) {
+		    rows.sort(function(r0, r1) { return r1.quantity - r0.quantity});
+		    console.log(rows[0]);
+		    test.equal(err, Constants.SUCCESS);
+		    test.equal(rows.length, 2);
+		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 12, unit: 'oz' };
+		    var row = rows[0];
+		    testIngredientEqual(row, exp, test);
+		    exp = { username: 'jernchr', ingredient_name: 'chicken breasts', expiration_date:'5/18/16', quantity: 3, unit: 'count' };
+		    row = rows[1];
+		    testIngredientEqual(row, exp, test);
+		    test.done();
+		});
+	    });
+	});
+	
     });
 	    
 };
@@ -205,11 +311,12 @@ function doSetup(db, callback) {
     db.connect();
     var createUsers = "Create table users (username text primary key,hashed_password text);"
     db.query(createUsers, function(err, results) {
-	console.log(err);
 	db.query("Create table ingredients (username text references users(username),ingredient_name text,expiration_date text,quantity decimal check(quantity>0),unit text, primary key(username,ingredient_name,expiration_date)); ", function(err, results) {
 	    var createHistory = "Create table history (username text references users(username), recipe_name text, dateCreated text, rating int check(rating > 0 AND rating <= 5), primary key(username,recipe_name,dateCreated));";
 	    db.query(createHistory, function(err, results) {
-		db.query("insert into users values('jernchr', 'foo')", callback);
+		db.query("insert into users values('jernchr', 'foo')", function(err, results) {
+		    db.query("insert into users values('jernchr2', 'foo2')", callback);
+		});
 	    });
 	});
     });

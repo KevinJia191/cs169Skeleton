@@ -5,7 +5,6 @@ var DatabaseModel = require('../DatabaseModel.js');
 function SQLite3Parser() {
 
     this.parseError = function(err) {
-	console.log("yeh");
 	if (err) {
 	    return DatabaseModel.ERROR;
 	}

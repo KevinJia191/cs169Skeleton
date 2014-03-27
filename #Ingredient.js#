@@ -175,13 +175,14 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	});
     }
     
-    this.getInventory = function(callback) {
+    this.getInventory = function(callback, sortBy) {
 	var self = this;
     	var ingredientRecord = new ActiveRecord();
 	ingredientRecord.setDatabaseModel(this.connection);
 	ingredientRecord.setParser(this.parser);
 	ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
 	ingredientRecord.put("username", this.username);
+	ingredientRecord.set
 	ingredientRecord.select(function(err, result) {
 	     if (err) {
 		 callback(Constants.ERROR);
@@ -189,7 +190,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	     else {
 		 callback(Constants.SUCCESS, self.parser.parseIngredient(result));
 	     }
-	 });
+	});
     }
 
     /*
