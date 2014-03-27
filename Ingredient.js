@@ -39,12 +39,19 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	ingredientRecord.setDatabaseModel(this.connection);
 	ingredientRecord.setParser(this.parser);
 	ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
-	this.get(function(err, result) {
+	ingredientRecord.put("username", this.username);
+	ingredientRecord.put("ingredient_name", this.ingredient_name);
+	ingredientRecord.put("expiration_date", this.expiration_date);
+	ingredientRecord.select(function(err, result) {
+	    if (err) {
+		callback(Constants.ERROR);
+		return;
+	    }
+	    result = self.parser.parseIngredient(result);
 	    // the item is not currently in the database, so we can directly insert it.
 	    if (result.length == 0) {
-		for (field in self.fields) {
-		    ingredientRecord.put(field, self.fields[field]);
-		}
+		ingredientRecord.put("unit", self.unit);
+		ingredientRecord.put("quantity", self.quantity);
 		ingredientRecord.insert(function(err, result) {
 		    if (err) {
 			callback(Constants.ERROR);
@@ -55,7 +62,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		});
 	    }
 	    // ingredient is already in the database, so update its quantity
-	    else {
+	    else if (result.length == 1) {
 		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
 		ingredientRecord.put("username", self.fields.username);
 		ingredientRecord.put("ingredient_name", self.fields.ingredient_name);
@@ -71,6 +78,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		    }
 		}, {"quantity":newQuantity});
 	    }
+	    // more than one ingredient matched: this is an error
+	    else {
+		callback(Constants.ERROR);
+	    }
 	});
     }
     /* 
@@ -85,6 +96,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    callback(Constants.NEGATIVE_QUANTITY, null);
 	    return;
 	}
+	var ingredientRecord = new ActiveRecord();
+	ingredientRecord.setDatabaseModel(this.connection);
+	ingredientRecord.setParser(this.parser);
+	ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
 	this.get(function(err, result) {
 	    // the item is not currently in the database, so we can't remove it
 	    if (result.length == 0) { 
@@ -95,26 +110,33 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		var newQuantity = parseInt(result[0]["quantity"]) - self.quantity;
 		// remove the item
 		if (newQuantity <= 0) {
-		    var removeQuery = "delete from ingredients where "+self.createConstraints();
-		    console.log(removeQuery);
-		    self.connection.query(removeQuery, function(err, result) {
+		    for (field in self.fields) {
+			ingredientRecord.put(field, self.fields[field]);
+		    }
+		    ingredientRecord.remove(function(err, result) {
 			if (err) {
 			    callback(Constants.ERROR);
-			    return;
 			}
-			callback(Constants.SUCCESS, null);
+			else {
+			    callback(Constants.SUCCESS);
+			}
 		    });
 		}
 		// decrease the quantity of the item
 		else {
-		    var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
-		    self.connection.query(updateQuery, function(err, result) {
+		    ingredientRecord.put("username", self.fields.username);
+		    ingredientRecord.put("ingredient_name", self.fields.ingredient_name);
+		    ingredientRecord.put("expiration_date", self.fields.expiration_date);
+		    ingredientRecord.put("unit", null);
+		    ingredientRecord.put("quantity", null);
+		    ingredientRecord.update(function(err, result) {
 			if (err) {
 			    callback(Constants.ERROR);
-			    return;
 			}
-			callback(Constants.SUCCESS_UPDATED, newQuantity);
-		    });
+			else {
+			    callback(Constants.SUCCESS_UPDATED, newQuantity);
+			}
+		    }, {"quantity":newQuantity});
 		}
 	    }
 	});
@@ -131,67 +153,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	self.connection.query(removeQuery, function(err, result) {
 	    callback(Constants.SUCCESS, null);
 	});
-    }
-
-    /*
-     * Gets the ingredient with the specified parameters passed into the constructor. 
-     * For example, if you only specify username and all other fields are null,
-     * then all ingredients possessed by that user will be stored in result.
-     * result will be a list of ingredients. If sortby was set, the list will be sorted, otherwise order
-     * is not guaranteed. If start and end are not set, all returned records are fair game.
-     */
-    this.get = function(callback) {
-	var selectQuery = "select * from ingredients where " + this.createConstraints();
-	console.log(selectQuery);
-	var self = this;
-	if (this.sortField != null) {
-	    selectQuery = selectQuery + " order by "+this.sortfield;
-	    if (this.sortBy != null) {
-		selectQuery = selectQuery + " "+this.sortBy;
-	    }
-	}
-	this.connection.query(selectQuery, function(err, result) {
-	    var x = self.parser.parseIngredient(result);
-	    callback(Constants.SUCCESS, x);
-	});
-    }
-
-    this.createConstraints = function() {
-	var query = "";
-	var index = 0;
-	var constraints = new Array();
-	var isFirst = true;
-	if (this.username != null) {
-	    constraints[index] = "username " + " = " + "'" + this.username + "' ";
-	    index = index + 1;
-	}
-	if (this.ingredient_name != null) {
-	    constraints[index] =  "ingredient_name " + " = " + "'" + this.ingredient_name + "' ";
-	    index = index + 1;
-	}
-	if (this.expiration_date != null) {
-	    constraints[index] =  "expiration_date " + " = " + "'" + this.expiration_date + "' ";
-	    index = index + 1;
-	}
-	for (index = 0; index < constraints.length; index++) {
-	    if (!isFirst) {
-		query = query + " AND ";
-	    }
-	    else {
-		isFirst = false;
-	    }
-	    query = query + constraints[index];
-	}
-	return query;
-    }
-
-    /*
-     * Checks whether an ingredient exists with the specified parameters passed into the constructor.
-     * null parameters are treated as wild cards. username, ingredient_name, expiration_date cannot be null.
-     * result will be a boolean that is true if it is found, and false otherwise.
-     */
-    this.contains = function(callback) {
-
     }
 
     /*
