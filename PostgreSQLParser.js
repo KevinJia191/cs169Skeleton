@@ -1,8 +1,19 @@
 var Ingredient = require('./Ingredient.js');
 var UserModel = require('./UserModel.js');
 var Recipe = require('./Recipe.js');
+var DatabaseModel = require('./DatabaseModel.js');
+function PostgreSQLParser() {
 
-function PostgreSQLParser() {    
+    this.parseError = function(err) {
+	if (err) {
+	    return DatabaseModel.ERROR;
+	}
+	else {
+	    return DatabaseModel.SUCCESS;
+	}
+    }
+    
+    
     this.parseIngredient = function(result) {
 	var ingredients = new Array();
 	if (result.rows.length == 0) {

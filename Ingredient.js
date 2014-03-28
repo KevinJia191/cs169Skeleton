@@ -1,10 +1,11 @@
 var pg = require('pg');
 var Constants = require('./Constants.js');
+var ActiveRecord = require('./ActiveRecord.js');
 /*
 * Model for an ingredient. username, ingredient_name, expiration_date are primary keys.
 * All methods in here have a callback function of format function(err, result);
 * A database model must be set in order to execute add, remove, etc.
-*@author Christopher
+* @author Christopher
 */
 function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.username = username;
@@ -19,9 +20,34 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.start = null;
     this.end = null;
     this.validUnits = { "oz" : true, "count": true};
+    this.fields = { "username": username, "ingredient_name":ingredient_name, "expiration_date":expiration_date, "quantity":quantity, "unit":unit};
     // null means conversion isn't allowed. This contains all combinations where [a,b] means that a is lexicographically less than b.
     this.conversion = {"count/oz": null} 
-    
+
+
+
+    this.userExists = function(callback) {
+	var self = this;
+	var userRecord = new ActiveRecord();
+	userRecord.setUp(self.connection, self.parser, Constants.USERS_TABLE);
+	userRecord.put("username", self.username);
+	userRecord.select(function(err, result) {
+	    console.log(err);
+	    if (err) {
+		callback(Constants.ERROR);
+		return;
+	    }
+	    result = self.parser.parseIngredient(result);
+	    if (result.length == 0) {
+		callback(Constants.INVALID_USER);
+	    }
+	    else {
+		callback(Constants.SUCCESS);
+	    }
+	});
+    }
+
+
     /* 
      * Adds the ingredient to the User's inventory.
      * These fields CANNOT be null: username, ingredient_name, expiration_date, quantity, unit
@@ -34,31 +60,55 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    callback(Constants.NEGATIVE_QUANTITY, null);
 	    return;
 	}
-	this.get(function(err, result) {
-	    // the item is not currently in the database, so we can directly insert it.
-	    if (result.length == 0) { 
-		var addQuery = "insert into ingredients values('"+self.username+"', '"+self.ingredient_name+"','"+self.expiration_date+"', '"+self.quantity+"', '"+self.unit+"')";
-		console.log(addQuery);
-		self.connection.query(addQuery, function(err, result) {
-		    if (err) {
-			callback(Constants.ERROR);
-			return;
-		    }
-		    callback(Constants.SUCCESS);
-		});
+	self.userExists(function(err) {
+	    if (err != Constants.SUCCESS) {
+		callback(err);
+		return;
 	    }
-	    // ingredient is already in the db, so update its quantity
-	    else {
-		var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
-		var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
-		self.connection.query(updateQuery, function(err, result) {
-		    if (err) {
-			callback(Constants.ERROR);
-			return;
-		    }
-		    callback(Constants.SUCCESS_UPDATED, newQuantity);
-		});
-	    }
+	    var ingredientRecord = new ActiveRecord();
+	    ingredientRecord.setUp(self.connection, self.parser, Constants.INGREDIENTS_TABLE);
+	    ingredientRecord.put("username", self.username);
+	    ingredientRecord.put("ingredient_name", self.ingredient_name);
+	    ingredientRecord.put("expiration_date", self.expiration_date);
+	    ingredientRecord.select(function(err, result) {
+		if (err) {
+		    callback(Constants.ERROR);
+		    return;
+		}
+		result = self.parser.parseIngredient(result);
+		// the item is not currently in the database, so we can directly insert it.
+		if (result.length == 0) {
+		    ingredientRecord.put("unit", self.unit);
+		    ingredientRecord.put("quantity", self.quantity);
+		    ingredientRecord.insert(function(err, result) {
+			if (err) {
+			    callback(Constants.ERROR);
+			}
+			else {
+			    callback(Constants.SUCCESS);
+			}
+		    });
+		}
+		// ingredient is already in the database, so update its quantity
+		else if (result.length == 1) {
+		    var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
+		    ingredientRecord.put("username", self.fields.username);
+		    ingredientRecord.put("ingredient_name", self.fields.ingredient_name);
+		    ingredientRecord.put("expiration_date", self.fields.expiration_date);
+		    ingredientRecord.update(function(err, result) {
+			if (err) {
+			    callback(Constants.ERROR);
+			}
+			else {
+			    callback(Constants.SUCCESS_UPDATED, newQuantity);
+			}
+		    }, {"quantity":newQuantity});
+		}
+		// more than one ingredient matched: this is an error
+		else {
+		    callback(Constants.ERROR);
+		}
+	    });
 	});
     }
     /* 
@@ -73,113 +123,126 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    callback(Constants.NEGATIVE_QUANTITY, null);
 	    return;
 	}
-	this.get(function(err, result) {
-	    // the item is not currently in the database, so we can't remove it
-	    if (result.length == 0) { 
-		callback(Constants.DOESNT_EXIST, null);
+	self.userExists(function(err) {
+	    if (err != Constants.SUCCESS) {
+		callback(err);
+		return;
 	    }
-	    // ingredient is already in the db, so update its quantity
-	    else {
-		var newQuantity = parseInt(result[0]["quantity"]) - self.quantity;
-		// remove the item
-		if (newQuantity <= 0) {
-		    var removeQuery = "delete from ingredients where "+self.createConstraints();
-		    console.log(removeQuery);
-		    self.connection.query(removeQuery, function(err, result) {
-			if (err) {
-			    callback(Constants.ERROR);
-			    return;
-			}
-			callback(Constants.SUCCESS, null);
-		    });
+	    var ingredientRecord = new ActiveRecord();
+	    ingredientRecord.setDatabaseModel(self.connection);
+	    ingredientRecord.setParser(self.parser);
+	    ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
+	    ingredientRecord.put("username", self.username);
+	    ingredientRecord.put("ingredient_name", self.ingredient_name);
+	    ingredientRecord.put("expiration_date", self.expiration_date);
+	    ingredientRecord.select(function(err, result) {
+		if (err) {
+		    callback(Constants.ERROR);
+		    return;
 		}
-		// decrease the quantity of the item
+		result = self.parser.parseIngredient(result);
+		if (result.length == 0) { 
+		    callback(Constants.DOESNT_EXIST, null);
+		}
+		else { // ingredient is already in the db, so update its quantity
+		    var newQuantity = parseInt(result[0]["quantity"]) - self.quantity;
+		    console.log(newQuantity);
+		    if (newQuantity <= 0) {
+			ingredientRecord.remove(function(err, result) {
+			    if (err) {
+				callback(Constants.ERROR);
+			    }
+			    else {
+				callback(Constants.SUCCESS);
+			    }
+			});
+		    }
+		    else {
+			ingredientRecord.update(function(err, result) {
+			    if (err) {
+				callback(Constants.ERROR);
+			    }
+			    else {
+				callback(Constants.SUCCESS_UPDATED, newQuantity);
+			    }
+			}, {"quantity":newQuantity});
+		    }
+		}
+	    });
+	});
+    }
+
+
+
+    this.removeAll = function(callback) {
+	var self = this;
+	self.userExists(function(err) {
+	    if (err != Constants.SUCCESS) {
+		callback(err);
+		return;
+	    }
+	    var ingredientRecord = new ActiveRecord();
+	    ingredientRecord.setDatabaseModel(self.connection);
+	    ingredientRecord.setParser(self.parser);
+	    ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
+	    ingredientRecord.put("username", self.username);
+	    ingredientRecord.remove(function(err, result) {
+		if (err) {
+		    callback(Constants.ERROR);
+		}
 		else {
-		    var updateQuery = "update ingredients set quantity ="+newQuantity+" where "+self.createConstraints();
-		    self.connection.query(updateQuery, function(err, result) {
-			if (err) {
-			    callback(Constants.ERROR);
-			    return;
-			}
-			callback(Constants.SUCCESS_UPDATED, newQuantity);
-		    });
+		    callback(Constants.SUCCESS);
 		}
-	    }
+	    });
 	});
     }
 
-    /*
-     * Clears all records that match the given constraints on primary key fields. For example you can delete all records for someone of a given username, or
-     * delete all records of a given username and a given ingredient name. Warning: if all primary key fields are null, the whole database will be cleared.
-     */
-    this.clear = function(callback) {
+    this.removeIngredient = function(callback) {
 	var self = this;
-	var removeQuery = "delete from ingredients where "+self.createConstraints();
-	console.log(removeQuery);
-	self.connection.query(removeQuery, function(err, result) {
-	    callback(Constants.SUCCESS, null);
+	self.userExists(function(err) {
+	    if (err != Constants.SUCCESS) {
+		callback(err);
+		return;
+	    }
+	    var ingredientRecord = new ActiveRecord();
+	    ingredientRecord.setDatabaseModel(self.connection);
+	    ingredientRecord.setParser(self.parser);
+	    ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
+	    ingredientRecord.put("username", self.username);
+	    ingredientRecord.put("ingredient_name", self.ingredient_name);
+	    ingredientRecord.put("expiration_date", self.expiration_date);
+	    ingredientRecord.remove(function(err, result) {
+		if (err) {
+		    callback(Constants.ERROR);
+		}
+		else {
+		    callback(Constants.SUCCESS);
+		}
+	    });
 	});
     }
-
-    /*
-     * Gets the ingredient with the specified parameters passed into the constructor. 
-     * For example, if you only specify username and all other fields are null,
-     * then all ingredients possessed by that user will be stored in result.
-     * result will be a list of ingredients. If sortby was set, the list will be sorted, otherwise order
-     * is not guaranteed. If start and end are not set, all returned records are fair game.
-     */
-    this.get = function(callback) {
-	var selectQuery = "select * from ingredients where " + this.createConstraints();
-	console.log(selectQuery);
+    
+    this.getInventory = function(callback) {
 	var self = this;
-	if (this.sortField != null) {
-	    selectQuery = selectQuery + " order by "+this.sortfield;
-	    if (this.sortBy != null) {
-		selectQuery = selectQuery + " "+this.sortBy;
+	self.userExists(function(err) {
+	    if (err != Constants.SUCCESS) {
+		callback(err);
+		return;
 	    }
-	}
-	this.connection.query(selectQuery, function(err, result) {
-	    var x = self.parser.parseIngredient(result);
-	    callback(Constants.SUCCESS, x);
+    	    var ingredientRecord = new ActiveRecord();
+	    ingredientRecord.setDatabaseModel(self.connection);
+	    ingredientRecord.setParser(self.parser);
+	    ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
+	    ingredientRecord.put("username", self.username);
+	    ingredientRecord.select(function(err, result) {
+		if (err) {
+		    callback(Constants.ERROR);
+		}
+		else {
+		    callback(Constants.SUCCESS, self.parser.parseIngredient(result));
+		}
+	    });
 	});
-    }
-
-    this.createConstraints = function() {
-	var query = "";
-	var index = 0;
-	var constraints = new Array();
-	var isFirst = true;
-	if (this.username != null) {
-	    constraints[index] = "username " + " = " + "'" + this.username + "' ";
-	    index = index + 1;
-	}
-	if (this.ingredient_name != null) {
-	    constraints[index] =  "ingredient_name " + " = " + "'" + this.ingredient_name + "' ";
-	    index = index + 1;
-	}
-	if (this.expiration_date != null) {
-	    constraints[index] =  "expiration_date " + " = " + "'" + this.expiration_date + "' ";
-	    index = index + 1;
-	}
-	for (index = 0; index < constraints.length; index++) {
-	    if (!isFirst) {
-		query = query + " AND ";
-	    }
-	    else {
-		isFirst = false;
-	    }
-	    query = query + constraints[index];
-	}
-	return query;
-    }
-
-    /*
-     * Checks whether an ingredient exists with the specified parameters passed into the constructor.
-     * null parameters are treated as wild cards. username, ingredient_name, expiration_date cannot be null.
-     * result will be a boolean that is true if it is found, and false otherwise.
-     */
-    this.contains = function(callback) {
-
     }
 
     /*
@@ -203,14 +266,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.getParser = function() {
 	return this.parser;
     }
-
-    this.connect = function() {
-	this.connection.connect();
-    }
-    this.end = function() {
-	this.connection.end();
-    }
-
     /*
      * Sets how the list returned by get is sorted by. sortField is the field to sort on. sortBy is either "ASC" or "DESC" (ascending/descending).
      * Display the inventory starting from the start to end element.
@@ -221,6 +276,5 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.limit = limit;
     }
 }
-
 
 module.exports = Ingredient;

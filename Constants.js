@@ -12,6 +12,7 @@ Constants.SUCCESS_UPDATED = "SUCCESS_UPDATED"; //Updated an ingredient
 Constants.NEGATIVE_QUANTITY = "NEGATIVE_QUANTITY";
 Constants.DATE_ERROR = "DATE_ERROR";  
 Constants.DOESNT_EXIST = "DOESNT_EXIST";
+Constants.INVALID_USER = "INVALID_USER"
 
 Constants.ERR_USER_NOTFOUND = "ERR_USER_NOTFOUND"; //Tried to use a username that doens't exist
 Constants.ERR_USER_EXISTS = "ERR_USER_EXISTS"; //Tried to Signup a user that doesn't exist
@@ -31,5 +32,10 @@ Constants.GET_HISTORY = '/recipes/history';
 Constants.MAKE_RECIPE = '/recipes/make';
 Constants.CLEAR_HISTORY = '/recipes/deleteAllHistory';
 Constants.RESET_FIXTURE = '/TESTAPI/resetFixture';
+
+
+Constants.INGREDIENTS_TABLE = "ingredients";
+Constants.USERS_TABLE = "users";
+Constants.HISTORY_TABLE = "history";
 
 module.exports = Constants;
