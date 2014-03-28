@@ -1,7 +1,7 @@
 var Ingredient = require('./Ingredient.js');
 var UserModel = require('./UserModel.js');
 var Recipe = require('./Recipe.js');
-var DatabaseModel = require('../DatabaseModel.js');
+var DatabaseModel = require('./DatabaseModel.js');
 function PostgreSQLParser() {
 
     this.parseError = function(err) {

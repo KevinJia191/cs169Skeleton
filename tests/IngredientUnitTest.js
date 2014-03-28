@@ -157,6 +157,32 @@ exports["testRemoveIngredient2"] = function(test){
 	    
 };
 
+exports["testRemoveIngredient3"] = function(test){
+    var db = new SQLite3Model();
+    doSetup(db, function(err, results) {
+	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 12, 'oz');
+	ingredientModel.setDatabaseModel(db);
+	
+	ingredientModel.setParser(new SQLite3Parser());
+	db.connect();
+	ingredientModel.add( function(err, results) {
+	    var ingredientModel2 = new IngredientModel('jernchr', 'pepper', '5/21/17', 15, 'oz');
+	    ingredientModel2.setDatabaseModel(db);
+	    ingredientModel2.setParser(new SQLite3Parser());
+	    ingredientModel2.remove(function(err, result) {
+		db.query("select * from ingredients", function(err, rows) {
+		    db.end();
+		    test.expect(1);
+		    test.equal(rows.length, 0, "Length of returns did not match");
+		    test.done();
+		});
+	    });
+	});
+	
+    });
+	    
+};
+
 
 
 

@@ -32,6 +32,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	userRecord.setUp(self.connection, self.parser, Constants.USERS_TABLE);
 	userRecord.put("username", self.username);
 	userRecord.select(function(err, result) {
+	    console.log(err);
 	    if (err) {
 		callback(Constants.ERROR);
 		return;
@@ -145,10 +146,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		}
 		else { // ingredient is already in the db, so update its quantity
 		    var newQuantity = parseInt(result[0]["quantity"]) - self.quantity;
+		    console.log(newQuantity);
 		    if (newQuantity <= 0) {
-			for (field in self.fields) {
-			    ingredientRecord.put(field, self.fields[field]);
-			}
 			ingredientRecord.remove(function(err, result) {
 			    if (err) {
 				callback(Constants.ERROR);

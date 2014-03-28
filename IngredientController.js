@@ -52,21 +52,7 @@ var IngredientController = function(res) {
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new PostgreSQLParser());
 	db.connect();
-	ingredientModel.clear(function (err, result) {
-	    db.end();
-	    var json = {errCode : err};
-	    res.header('Content-Type', 'application/json');
-	    res.end(JSON.stringify(json));
-	});
-    }
-
-    this.clearAll = function(postRequest) {
-	var ingredientModel = new IngredientModel(postRequest["user"]);
-	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
-	ingredientModel.setDatabaseModel(db);
-	ingredientModel.setParser(new PostgreSQLParser());
-	db.connect();
-	ingredientModel.clear(function (err, result) {
+	ingredientModel.removeAll(function (err, result) {
 	    db.end();
 	    var json = {errCode : err};
 	    res.header('Content-Type', 'application/json');
@@ -81,7 +67,7 @@ var IngredientController = function(res) {
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new PostgreSQLParser());
 	db.connect();
-	ingredientModel.get(function (err, result) {
+	ingredientModel.getInventory(function (err, result) {
 	    db.end();
 	    var json = {errCode : err};
 	    var inventory = new Array();
