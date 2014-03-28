@@ -73,6 +73,7 @@ class TestAdd(testLib.RestTestCase):
         self.assertResponse(respData2, USER_EXISTS)     
     """
     REMOVE   
+    CHRIS
     def testAddInvalidUser(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData1 = self.makeRequest("/users/signup", method="POST", data = { 'user' : '', 'password' : 'user1'} )
@@ -181,8 +182,16 @@ class TestIngredients(testLib.RestTestCase):
         self.assertResponse(respData,SUCCESS);
         respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Mango', 'quantity': -10, 'unit':'count', 'expiration_date':'6/7/15'} )
         self.assertResponse(respData,NEGATIVE_QUANTITY);
+    def testRemoveNegativeQuantity(self):
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Candy', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Candy', 'quantity': -3, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,NEGATIVE_QUANTITY)
+    def testGetInventory(self):
+        respData = self.makeRequest("/ingredients/get", method="POST", data = {'user': 'user1'} )
+        self.assertResponse(respData,SUCCESS)
     """
     REMOVE
+    CHRIS
     def testRemoveSomeIngredients(self):
         respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
         self.assertResponse(respData,SUCCESS)
@@ -198,7 +207,10 @@ class TestIngredients(testLib.RestTestCase):
         #self.assertQuantity(respData,7);
     """     
     def testRemoveAll(self):
+        respData = self.makeRequest("/ingredients/removeAll", method="POST", data = {'user': 'user1'} )
+        self.assertResponse(respData,SUCCESS)
         
+
 
 class TestRecipe(testLib.RestTestCase):
     def assertResponse(self, respData, code):
@@ -206,12 +218,17 @@ class TestRecipe(testLib.RestTestCase):
             return;
         else:
             self.assertEquals(respData["errCode"],code);
-    def testAddRecipe(self):
+    """
+    KEVIN
+    def testMakeRecipe(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Apple Pie', 'current_date': '3/11/14', 'rating':'4'} )
-        print(respData)
+        self.assertResponse(respData,SUCCESS)
+    """
+    def testGetCompletedRecipes(self):
+        
         """
         self.assertResponse(respData,"SUCCESS")
         respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Chicken Pie', 'current_date': '3/11/14', 'rating':'4'} )
