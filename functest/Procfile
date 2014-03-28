@@ -1,6 +1,0 @@
-<<<<<<< HEAD
-web: python server.py
-=======
-web: node HTTPHandler.js
-
->>>>>>> bf7b7a17c32dd00a7ceee9bef0ce922b560179e6
