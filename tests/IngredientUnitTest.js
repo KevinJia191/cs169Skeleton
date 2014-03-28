@@ -265,7 +265,6 @@ exports["testGetIngredients"] = function(test){
 		ingredientModel3.setParser(new SQLite3Parser());
 		ingredientModel3.getInventory(function(err, rows) {
 		    rows.sort(function(r0, r1) { return r1.quantity - r0.quantity});
-		    console.log(rows[0]);
 		    test.equal(err, Constants.SUCCESS);
 		    test.equal(rows.length, 2);
 		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 12, unit: 'oz' };
@@ -284,26 +283,22 @@ exports["testGetIngredients"] = function(test){
 };
 
 
-
-/*
-
 exports["testAddIngredientInvalidUser"] = function(test){
     var db = new SQLite3Model();
     test.expect(1);
     doSetup(db, function(err, results) {
 	console.log(err);
-	var ingredientModel = new IngredientModel('invalidname', 'pepper', '5/21/17', -23, 'oz');
+	var ingredientModel = new IngredientModel('invalidname', 'pepper', '5/21/17', 23, 'oz');
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new SQLite3Parser());
 	db.connect();
 	ingredientModel.add(function(err, result) {
 	    test.equal(err, Constants.INVALID_USER, "Can't add ingredient for invalid user");
+	    test.done();
 	});
     });
 	    
 };
-
-*/
 
 
 

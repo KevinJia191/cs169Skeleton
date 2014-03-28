@@ -25,10 +25,6 @@ function ActiveRecord() {
 	}
     }
 
-    this.setTable = function(name) {
-	this.tableName = name;
-    }
-
     /*
      * Adds the record to the database. No fields of the record should be null.
      */
@@ -123,6 +119,19 @@ function ActiveRecord() {
 	return this.parser;
     }
 
+    this.setTable = function(name) {
+	this.tableName = name;
+    }
+    
+    this.getTable = function() {
+	return this.tableName;
+    }
+
+    this.setUp = function(model, parser, tableName) {
+	this.setDatabaseModel(model);
+	this.setParser(parser);
+	this.setTable(tableName);
+    }
     /*
      * Sets how the list returned by get is sorted by. sortField is the field to sort on. sortBy is either "ASC" or "DESC" (ascending/descending).
      *
