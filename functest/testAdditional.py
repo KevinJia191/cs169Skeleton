@@ -13,7 +13,7 @@ USER_EXISTS= "ERR_USER_EXISTS"
 ERR_USER_NOTFOUND = "ERR_USER_NOTFOUND";
 ERR_USER_EXISTS = "ERR_USER_EXISTS";
 CERR_INVAL_CRED = "ERR_INVAL_CRED";
-
+INVALID_USER = "INVALID_USER"
 
 ERR_RECIPE_CREATED_ALREADY = "ERR_RECIPE_CREATED_ALREADY";
 ERROR = "ERROR";
@@ -49,7 +49,7 @@ class TestAdd(testLib.RestTestCase):
         code = respData["errCode"]
         print(code)
         self.assertEqual(code,correctCode);
-    def testAdd1(self):
+    def testAddNewUser(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'password'} )
         self.assertResponse(respData, SUCCESS)
@@ -59,19 +59,31 @@ class TestAdd(testLib.RestTestCase):
         respData2 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user2', 'password' : 'user2'} )
         self.assertResponse(respData1, SUCCESS)
         self.assertResponse(respData2, SUCCESS)
-    def testSame(self):
+    def testAddExistingUser(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData1 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData2 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         self.assertResponse(respData1, SUCCESS)
-        self.assertResponse(respData2, USER_EXISTS)
+        self.assertResponse(respData2, USER_EXISTS)        
+    def testAddInvalidUser(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        respData1 = self.makeRequest("/users/signup", method="POST", data = { 'user' : '', 'password' : 'user1'} )
+        self.assertResponse(respData1, INVALID_USER)
+        print(respData1)
     """
+    ERRORS:
+    INVALID USERS ARE ALLOWED
+
+
     TODO
     testaddNewUser(): Sends a POST request to the backend to add users to make sure adding a new users works (by verifying the correct json response).
 testAddExistingUser(): Tries to add an already existing user to make sure it errors.
 testAddInvalidUser(): Try to add a user with an invalid username.
 testLoginValid(): Try to login with an added account.
 testLoginInvalid(): Try to login with invalid credentials.
+
+
+Assuming Invalid User is one with a null name
     """
 
    
@@ -81,11 +93,11 @@ class TestLogin(testLib.RestTestCase):
         code = respData["errCode"]
         print(code)
         self.assertEqual(code,correctCode);
-    def testNoAddLog(self):
+    def testLoginInvalid(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'baduser', 'password' : 'password'} )
         self.assertResponse(respData, CERR_INVAL_CRED)  
-    def testAddthenLog(self):
+    def testLoginValid(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
@@ -96,9 +108,10 @@ class TestLogin(testLib.RestTestCase):
         respData2 = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'wrong password'} )
         self.assertResponse(respData1, SUCCESS)
         self.assertResponse(respData2, CERR_INVAL_CRED)
-    """
 
-    """
+"""
+ERROR WITH RUNNING THESE TESTS
+"""
 
 class TestIngredients(testLib.RestTestCase):
     def assertResponse(self, respData, code):
@@ -161,17 +174,17 @@ class TestIngredients(testLib.RestTestCase):
         self.assertResponse(respData,NEGATIVE_QUANTITY);
     def testRemoveSomeIngredients(self):
         respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
-        print(respData)
         self.assertResponse(respData,SUCCESS)
+        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
+        print(respData)
+        self.assertResponse(respData, SUCCESS)
+        #self.assertQuantity(respData,7);
         respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Banana', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
         self.assertResponse(respData, SUCCESS)
-        self.assertQuantity(respData,7);
-        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Guava', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
-        self.assertResponse(respData, SUCCESS)
-        self.assertQuantity(respData,7);
+        #self.assertQuantity(respData,7);
         respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Mango', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
         self.assertResponse(respData, DOESNT_EXIST)
-        self.assertQuantity(respData,7);
+        #self.assertQuantity(respData,7);
 """
 class TestRecipe(testLib.RestTestCase):
     def assertResponse(self, respData, code):
@@ -211,3 +224,4 @@ class TestRecipe(testLib.RestTestCase):
     #SHOULD PROBABLY TEST INVENTORY RANGE
 
 """
+
