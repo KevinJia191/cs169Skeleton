@@ -88,16 +88,17 @@ class TestLogin(testLib.RestTestCase):
         respData2 = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'wrong password'} )
         self.assertResponse(respData1, SUCCESS)
         self.assertResponse(respData2, USER_EXISTS)
- """
+
 
 class TestFail(testLib.RestTestCase):
-    def assertResponse(self, respData, count = 1, errCode = testLib.RestTestCase.ERR_BAD_USERNAME):
-        expected = { 'errCode' : errCode }
-        self.assertDictEqual(expected, respData)
+    def assertResponse(self, respData, correctCode):
+        code = respData["errCode"]
+        print(code)
+        self.assertEqual(code,correctCode);
     def testLoginNullName(self):
         respData = self.makeRequest("/users/signup", method="POST", data = { 'user' : '', 'password' : 'noName'} )
         self.assertResponse(respData, None, testLib.RestTestCase.ERR_BAD_USERNAME)
-
+"""
 class TestIngredients(testLib.RestTestCase):
     def assertResponse(self, respData, code):
         if (respData["errCode"]==code):
