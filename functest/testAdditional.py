@@ -65,6 +65,14 @@ class TestAdd(testLib.RestTestCase):
         respData2 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         self.assertResponse(respData1, SUCCESS)
         self.assertResponse(respData2, USER_EXISTS)
+    """
+    TODO
+    testaddNewUser(): Sends a POST request to the backend to add users to make sure adding a new users works (by verifying the correct json response).
+testAddExistingUser(): Tries to add an already existing user to make sure it errors.
+testAddInvalidUser(): Try to add a user with an invalid username.
+testLoginValid(): Try to login with an added account.
+testLoginInvalid(): Try to login with invalid credentials.
+    """
 
    
 
@@ -87,18 +95,11 @@ class TestLogin(testLib.RestTestCase):
         respData1 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData2 = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'wrong password'} )
         self.assertResponse(respData1, SUCCESS)
-        self.assertResponse(respData2, USER_EXISTS)
+        self.assertResponse(respData2, CERR_INVAL_CRED)
+    """
 
+    """
 
-class TestFail(testLib.RestTestCase):
-    def assertResponse(self, respData, correctCode):
-        code = respData["errCode"]
-        print(code)
-        self.assertEqual(code,correctCode);
-    def testLoginNullName(self):
-        respData = self.makeRequest("/users/signup", method="POST", data = { 'user' : '', 'password' : 'noName'} )
-        self.assertResponse(respData, None, testLib.RestTestCase.ERR_BAD_USERNAME)
-"""
 class TestIngredients(testLib.RestTestCase):
     def assertResponse(self, respData, code):
         if (respData["errCode"]==code):
@@ -109,19 +110,21 @@ class TestIngredients(testLib.RestTestCase):
         if (respData["new_quantity"]==quantity):
             return;
         else:
-            self.assertEquals(respData["new_quantity"],quantity);
+            self.assertEquals(respData["new_quantity"],quantity);           
     def testAdd(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
         self.assertResponse(respData,SUCCESS);
+
     def testUpdateAdd(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
         respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
+        print(respData)
         self.assertResponse(respData,SUCCESS_UPDATED);
         self.assertQuantity(respData,6);
 
@@ -133,42 +136,43 @@ class TestIngredients(testLib.RestTestCase):
         respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
         self.assertResponse(respData,SUCCESS_UPDATED);
         self.assertQuantity(respData,7);
-
-
-class TestIngredients(testLib.RestTestCase):
-    def assertResponse(self, respData, code):
-        if (respData["errCode"]==code):
-            return;
-        else:
-            self.assertEquals(respData["errCode"],code);
+        print(respData);
     def testAddthenLog(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        self.assertResponse(respData, count=2)
+        self.assertResponse(respData, SUCCESS)
     def testAddSomeIngredients(self):
-        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': '3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData,3)
-        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Raisin', 'quantity': '3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData, 3)
-        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Fruit Tarts', 'quantity': '3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData, 3)
-        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Banana', 'quantity': '3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData, 3)
-        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Banana', 'quantity': '3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData, -3)
-        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Durian', 'quantity': '-3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData, -3)
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
+        respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        print(respData)
+        self.assertResponse(respData,SUCCESS);
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Banana', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,SUCCESS);
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Guava', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,SUCCESS);
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Taco', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,SUCCESS);
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Fish', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,SUCCESS);
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Mango', 'quantity': -10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,NEGATIVE_QUANTITY);
     def testRemoveSomeIngredients(self):
-        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': '3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData,3)
-        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Raisin', 'quantity': '3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData, 3)
-        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Fruit Tarts', 'quantity': '3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData, 3)
-        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Banana', 'quantity': '3', 'unit':'count', 'expiration_date':'6/7/15', 'current_date':'3/2/14'} )
-        self.assertResponse(respData, 3)
-
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Apple', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
+        print(respData)
+        self.assertResponse(respData,SUCCESS)
+        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Banana', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData, SUCCESS)
+        self.assertQuantity(respData,7);
+        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Guava', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData, SUCCESS)
+        self.assertQuantity(respData,7);
+        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Mango', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData, DOESNT_EXIST)
+        self.assertQuantity(respData,7);
+"""
 class TestRecipe(testLib.RestTestCase):
     def assertResponse(self, respData, code):
         if (respData["errCode"]==code):
