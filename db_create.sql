@@ -4,7 +4,7 @@ hashed_password text
 );
 
 Create table ingredients (
-username text username text references users(username),
+username text references users(username),
 ingredient_name text,
 expiration_date text,
 quantity decimal check(quantity>0),

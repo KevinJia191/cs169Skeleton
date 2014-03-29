@@ -219,24 +219,22 @@ class TestRecipe(testLib.RestTestCase):
             return;
         else:
             self.assertEquals(respData["errCode"],code);
-    """
-    KEVIN
+    def testGetCompletedRecipes(self):
+        respData = self.makeRequest("/recipes/history", method="GET", data = {'user': 'user1'} )
+        print(respData)
+        self.assertResponse(respData,SUCCESS)
     def testMakeRecipe(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Apple Pie', 'current_date': '3/11/14', 'rating':'4'} )
+        print(respData)
         self.assertResponse(respData,SUCCESS)
-    """
     def testGetCompletedRecipes(self):
+        respData = self.makeRequest("/recipes/history", method="GET", data = {'user': 'user1'} )
+        print(respData)
+        self.assertResponse(respData,SUCCESS)
 
-        """
-        self.assertResponse(respData,"SUCCESS")
-        respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Chicken Pie', 'current_date': '3/11/14', 'rating':'4'} )
-        self.assertResponse(respData,"SUCCESS")
-        respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Berry Pie', 'current_date': '3/11/14', 'rating':'4'} )
-        self.assertResponse(respData,"SUCCESS")
-        """
     """
     def testClearAll(self):
         respData = self.makeRequest("/recipes/deleteAllHistory", method="POST", data = {'user': 'user1'} )
