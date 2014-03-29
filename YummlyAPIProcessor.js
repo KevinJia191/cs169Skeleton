@@ -1,10 +1,27 @@
-var yummly = require('yummly');
-var yummlyProcessor = require('./YummlyAPIProcessor.js')
-var searchcontroller = function(json){
-    
-    this.json = json;
+//YummlyAPIProcessor
+var RecipeAPIProcessor = require('./RecipeAPIProcessor.js')
+  , inherits     = require('util').inherits
+  ;
 
-    this.search = function(recipie,callback){
+function YummlyAPIProcessor() {
+  RecipeAPIProcessor.call(this);
+}
+
+inherits(YummlyAPIProcessor, RecipeAPIProcessor);
+
+YummlyAPIProcessor.prototype.pat = function pat() {
+  console.log('purr');
+};
+
+YummlyAPIProcessor.prototype.lasagna = function() {
+  console.log('lasagna!');
+};
+
+YummlyAPIProcessor.prototype.walk = function() {
+  console.log('I CAN WALK SO FAST!');
+}
+
+YummlyAPIProcessor.prototype.search = function(recipie,callback){
         jsonArray = []
         recArray=[];
         recnameArray=[];
@@ -42,7 +59,6 @@ var searchcontroller = function(json){
             	return;
             }
             var new_son = "";
-            yummlyProcessor.walk()
             for (var i=0;i<json.matches.length;i++) {
                 recArray.push(json.matches[i].id);
                 recnameArray.push(json.matches[i].recipeName);
@@ -62,9 +78,5 @@ var searchcontroller = function(json){
           }
       });
     }
-    
-    function getRecipeData(param1, param2){
-        return {errCode : 1};
-    }
-}
-module.exports = searchcontroller;
+
+module.exports = YummlyAPIProcessor;
