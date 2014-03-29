@@ -31,6 +31,7 @@ DOESNT_EXIST = "DOESNT_EXIST";
 ERR_USER_NOTFOUND = "ERR_USER_NOTFOUND";
 ERR_USER_EXISTS = "ERR_USER_EXISTS";
 CERR_INVAL_CRED = "ERR_INVAL_CRED";
+YUMMLY_SUCCESS = 42
 
 class TestYummly(testLib.RestTestCase):
     def assertResponse(self, respData, code):
@@ -43,9 +44,9 @@ class TestYummly(testLib.RestTestCase):
                 print("chicken was not found in the name of the dish!")
                 self.assertEqual(1,0)
         print(all_dishes)
-    def testYummlycall(self):
+    def testRecipeSearch(self):
         respData = self.makeRequest("/recipes/search", method="POST", data = { 'q' : 'chicken'})
-        self.assertResponse(respData,42)
+        self.assertResponse(respData,YUMMLY_SUCCESS)
 
 
 class TestAdd(testLib.RestTestCase):
@@ -228,7 +229,7 @@ class TestRecipe(testLib.RestTestCase):
         self.assertResponse(respData,SUCCESS)
     """
     def testGetCompletedRecipes(self):
-        
+
         """
         self.assertResponse(respData,"SUCCESS")
         respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Chicken Pie', 'current_date': '3/11/14', 'rating':'4'} )
