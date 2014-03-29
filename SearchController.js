@@ -43,6 +43,8 @@ var searchcontroller = function(json){
             	return;
             }
             var new_son = "";
+            yummlyProcessor.search(json.matches,callback);
+            """
             yummlyProcessor.walk()
             for (var i=0;i<json.matches.length;i++) {
                 recArray.push(json.matches[i].id);
@@ -59,7 +61,8 @@ var searchcontroller = function(json){
             ingredient_list: ilArray
             };
             var format_son = JSON.stringify(new_son);
-            callback(format_son);
+            """
+            //callback(format_son);
           }
       });
     }

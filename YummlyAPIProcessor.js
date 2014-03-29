@@ -21,50 +21,20 @@ YummlyAPIProcessor.prototype.walk = function() {
   console.log('I CAN WALK SO FAST!');
 }
 
-YummlyAPIProcessor.prototype.search = function(recipie,callback){
+YummlyAPIProcessor.prototype.search = function(yummlyResults,callback){
         jsonArray = []
         recArray=[];
         recnameArray=[];
         siuArray=[];
         dArray=[];
         ilArray=[];
-        var credentials = {
-          id: '13944c3c',
-          key: '5a09042c7587234cbd1adc10150874cf'
-        }
-        console.log("PRE SEARCH");
-        yummly.search({
-          credentials: {id: '13944c3c', key: '5a09042c7587234cbd1adc10150874cf'},
-          query: {
-            q: recipie
-          }
-        }, function (error, response, json) {
-          console.log(response.statusCode);
-          //console.log(json.matches[0].id);
-          if (error) {
-            console.log(response.statusCode);
-            console.error(error);
-            var err_son = {
-            		errCode:2
-            	}
-            	callback(JSON.stringify(err_son));
-            	return;
-          } else {
-            console.log(json.matches.length);
-            if (json.matches.length==0){
-            	var err_son = {
-            		errCode:2
-            	}
-            	callback(JSON.stringify(err_son));
-            	return;
-            }
             var new_son = "";
-            for (var i=0;i<json.matches.length;i++) {
-                recArray.push(json.matches[i].id);
-                recnameArray.push(json.matches[i].recipeName);
-                siuArray.push(json.matches[i].smallImageUrls);
-                dArray.push(json.matches[i].sourceDisplayName);
-                ilArray.push(json.matches[i].ingredients);
+            for (var i=0;i<yummlyResults.length;i++) {
+                recArray.push(yummlyResults[i].id);
+                recnameArray.push(yummlyResults[i].recipeName);
+                siuArray.push(yummlyResults[i].smallImageUrls);
+                dArray.push(yummlyResults[i].sourceDisplayName);
+                ilArray.push(yummlyResults[i].ingredients);
             }
             new_son = {
             recipe_id : recArray, 
