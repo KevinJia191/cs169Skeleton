@@ -28,25 +28,23 @@ YummlyAPIProcessor.prototype.search = function(yummlyResults,callback){
         siuArray=[];
         dArray=[];
         ilArray=[];
-            var new_son = "";
-            for (var i=0;i<yummlyResults.length;i++) {
-                recArray.push(yummlyResults[i].id);
-                recnameArray.push(yummlyResults[i].recipeName);
-                siuArray.push(yummlyResults[i].smallImageUrls);
-                dArray.push(yummlyResults[i].sourceDisplayName);
-                ilArray.push(yummlyResults[i].ingredients);
-            }
-            new_son = {
-            recipe_id : recArray, 
-            recipe_name: recnameArray, 
-            smallImageUrls:siuArray, 
-            details: dArray,
-            ingredient_list: ilArray
-            };
-            var format_son = JSON.stringify(new_son);
-            callback(format_son);
-          }
-      });
-    }
+        var new_son = "";
+        for (var i=0;i<yummlyResults.length;i++) {
+            recArray.push(yummlyResults[i].id);
+            recnameArray.push(yummlyResults[i].recipeName);
+            siuArray.push(yummlyResults[i].smallImageUrls);
+            dArray.push(yummlyResults[i].sourceDisplayName);
+            ilArray.push(yummlyResults[i].ingredients);
+        }
+        new_son = {
+        recipe_id : recArray, 
+        recipe_name: recnameArray, 
+        smallImageUrls:siuArray, 
+        details: dArray,
+        ingredient_list: ilArray
+        };
+	var format_son = JSON.stringify(new_son);
+	callback(format_son);
+}
 
 module.exports = YummlyAPIProcessor;
