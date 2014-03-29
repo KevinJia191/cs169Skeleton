@@ -1,5 +1,6 @@
 var yummly = require('yummly');
-var yummlyProcessor = require('./YummlyAPIProcessor.js')
+var customYum = require('./YummlyAPIProcessor.js');
+var yummlyProcessor = new customYum();
 var searchcontroller = function(json){
     
     this.json = json;
