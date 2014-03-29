@@ -1,6 +1,8 @@
 var pg = require('pg');
 var Constants = require('./Constants.js');
 var ActiveRecord = require('./ActiveRecord.js');
+var IngredientRecord = require('./IngredientRecord.js');
+var UserRecord = require('./UserRecord.js');
 /*
 * Model for an ingredient. username, ingredient_name, expiration_date are primary keys.
 * All methods in here have a callback function of format function(err, result);
@@ -28,9 +30,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 
     this.userExists = function(callback) {
 	var self = this;
-	var userRecord = new ActiveRecord();
-	userRecord.setUp(self.connection, self.parser, Constants.USERS_TABLE);
-	userRecord.put("username", self.username);
+	var userRecord = new UserRecord(this.username);
+	userRecord.setUp(self.connection, self.parser);
 	userRecord.select(function(err, result) {
 	    console.log(err);
 	    if (err) {
@@ -65,12 +66,13 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-	    var ingredientRecord = new ActiveRecord();
-	    ingredientRecord.setUp(self.connection, self.parser, Constants.INGREDIENTS_TABLE);
-	    ingredientRecord.put("username", self.username);
-	    ingredientRecord.put("ingredient_name", self.ingredient_name);
-	    ingredientRecord.put("expiration_date", self.expiration_date);
+	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date);
+	    ingredientRecord.setUp(self.connection, self.parser);
+	    //ingredientRecord.put("username", self.username);
+	    //ingredientRecord.put("ingredient_name", self.ingredient_name);
+	    //ingredientRecord.put("expiration_date", self.expiration_date);
 	    ingredientRecord.select(function(err, result) {
+
 		if (err) {
 		    callback(Constants.ERROR);
 		    return;
@@ -92,9 +94,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		// ingredient is already in the database, so update its quantity
 		else if (result.length == 1) {
 		    var newQuantity = parseInt(result[0]["quantity"]) + self.quantity;
-		    ingredientRecord.put("username", self.fields.username);
-		    ingredientRecord.put("ingredient_name", self.fields.ingredient_name);
-		    ingredientRecord.put("expiration_date", self.fields.expiration_date);
 		    ingredientRecord.update(function(err, result) {
 			if (err) {
 			    callback(Constants.ERROR);
@@ -128,26 +127,21 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-	    var ingredientRecord = new ActiveRecord();
-	    ingredientRecord.setDatabaseModel(self.connection);
-	    ingredientRecord.setParser(self.parser);
-	    ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
-	    ingredientRecord.put("username", self.username);
-	    ingredientRecord.put("ingredient_name", self.ingredient_name);
-	    ingredientRecord.put("expiration_date", self.expiration_date);
+	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date);
+	    ingredientRecord.setUp(self.connection, self.parser);
 	    ingredientRecord.select(function(err, result) {
 		if (err) {
 		    callback(Constants.ERROR);
 		    return;
 		}
 		result = self.parser.parseIngredient(result);
-		if (result.length == 0) { 
+		if (result.length == 0) { // ingredient doesn't even exist, so you can't remove it
 		    callback(Constants.DOESNT_EXIST, null);
 		}
 		else { // ingredient is already in the db, so update its quantity
 		    var newQuantity = parseInt(result[0]["quantity"]) - self.quantity;
 		    console.log(newQuantity);
-		    if (newQuantity <= 0) {
+		    if (newQuantity <= 0) { // remove all of it
 			ingredientRecord.remove(function(err, result) {
 			    if (err) {
 				callback(Constants.ERROR);
@@ -181,11 +175,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-	    var ingredientRecord = new ActiveRecord();
-	    ingredientRecord.setDatabaseModel(self.connection);
-	    ingredientRecord.setParser(self.parser);
-	    ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
-	    ingredientRecord.put("username", self.username);
+	    var ingredientRecord = new IngredientRecord(self.username);
+	    ingredientRecord.setUp(self.connection, self.parser);
 	    ingredientRecord.remove(function(err, result) {
 		if (err) {
 		    callback(Constants.ERROR);
@@ -204,13 +195,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-	    var ingredientRecord = new ActiveRecord();
-	    ingredientRecord.setDatabaseModel(self.connection);
-	    ingredientRecord.setParser(self.parser);
-	    ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
-	    ingredientRecord.put("username", self.username);
-	    ingredientRecord.put("ingredient_name", self.ingredient_name);
-	    ingredientRecord.put("expiration_date", self.expiration_date);
+	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date);
+	    ingredientRecord.setUp(self.connection, self.parser);
 	    ingredientRecord.remove(function(err, result) {
 		if (err) {
 		    callback(Constants.ERROR);
@@ -229,11 +215,8 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-    	    var ingredientRecord = new ActiveRecord();
-	    ingredientRecord.setDatabaseModel(self.connection);
-	    ingredientRecord.setParser(self.parser);
-	    ingredientRecord.setTable(Constants.INGREDIENTS_TABLE);
-	    ingredientRecord.put("username", self.username);
+	    var ingredientRecord = new IngredientRecord(self.username);
+	    ingredientRecord.setUp(self.connection, self.parser);
 	    ingredientRecord.select(function(err, result) {
 		if (err) {
 		    callback(Constants.ERROR);

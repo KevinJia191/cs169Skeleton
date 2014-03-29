@@ -38,4 +38,8 @@ Constants.INGREDIENTS_TABLE = "ingredients";
 Constants.USERS_TABLE = "users";
 Constants.HISTORY_TABLE = "history";
 
+
+Constants.INGREDIENTS_NUM_FIELDS = 5;
+Constants.USERS_NUM_FIELDS = 2;
+
 module.exports = Constants;
