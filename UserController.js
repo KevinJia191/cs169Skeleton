@@ -23,17 +23,14 @@ var UserController = function(request) {
             callback(JSON.stringify({errCode:'ERROR'}));
             return;
         }
-
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL)
         var userModel = new UserModel(postRequest.user, postRequest.password);
-        userModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
+        userModel.setDatabaseModel(db);
         userModel.setParser(new PostgreSQLParser());
-        
-        userModel.connect(function(){
-            userModel.signUp(function(resultingJson) {
-            userModel.end();
+        db.connect();
+        userModel.signUp(function(resultingJson) {
+            db.end();
             callback(resultingJson);
-            return;
-            });
         });
         //console.log("connection is over, now going to try to signup");
         

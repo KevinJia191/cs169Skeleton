@@ -16,6 +16,12 @@ Create table history (
 username text references users(username),
 recipe_name text,
 dateCreated text,
+primary key(username,recipe_name, dateCreated)
+);
+
+Create table ratings (
+username text references users(username),
+recipe_name text,
 rating int check(rating > 0 AND rating <= 5),
-primary key(username,recipe_name,dateCreated)
+primary key(username, recipe_name)
 );

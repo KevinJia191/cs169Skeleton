@@ -13,7 +13,6 @@ function UserModel(username, password){
         
         var inputQuery = "INSERT INTO users (username, hashed_password) VALUES ("+ "\'" + this.username + "\'" + ","+ "\'" + this.password + "\'" +")";
         var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'";
-        console.log("WHY YOU NO WORK "+this.connection==undefined);
         this.connection.query(testUserQuery, function(err, result){
             // return error, user already in database
             var queryResult = self.parser.parseUser(result);

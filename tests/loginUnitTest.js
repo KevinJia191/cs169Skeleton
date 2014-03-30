@@ -2,6 +2,9 @@ var SQLite3Model = require('./SQLite3DatabaseModel.js');
 var UserModel = require('../UserModel.js');
 var SQLite3Parser = require('./SQLite3Parser.js');
 var Constants = require('../Constants.js');
+var HelperMethods = require('./TestHelperMethods.js');
+var doSetup = HelperMethods.doSetup;
+
 
 exports["testSignup"] = function(test){
     var db = new SQLite3Model();
@@ -25,13 +28,3 @@ exports["testSignup"] = function(test){
     });
 };
 
-function doSetup(db, callback) {
-    db.connect();
-    var createUsers = "Create table users (username text primary key,hashed_password text);"
-    db.query(createUsers, function(err, results) {
-        db.query("Create table ingredients (username text references users(username),ingredient_name text,expiration_date text,quantity decimal check(quantity>0),unit text, primary key(username,ingredient_name,expiration_date)); ", function(err, results) {
-            var createHistory = "Create table history (username text references users(username), recipe_name text, dateCreated text, rating int check(rating > 0 AND rating <= 5), primary key(username,recipe_name,dateCreated));";
-            db.query(createHistory, callback);
-        });
-    });
-}
