@@ -17,6 +17,8 @@ Constants.INVALID_USER = "INVALID_USER"
 Constants.ERR_USER_NOTFOUND = "ERR_USER_NOTFOUND"; //Tried to use a username that doens't exist
 Constants.ERR_USER_EXISTS = "ERR_USER_EXISTS"; //Tried to Signup a user that doesn't exist
 Constants.ERR_INVAL_CRED = "ERR_INVAL_CRED"; //Wrong Username, Password Combination
+Constants.BAD_USER = "BAD_USER"; //username is longer than 128 characters or of length 0
+Constants.BAD_PASS = "BAD_PASS"; //password is longer than 128 characters
 
 //URLS
 Constants.LOGIN = '/users/login';

@@ -1,6 +1,6 @@
 var pg = require('pg');
 var Constants = require('./Constants.js');
-
+var UserRecord = require('./UserRecord.js');
 //should extend the ActiveRecord class
 function UserModel(username, password){
     this.username = username;
@@ -9,52 +9,46 @@ function UserModel(username, password){
     this.parser = null;
     var self = this;
     this.signUp = function(callback) { 
-        var jsonObject = {};
-        
-        var inputQuery = "INSERT INTO users (username, hashed_password) VALUES ("+ "\'" + this.username + "\'" + ","+ "\'" + this.password + "\'" +")";
-        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'";
-        this.connection.query(testUserQuery, function(err, result){
-            // return error, user already in database
-            var queryResult = self.parser.parseUser(result);
-            if(queryResult.length>0){
-                jsonObject.errCode = Constants.ERR_USER_EXISTS;
-                var jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
-                return;
-            }
-        });
-        this.connection.query(inputQuery, function (err, result) {
-            jsonObject.errCode = Constants.SUCCESS;
-            var jsonForm = JSON.stringify(jsonObject);
-            callback(jsonForm);
+	if(this.username.length > 128 || this.username.length == 0) {
+            callback(Constants.BAD_USER);
             return;
-        });// input query
-    }// signup END
+        }
+	if (this.password.length > 128) {
+	    callback(Constants.BAD_PASSWORD);
+	    return;
+	}
+	var userRecord = new UserRecord(this.username, this.password);
+	userRecord.setUp(self.connection, self.parser);
+	userRecord.insert(function(err) {
+	    if (err) {
+		callback(Constants.ERR_USER_EXISTS);
+	    }
+	    else {
+		callback(Constants.SUCCESS);
+	    }
+	});
+    }
 
     this.login = function(callback) {
-        var jsonObject = {};
-        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'";
-        this.connection.query(testUserQuery, function(err, result){
-            var queryResult = self.parser.parseUser(result);
-            if(queryResult.length>0){
-                //CASE: PASSWORD CORRECT
-                if(result.rows[0].hashed_password === password) {
-                    //CASE: PASSWORD CORRECT
-                    //return success
-                    jsonObject.errCode = Constants.SUCCESS;
-                    var jsonForm = JSON.stringify(jsonObject);
-                    callback(jsonForm);
-                    return;
-                }
-                
-            }
-            //CASE: USER NOT IN DATABASE OR PASSWORD NOT CORRECT
-            jsonObject.errCode = Constants.ERR_INVAL_CRED;
-            var jsonForm = JSON.stringify(jsonObject);
-            callback(jsonForm);
+	if(this.username.length == 0 || this.username.length > 128 || this.password.length > 128) {
+            callback(Constants.ERR_INVAL_CRED);
             return;
-
-        });
+        }
+	var userRecord = new UserRecord(this.username, this.password);
+	userRecord.setUp(self.connection, self.parser);
+	userRecord.select(function(err, result) {
+	    if (err) {
+		callback(Constants.ERROR);
+		return;
+	    }
+	    var result = self.parser.parseUser(result);
+	    if (result.length == 0) {
+		callback(Constants.ERR_INVAL_CRED);
+	    }
+	    else {
+		callback(Constants.SUCCESS);
+	    }
+	});
     }
 
     this.setParser = function(parser) {

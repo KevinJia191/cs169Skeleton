@@ -328,11 +328,12 @@ exports["testAddIngredientInvalidUser"] = function(test){
 };
 
 
+
+
 function testIngredientEqual(row, exp, test) {
     test.equal(row.username, exp.username, "Failed");
     test.equal(row.ingredient_name, exp.ingredient_name);
     test.equal(row.expiration_date, exp.expiration_date);
     test.equal(row.quantity, exp.quantity);
     test.equal(row.unit, exp.unit);
-
 }
