@@ -32,13 +32,7 @@ var UserController = function(request) {
             db.end();
             callback(resultingJson);
         });
-        //console.log("connection is over, now going to try to signup");
-        
-
-        //return {'errCode' : 1};
-    } // end of THIS.SIGNUP
-
-
+    }
 
     // postRequest is a json containing the fields: user, hashed_password
     //{errCode:SUCCESS} if login succeeds
@@ -52,21 +46,16 @@ var UserController = function(request) {
             callback(JSON.stringify({errCode:'ERR_INVAL_CRED'}));
             return;
         }
-
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
         var userModel = new UserModel(postRequest.user, postRequest.password);
-        userModel.setDatabaseModel(new PostgreSQLDatabaseModel(process.env.DATABASE_URL));
+        userModel.setDatabaseModel(db);
         userModel.setParser(new PostgreSQLParser());
-        
-        userModel.connect(function(){
-            userModel.login(function(resultingJson) {
-                userModel.end();
-                callback(resultingJson);
-                return;
-            });
+        db.connect();
+        userModel.login(function(resultingJson) {
+            db.end();
+            callback(resultingJson);
+            return;
         });
-        
-
-        //return {'errCode' : 1};
     }
 }
 module.exports = UserController;

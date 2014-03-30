@@ -71,16 +71,6 @@ function UserModel(username, password){
 
     this.setSort = function(sortby) {
     }
-    
-    this.connect = function(callback) {
-        //this.connection = new pg.Client(process.env.DATABASE_URL);
-        this.connection.connect();
-        callback();
-    }
-    
-    this.end = function(){
-        this.connection.end();
-    }
 }
     //{errCode:SUCCESS} if success
     //{errCode:ERR_USER_EXISTS} if user exists

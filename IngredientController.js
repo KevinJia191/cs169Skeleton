@@ -73,7 +73,6 @@ var IngredientController = function(res) {
 	    var inventory = new Array();
 	    for (index = 0; index < result.length; index++) {
 		var ingredient = { "ingredient_name":result[index].ingredient_name, "expiration_date":result[index].expiration_date, "quantity": result[index].quantity, "unit":result[index].unit};
-		console.log(ingredient);
 		inventory[index] = ingredient;
 	    }
 	    json["items"] = inventory;

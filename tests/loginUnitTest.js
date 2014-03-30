@@ -14,17 +14,17 @@ exports["testSignup"] = function(test){
         var userModel = new UserModel('testUser', 'testPass');
         userModel.setDatabaseModel(db);
         userModel.setParser(new SQLite3Parser());
-        userModel.connect(function(){
-            userModel.signUp(function(resultingJson) {
-                db.query("select * from users", function(err, rows) {
-                    db.end();
-                    test.equal(rows.length, 1, "Length of returns did not match");
-                    //var exp = { username: 'testUser', recipe_name: 'OnionSoup', dateCreated: '5/21/17', rating: 4};
-                    //var row = rows[0];
-                    test.done();
-                });
+	db.connect();
+        userModel.signUp(function(resultingJson) {
+            db.query("select * from users", function(err, rows) {
+                db.end();
+                test.equal(rows.length, 1, "Length of returns did not match");
+                //var exp = { username: 'testUser', recipe_name: 'OnionSoup', dateCreated: '5/21/17', rating: 4};
+                //var row = rows[0];
+                test.done();
             });
         });
+	
     });
 };
 
