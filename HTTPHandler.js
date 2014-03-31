@@ -55,7 +55,8 @@ app.get('/test2', function(req,res) {
             console.error(error);
           } else {
             //console.log(json);
-            res.end(json);
+            var format_son = json.stringify(new_son);
+            res.end(format_son);
           }
         });
     });
