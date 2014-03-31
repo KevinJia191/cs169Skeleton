@@ -74,11 +74,12 @@ var searchcontroller = function(json){
     #important
 
     for this to work, it needs to be given recipe_id's
-    @param json.matches[0].id
+    @param json body in the form req.body
     @param callback
 
     */
-    this.getRecipeData = function(recipe_id, callback){
+    this.getRecipeData = function(recipe_body, callback){
+        var recipe_id = recipe_body.recipe_id;
         /*
         var credentials = {
           id: '13944c3c',
