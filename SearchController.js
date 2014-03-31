@@ -74,15 +74,15 @@ var searchcontroller = function(json){
     @param callback
 
     */
-    function getRecipeData(param1, param2){
+    function getRecipeData(recipie_id, callback){
         yummly.recipe({
           credentials: credentials,
-          id: param1 // id of the first recipe returned by search
+          id: recipie_id // id of the first recipe returned by search
         }, function (error, response, json) {
           if (error) {
             console.error(error);
           } else {
-            console.log(json);
+            callback(json);
           }
         });
         return {errCode : 1};
