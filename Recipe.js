@@ -63,26 +63,6 @@ function Recipe(username, recipe_name, dateCreated){
         });
     }
 
-    this.clearAllHistoryFromUser = function(callback) {
-        var self = this;
-        self.userExists(function(err) {
-            if (err != Constants.SUCCESS) {
-                callback(err);
-                return;
-            }
-            var recipeRecord = new RecipeRecord(self.username);
-            recipeRecord.setUp(self.connection, self.parser);
-            recipeRecord.remove(function(err, result) {
-                if (err) {
-                    callback(Constants.ERROR);
-                }
-                else {
-                    callback(Constants.SUCCESS);
-                }
-            });
-        });
-    }
-
     this.getAllHistoryFromUser = function(callback){
         var self = this;
         self.userExists(function(err) {
@@ -98,6 +78,46 @@ function Recipe(username, recipe_name, dateCreated){
                 }
                 else {
                     callback(Constants.SUCCESS, self.parser.parseHistory(result));
+                }
+            });
+        });
+    }
+    
+    this.deleteHistory = function(callback) {
+        var self = this;
+        self.userExists(function(err) {
+            if (err != Constants.SUCCESS) {
+                callback(err);
+                return;
+            }
+            var recipeRecord = new RecipeRecord(self.username, self.recipe_name, self.dateCreated);
+            recipeRecord.setUp(self.connection, self.parser);
+            recipeRecord.remove(function(err, result) {
+                if (err) {
+                    callback(Constants.ERROR);
+                }
+                else {
+                    callback(Constants.SUCCESS);
+                }
+            });
+        });
+    }
+    
+    this.clearAllHistoryFromUser = function(callback) {
+        var self = this;
+        self.userExists(function(err) {
+            if (err != Constants.SUCCESS) {
+                callback(err);
+                return;
+            }
+            var recipeRecord = new RecipeRecord(self.username);
+            recipeRecord.setUp(self.connection, self.parser);
+            recipeRecord.remove(function(err, result) {
+                if (err) {
+                    callback(Constants.ERROR);
+                }
+                else {
+                    callback(Constants.SUCCESS);
                 }
             });
         });
