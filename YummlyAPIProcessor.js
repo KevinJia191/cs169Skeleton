@@ -5,6 +5,7 @@ var RecipeAPIProcessor = require('./RecipeAPIProcessor.js')
 
 function YummlyAPIProcessor() {
   RecipeAPIProcessor.call(this);
+  this.extended=true;
 }
 
 inherits(YummlyAPIProcessor, RecipeAPIProcessor);
