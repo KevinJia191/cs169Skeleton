@@ -25,7 +25,7 @@ app.get('/', function(req, res) {
     res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="TestSearch" onclick=this.form.action="recipes/search"></form>');
     res.write('<form action="recipes/deleteAllHistory" method="post"><input type="text" name="username">Clear History<input type="submit" value="delete all history post Button"></form>');
     res.write('<form action="recipes/make" method="post">Username:<input type="text" name="user">RecipeName:<input type="text" name="recipe_name">Datecreated<input type="text" name="current_date">Rating:<input type="text" name="rating">Make <input type="submit" value="Make"></form>');
-    res.write('<form action="recipes/getRecipeData" method="get">Recipe ID:<input type="text" name="recipe_id"><input type="submit" value="GetRecipeData"></form>');
+    res.write('<form action="recipes/getRecipeData" method="post">Recipe ID:<input type="text" name="recipe_id"><input type="submit" value="GetRecipeData"></form>');
     res.write('<form action="TESTAPI/resetFixture" method="post"><input type="text" name="username">RESET API <input type="submit" value="RESETTABLES"></form>');
     
     res.end('</body></html>');
@@ -212,7 +212,7 @@ app.post('/recipes/search', function(req, res) {
     });
 });
 
-app.get('/recipes/getRecipeData', function(req, res) {
+app.post('/recipes/getRecipeData', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example
 
@@ -221,7 +221,6 @@ app.get('/recipes/getRecipeData', function(req, res) {
     //var jsonObject = searchController.getRecipeData(null);
     //var jsonForm = JSON.stringify(jsonObject);
     var id = req.body.recipe_id;
-    var id2 = res.body.recipe_id;
     console.log(id);
     console.log("with res"+res.body.recipe_id)
     console.log("starting get recipie data in HTTP Handler");
