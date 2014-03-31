@@ -153,47 +153,15 @@ app.get('/search', function(req, res) {
 
 
 app.post('/users/signup', function(req, res) {
-
-  console.log(req.body);
-   
-  //START JSON HEADER
-  res.header('Content-Type', 'application/json');
-
-  
-  var signinJSON = req.body;
-  var userController = new UserController(null);
-  
-  //START REQUEST
-  userController.signup(signinJSON, function(resultingJson){
-    //RETURN RESULT
-    res.end(resultingJson);
-
-    });
-  
-  console.log("FUNCTION 1"+res.body);
+    var userController = new UserController(res);
+    userController.signup(req.body);
 });
 
 
   
 app.post('/users/login', function(req, res) {
-  
-  console.log(req.body);
-
-  //START JSON HEADER
-  res.header('Content-Type', 'application/json');
-
-  
-  var loginJSON = req.body;
-  var userController = new UserController(null);
-  
-  //START REQUEST
-  userController.login(loginJSON, function(resultingJson) {
-    //RETURN RESULT
-    res.end(resultingJson);
-  });
-  
- 
-  console.log(res.body);
+    var userController = new UserController(res);
+    userController.login(req.body);
 });
 
 
