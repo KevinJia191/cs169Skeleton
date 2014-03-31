@@ -32,7 +32,12 @@ app.get('/', function(req, res) {
 });
 
 app.get('/test2', function(req,res) {
+        console.log("SOMETHING IS HAPPENING");
         res.writeHead(200);
+        var credentials = {
+      id: '13944c3c',
+      key: '5a09042c7587234cbd1adc10150874cf'
+    }
         yummly.search({ // calling search first to get a recipe id
       credentials: credentials,
       query: {
