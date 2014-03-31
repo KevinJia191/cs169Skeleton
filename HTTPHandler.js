@@ -220,9 +220,10 @@ app.post('/recipes/getRecipeData', function(req, res) {
     var searchController = new SearchController(null);
     //var jsonObject = searchController.getRecipeData(null);
     //var jsonForm = JSON.stringify(jsonObject);
-    var id = req.body.recipe_id;
-    console.log(id);
-    console.log("with res"+res.body.recipe_id)
+
+    //var id = req.body.recipe_id;
+    //console.log(id);
+    //console.log("with res"+res.body.recipe_id)
     console.log("starting get recipie data in HTTP Handler");
     /*
     yummly.search({ // calling search first to get a recipe id
@@ -248,7 +249,7 @@ app.post('/recipes/getRecipeData', function(req, res) {
               }
             });
     */
-    searchController.getRecipeData(id,function(result){
+    searchController.getRecipeData(req.body,function(result){
       res.end(result);
     });
 });
