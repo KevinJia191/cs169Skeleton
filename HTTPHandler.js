@@ -54,7 +54,7 @@ app.get('/test2', function(req,res) {
           if (error) {
             console.error(error);
           } else {
-            console.log(json);
+            //console.log(json);
             res.end(json);
           }
         });
