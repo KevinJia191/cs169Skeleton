@@ -46,7 +46,7 @@ app.get('/test2', function(req,res) {
     }, function (error, response, json) {
       if (error) {
         console.error(error);
-      } else if (response.statusCode === 200) {
+      } 
         yummly.recipe({
           credentials: credentials,
           id: json.matches[0].id // id of the first recipe returned by search
@@ -55,9 +55,9 @@ app.get('/test2', function(req,res) {
             console.error(error);
           } else {
             console.log(json);
+            res.end(json);
           }
         });
-      }
     });
 });
 
