@@ -79,7 +79,7 @@ var searchcontroller = function(json){
           id: '13944c3c',
           key: '5a09042c7587234cbd1adc10150874cf'
         }
-        yummly.search({ // calling search first to get a recipe id
+        yummly.search({ 
           credentials: credentials,
           query: {
             q: 'pasta'
