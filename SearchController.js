@@ -78,7 +78,7 @@ var searchcontroller = function(json){
     @param callback
 
     */
-    function getRecipeData(recipie_id, callback){
+    this.getRecipeData = function(recipie_id, callback){
         /*
         var credentials = {
           id: '13944c3c',
