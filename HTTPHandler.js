@@ -218,9 +218,10 @@ app.get('/recipes/getRecipeData', function(req, res) {
 
     //process req, res to get stuff
     var searchController = new SearchController(null);
-    var jsonObject = searchController.getRecipeData(null);
-    var jsonForm = JSON.stringify(jsonObject);
+    //var jsonObject = searchController.getRecipeData(null);
+    //var jsonForm = JSON.stringify(jsonObject);
     var id = req.body.recipe_id;
+    /*
     yummly.search({ // calling search first to get a recipe id
               credentials: credentials,
               query: {
@@ -243,6 +244,7 @@ app.get('/recipes/getRecipeData', function(req, res) {
                 });
               }
             });
+    */
     searchController.getRecipeData(id,function(result){
       res.end(result);
     });
