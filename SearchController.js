@@ -78,7 +78,7 @@ var searchcontroller = function(json){
     @param callback
 
     */
-    this.getRecipeData = function(recipie_id, callback){
+    this.getRecipeData = function(recipe_id, callback){
         /*
         var credentials = {
           id: '13944c3c',
@@ -107,13 +107,15 @@ var searchcontroller = function(json){
             });
         });
         */
+        console.log("starting data");
         yummly.recipe({
           credentials: this.credentials,
-          id: recipie_id // id of the first recipe returned by search
+          id: recipe_id // id of the first recipe returned by search
         }, function (error, response, json) {
           if (error) {
             console.error(error);
           } else {
+            console.log("starting conversion");
             var new_son = JSON.stringify(json);            
             console.log(new_son);
             callback(new_son);
