@@ -155,9 +155,6 @@ app.get('/search', function(req, res) {
 app.post('/users/signup', function(req, res) {
     var userController = new UserController(res);
     userController.signup(req.body);
-
-  
-  console.log("FUNCTION 1"+res.body);
 });
 
 
