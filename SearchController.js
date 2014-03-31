@@ -82,6 +82,7 @@ var searchcontroller = function(json){
           if (error) {
             console.error(error);
           } else {
+            console.log(json);
             callback(json);
           }
         });
