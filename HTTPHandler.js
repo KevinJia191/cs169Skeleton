@@ -237,6 +237,7 @@ app.get('/recipes/getRecipeData', function(req, res) {
                     console.error(error);
                   } else {
                     console.log(json);
+                    res.end(json);
                   }
                 });
               }
