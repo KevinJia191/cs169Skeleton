@@ -75,31 +75,6 @@ var searchcontroller = function(json){
 
     */
     function getRecipeData(recipie_id, callback){
-        var credentials = {
-          id: '13944c3c',
-          key: '5a09042c7587234cbd1adc10150874cf'
-        }
-        yummly.search({ 
-          credentials: credentials,
-          query: {
-            q: 'pasta'
-          }
-        }, function (error, response, json) {
-          if (error) {
-            console.error(error);
-          } else if (response.statusCode === 200) {
-            yummly.recipe({
-              credentials: credentials,
-              id: json.matches[0].id // id of the first recipe returned by search
-            }, function (error, response, json) {
-              if (error) {
-                console.error(error);
-              } else {
-                console.log(json);
-              }
-            });
-          }
-        });
         /*
         yummly.recipe({
           credentials: credentials,
