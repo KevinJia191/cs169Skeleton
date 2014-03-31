@@ -32,25 +32,28 @@ app.get('/', function(req, res) {
 });
 
 app.get('/test2', function(req,res) {
-    res.writeHead(200);
-    /*
-    UNDERSTANDING OF HOW CALLBACKS WORK
-    IT NEEDS THE CALLBACK TO BE CALLED AT THE END SO IT KNOWS TO START THE NEXT ONE, THATS HOW SERIES
-    */
-    
-    console.log(52);
-    console.log(53);
-    console.log(54);
-    var searchController = new SearchController(null);
-    searchController.search(function(result){
-      res.end(result);
+        res.writeHead(200);
+        yummly.search({ // calling search first to get a recipe id
+      credentials: credentials,
+      query: {
+        q: 'pasta'
+      }
+    }, function (error, response, json) {
+      if (error) {
+        console.error(error);
+      } else if (response.statusCode === 200) {
+        yummly.recipe({
+          credentials: credentials,
+          id: json.matches[0].id // id of the first recipe returned by search
+        }, function (error, response, json) {
+          if (error) {
+            console.error(error);
+          } else {
+            console.log(json);
+          }
+        });
+      }
     });
-
-    /*
-    SearchController.search(function(result){
-      res.end(result);
-    });
-    */
 });
 
 
