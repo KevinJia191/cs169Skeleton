@@ -66,8 +66,25 @@ var searchcontroller = function(json){
           }
       });
     }
-    
+    /*
+    #important
+
+    for this to work, it needs to be given recipe_id's
+    @param json.matches[0].id
+    @param callback
+
+    */
     function getRecipeData(param1, param2){
+        yummly.recipe({
+          credentials: credentials,
+          id: param1 // id of the first recipe returned by search
+        }, function (error, response, json) {
+          if (error) {
+            console.error(error);
+          } else {
+            console.log(json);
+          }
+        });
         return {errCode : 1};
     }
 }
