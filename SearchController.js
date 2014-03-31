@@ -2,7 +2,11 @@ var yummly = require('yummly');
 var customYum = require('./YummlyAPIProcessor.js');
 var yummlyProcessor = new customYum();
 var searchcontroller = function(json){
-    
+    this.credentials = {
+      id: '13944c3c',
+      key: '5a09042c7587234cbd1adc10150874cf'
+    }
+        
     this.json = json;
 
     this.search = function(recipie,callback){
@@ -75,42 +79,47 @@ var searchcontroller = function(json){
 
     */
     function getRecipeData(recipie_id, callback){
-                    yummly.search({ // calling search first to get a recipe id
+        /*
+        var credentials = {
+          id: '13944c3c',
+          key: '5a09042c7587234cbd1adc10150874cf'
+        }
+            yummly.search({ // calling search first to get a recipe id
+          credentials: credentials,
+          query: {
+            q: 'pasta'
+          }
+        }, function (error, response, json) {
+          if (error) {
+            console.error(error);
+          } 
+            yummly.recipe({
               credentials: credentials,
-              query: {
-                q: 'pasta'
-              }
+              id: json.matches[0].id // id of the first recipe returned by search
             }, function (error, response, json) {
               if (error) {
                 console.error(error);
-              } else if (response.statusCode === 200) {
-                yummly.recipe({
-                  credentials: credentials,
-                  id: json.matches[0].id // id of the first recipe returned by search
-                }, function (error, response, json) {
-                  if (error) {
-                    console.error(error);
-                  } else {
-                    console.log(json);
-                  }
-                });
+              } else {
+                //console.log(json);
+                var format_son = JSON.stringify(json);
+                res.end(format_son);
               }
             });
-        /*
+        });
+        */
         yummly.recipe({
-          credentials: credentials,
+          credentials: this.credentials,
           id: recipie_id // id of the first recipe returned by search
         }, function (error, response, json) {
           if (error) {
             console.error(error);
           } else {
-            console.log(json);
-            callback(json);
+            var new_son = JSON.stringify(json);            
+            console.log(new_son);
+            callback(new_son);
           }
         });
         return {errCode : 1};
-    }
-    */
     }
 }
 
