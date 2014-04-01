@@ -3,13 +3,16 @@ var Constants = require('./Constants.js');
 var UserRecord = require('./UserRecord.js')
 var crypto = require('crypto');
 
-function UserModel(username, password, salt){
+function UserModel(username, password, salt, newPassword){
     this.username = username;
     this.password = password;
     this.salt = salt;
+    this.newPassword = newPassword;
     this.connection = null;
     this.parser = null;
     var self = this;
+    
+
     this.signUp = function(callback) { 
 	var self = this;
 	if(self.username.length > 128 || self.username.length == 0) {
@@ -80,6 +83,67 @@ function UserModel(username, password, salt){
 	    }
 	});
     }
+
+    this.changePassword = function(callback) {
+	var self = this;
+	if(self.username.length == 0 || self.username.length > 128 || self.password.length > 128 || self.newPassword.length > 128) {
+            callback(Constants.ERR_INVAL_CRED);
+            return;
+        }
+	var userRecord = new UserRecord(self.username);
+	userRecord.setUp(self.connection, self.parser);
+	userRecord.select(function(err, result) {
+	    if (err) {
+		callback(Constants.ERROR);
+		return;
+	    }
+	    var result = self.parser.parseUser(result);
+	    if (result.length == 0) {
+		callback(Constants.ERR_INVAL_CRED);
+	    }
+	    else {
+		try {
+		    var hashFunction = crypto.createHash('sha256');
+		    hashFunction.update(self.password + result[0]["salt"]);
+		    var hashed_password = hashFunction.digest().toString('hex');
+		    // Fix parser in the future to return a UserRecord object instead of a UserModel.
+		    if (hashed_password.valueOf() == result[0]["password"]) {
+			//callback(Constants.SUCCESS);
+				try {
+				    //hashing new password
+				    var hashFunction2 = crypto.createHash('sha256');
+				    hashFunction2.update(self.newPassword + result[0]["salt"]);
+				    var new_hashed_password = hashFunction2.digest().toString('hex');
+
+				    var userRecord = new UserRecord(self.username, hashed_password, result[0]["salt"]);
+				    userRecord.setUp(self.connection, self.parser);
+
+				    userRecord.update(function(err) {
+				    	if (err) {
+				    		callback(Constants.ERROR);
+				    	} else {
+				    		callback(Constants.SUCCESS);
+
+				    	}
+
+				    }, {'hashed_password': new_hashed_password})
+				}
+				catch(err) {
+		    		console.log(err);
+		    		callback(Constants.ERROR);
+				} 
+		    }
+		    else {
+			callback(Constants.ERR_INVAL_CRED);
+		    }
+		}
+		catch(err) {
+		    console.log(err);
+		    callback(Constants.ERROR);
+		}
+	    }
+	});
+    } // end of changePassword
 
     this.setParser = function(parser) {
         this.parser = parser;
