@@ -1,7 +1,8 @@
 /*
 Searchcontroller Tests
 */
-var SearchController = require('../SearchController.js');
+var SearchController = require('../MockFoodAPI.js');
+var query;
 
 /*
 
@@ -133,7 +134,7 @@ exports['fishSearch'] = function (test) {
 	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
 	  test.done();
     });
-    
+    var x = searchController.search(query);
 };
 
 exports['nameSearch'] = function (test) {

@@ -28,7 +28,7 @@ This function takes in the query only!
 @param Query as a string
 @return JSON same style as yummly which will contain 10 elements
 */
-MockFoodAPI.prototype.search = function(query){
+MockFoodAPI.prototype.search = function(query,callback){
     jsonArray = []
     recArray=[];
     recnameArray=[];
@@ -57,6 +57,12 @@ MockFoodAPI.prototype.search = function(query){
     ingredient_list: ilArray
     };
 	var format_son = JSON.stringify(new_son);
+  if (callback==null){
+    console.log("no callback");
+  }
+  else {
+    callback(format_son);
+  }
 	return format_son;
 }
 
