@@ -1,40 +1,55 @@
 var pg = require('pg');
 var Constants = require('./Constants.js');
-var UserRecord = require('./UserRecord.js');
+var UserRecord = require('./UserRecord.js')
+var crypto = require('crypto');
 //should extend the ActiveRecord class
-function UserModel(username, password){
+function UserModel(username, password, salt){
     this.username = username;
     this.password = password;
+    this.salt = salt;
     this.connection = null;
     this.parser = null;
     var self = this;
     this.signUp = function(callback) { 
-	if(this.username.length > 128 || this.username.length == 0) {
+	var self = this;
+	if(self.username.length > 128 || self.username.length == 0) {
             callback(Constants.BAD_USER);
             return;
         }
-	if (this.password.length > 128) {
+	if (self.password.length > 128) {
 	    callback(Constants.BAD_PASSWORD);
 	    return;
 	}
-	var userRecord = new UserRecord(this.username, this.password);
-	userRecord.setUp(self.connection, self.parser);
-	userRecord.insert(function(err) {
-	    if (err) {
-		callback(Constants.ERR_USER_EXISTS);
+	try {
+	    var salt = crypto.randomBytes(64).toString('hex');
+	    if (self.salt) {
+		salt = self.salt;
 	    }
-	    else {
-		callback(Constants.SUCCESS);
-	    }
-	});
+	    var hashFunction = crypto.createHash('sha256');
+	    hashFunction.update(self.password + salt);
+	    var hashed_password = hashFunction.digest().toString('hex');
+	    var userRecord = new UserRecord(self.username, hashed_password, salt);
+	    userRecord.setUp(self.connection, self.parser);
+	    userRecord.insert(function(err) {
+		if (err) {
+		    callback(Constants.ERR_USER_EXISTS);
+		}
+		else {
+		    callback(Constants.SUCCESS);
+		}
+	    });
+	} catch (ex) {
+	    callback(Constants.ERROR);
+	}
     }
 
     this.login = function(callback) {
-	if(this.username.length == 0 || this.username.length > 128 || this.password.length > 128) {
+	var self = this;
+	if(self.username.length == 0 || self.username.length > 128 || self.password.length > 128) {
             callback(Constants.ERR_INVAL_CRED);
             return;
         }
-	var userRecord = new UserRecord(this.username, this.password);
+	var userRecord = new UserRecord(self.username);
 	userRecord.setUp(self.connection, self.parser);
 	userRecord.select(function(err, result) {
 	    if (err) {
@@ -46,7 +61,22 @@ function UserModel(username, password){
 		callback(Constants.ERR_INVAL_CRED);
 	    }
 	    else {
-		callback(Constants.SUCCESS);
+		try {
+		    var hashFunction = crypto.createHash('sha256');
+		    hashFunction.update(self.password + result[0]["salt"]);
+		    var hashed_password = hashFunction.digest().toString('hex');
+		    // Fix parser in the future to return a UserRecord object instead of a UserModel.
+		    if (hashed_password.valueOf() == result[0]["password"]) {
+			callback(Constants.SUCCESS);
+		    }
+		    else {
+			callback(Constants.ERR_INVAL_CRED);
+		    }
+		}
+		catch(err) {
+		    console.log(err);
+		    callback(Constants.ERROR);
+		}
 	    }
 	});
     }
