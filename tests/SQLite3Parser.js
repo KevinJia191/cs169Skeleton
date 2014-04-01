@@ -28,19 +28,15 @@ function SQLite3Parser() {
     }
     
     this.parseUser = function(result) {
-        //console.log(result)
         var users = new Array();
         if (result.length == 0) {
             return users;
         }
         for (index = 0; index < result.length; index++) {
             var row = result[index];
-            //console.log("thisrow is " + row);
-            var user = new UserModel(row.username, row.hashed_password);
-            //console.log("thisuser is" + user);
+            var user = new UserModel(row["username"], row["hashed_password"], row["salt"]);
             users[index] = user;
         }
-        //console.log("hello"+users);
         return users;
     }
     
