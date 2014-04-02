@@ -9,6 +9,7 @@ var IngredientController = require('./IngredientController.js');
 var HistoryController = require('./HistoryController.js');
 var SearchController = require('./SearchController.js');
 var MockFoodAPI = require('./MockFoodAPI.js');
+var Constants = require('./Constants.js');
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -223,6 +224,7 @@ app.post('/recipes/search', function(req, res) {
 	});
     } catch(err) {
 	console.log(err);
+	res.end({errCode:Constants.ERROR});
     }
 });
 
@@ -263,9 +265,15 @@ app.post('/recipes/getRecipeData', function(req, res) {
               }
             });
     */
+    try {
     searchController.getRecipeData(req.body,function(result){
       res.end(result);
     });
+    }
+    catch(err) {
+	console.log("My error:"+err);
+	res.end({errCode:Constants.ERROR});
+    }
 });
 
 app.get('/recipes/history', function(req, res) {
