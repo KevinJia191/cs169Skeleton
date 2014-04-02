@@ -7,7 +7,7 @@ function RatingRecord(username, recipe_name, rating) {
     this.fields["recipe_name"] = recipe_name;
     this.fields["rating"] = rating;
     this.numFields = Constants.RATINGS_NUM_FIELDS;
-    this.tableName = Constants.RATINGS_TABLE;
+    this.tableName = Constants.RATING_TABLE;
 }
 RatingRecord.prototype = Object.create(ActiveRecord.prototype);
 RatingRecord.prototype.constructor = ActiveRecord;
