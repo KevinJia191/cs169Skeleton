@@ -34,15 +34,25 @@ var IngredientController = function(res) {
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new PostgreSQLParser());
 	db.connect();
-	ingredientModel.remove(function (err, result) {
-	    db.end();
-	    var json = {errCode : err};
-	    if (result != null) {
-		json["new_quantity"] = result;
-	    }
-	    res.header('Content-Type', 'application/json');
-	    res.end(JSON.stringify(json));
-	});
+	if (postRequest["quantity"] != null) {
+	    ingredientModel.remove(function (err, result) {
+		db.end();
+		var json = {errCode : err};
+		if (result != null) {
+		    json["new_quantity"] = result;
+		}
+		res.header('Content-Type', 'application/json');
+		res.end(JSON.stringify(json));
+	    });
+	}
+	else {
+	    ingredientModel.removeIngredient(function (err, result) {
+		db.end();
+		var json = {errCode : err};
+		res.header('Content-Type', 'application/json');
+		res.end(JSON.stringify(json));
+	    });
+	}
     }
 
     // postRequest is a json containing the fields: user
