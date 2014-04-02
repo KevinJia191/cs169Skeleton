@@ -62,7 +62,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date, self.unit);
+	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date, null, self.unit);
 	    ingredientRecord.setUp(self.connection, self.parser);
 	    //ingredientRecord.put("username", self.username);
 	    //ingredientRecord.put("ingredient_name", self.ingredient_name);
@@ -124,7 +124,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date, self.unit);
+	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date, null, self.unit);
 	    ingredientRecord.setUp(self.connection, self.parser);
 	    ingredientRecord.select(function(err, result) {
 		if (err) {
@@ -230,7 +230,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date, self.unit);
+	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date, null, self.unit);
 	    ingredientRecord.setUp(self.connection, self.parser);
 	    ingredientRecord.update(function(err, result) {
 		if (err) {
