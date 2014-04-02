@@ -217,13 +217,7 @@ app.post('/recipes/search', function(req, res) {
     //example
     //process req, res to get stuff
     var q = req.body.q;
-<<<<<<< HEAD
-    var searchController = new SearchController(null);
-    //var searchController = new MockFoodAPI();
-    searchController.search(q,function(result){
-      res.end(result);
-    });
-=======
+
     try {
 	var searchController = new SearchController(null);
 	searchController.search(q,function(result){
@@ -233,7 +227,6 @@ app.post('/recipes/search', function(req, res) {
 	console.log(err);
 	res.end({errCode:Constants.ERROR});
     }
->>>>>>> 9c78a661cc48be73474d22213d839c5e9b7de900
 });
 
 app.post('/recipes/getRecipeData', function(req, res) {
