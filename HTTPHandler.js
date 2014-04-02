@@ -27,7 +27,7 @@ app.get('/', function(req, res) {
     res.write('<form action="recipes/make" method="post">Username:<input type="text" name="user">RecipeName:<input type="text" name="recipe_name">Datecreated<input type="text" name="current_date">Rating:<input type="text" name="rating">Make <input type="submit" value="Make"></form>');
     res.write('<form action="recipes/getRecipeData" method="post">Recipe ID:<input type="text" name="recipe_id"><input type="submit" value="GetRecipeData"></form>');
     res.write('<form action="TESTAPI/resetFixture" method="post"><input type="text" name="username">RESET API <input type="submit" value="RESETTABLES"></form>');
-    
+    res.write('<form action="users/changePassword" method="post">Username <input type="text" name="user"><br>Password <input type="text" name="password"><br>newPassword<input type="text" name="newPassword"><input type="submit" value="Change" onclick=this.form.action="users/changePassword"></form>');
     res.end('</body></html>');
 });
 
@@ -174,6 +174,10 @@ app.post('/users/login', function(req, res) {
     userController.login(req.body);
 });
 
+app.post('/users/changePassword', function(req, res) {
+    var userController = new UserController(res);
+    userController.changePassword(req.body);
+});
 
 
 app.post('/ingredients/add', function(req, res) {
@@ -199,6 +203,11 @@ app.post('/ingredients/get', function(req, res) {
 app.post('/ingredients/clearAll', function(req, res) {
     var ingredientController = new IngredientController(res);
     var jsonObject = ingredientController.clearAll(req.body);
+});
+
+app.post('/ingredients/update', function(req, res) {
+    var ingredientController = new IngredientController(res);
+    var jsonObject = ingredientController.updateIngredient(req.body);
 });
 
 app.post('/recipes/search', function(req, res) {

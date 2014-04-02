@@ -6,6 +6,7 @@ var UserModel = require('./UserModel.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 var PostgreSQLParser = require('./PostgreSQLParser.js');
 
+
 var UserController = function(res) {
     this.signup = function (postRequest) {
 	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL)
@@ -35,6 +36,23 @@ var UserController = function(res) {
 	    res.end(JSON.stringify(json));
 	});
     }
+
+    this.changePassword = function (postRequest) {
+        console.log(postRequest);
+    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+        var userModel = new UserModel(postRequest.user, postRequest.password, null, postRequest.newPassword);
+        userModel.setDatabaseModel(db);
+        userModel.setParser(new PostgreSQLParser());
+        db.connect();
+        userModel.changePassword(function (err, result) {
+        db.end();
+        var json = {errCode : err};
+        res.header('Content-Type', 'application/json');
+        res.end(JSON.stringify(json));
+    });
+    }
+
+
 }
 module.exports = UserController;
 

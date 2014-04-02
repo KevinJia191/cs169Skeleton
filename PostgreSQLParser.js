@@ -34,7 +34,7 @@ function PostgreSQLParser() {
         }
         for (index = 0; index < result.rows.length; index++) {
             var row = result.rows[index];
-            var user = new UserModel(row["username"], row["hashed_password"]);
+            var user = new UserModel(row["username"], row["hashed_password"], row["salt"]);
             users[index] = user;
         }
         return users;

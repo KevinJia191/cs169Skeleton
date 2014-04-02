@@ -1,131 +1,125 @@
 var pg = require('pg');
-var constantModel = require('./Constants.js');
-
+var Constants = require('./Constants.js');
+var ActiveRecord = require('./ActiveRecord.js');
+var RecipeRecord = require('./RecipeRecord.js');
+var UserRecord = require('./UserRecord.js');
 /*
-Model for a "History" element : primary key'd by (username, recipe_name, date_created), to ensure one recipe per day by each user
-All callbacks are of the form: function(returningJson)
+Model for a "History" element : primary key'd by (username, recipe_name, dateCreated)
 */
-function Recipe(username, recipe_name, date_created, rating){
+function Recipe(username, recipe_name, dateCreated){
     this.username = username;
     this.recipe_name = recipe_name;
-    this.current_date = date_created;
-    this.rating = rating;
+    this.dateCreated = dateCreated;
+    
     this.connection = null;
     this.parser = null;
     
-    var self = this;
+    this.sortField = null;
+    this.sortBy = null;
+    this.limit = null;
+
+    
+    this.fields = {"username": username, "recipe_name":recipe_name, "dateCreated":dateCreated};
+
+    
     /*
     Make's this Recipe object and inserts into a user's history table
     */
     this.make = function(callback) {
-        var jsonObject = {};     
-        
-        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "\'";
-        var testAlreadyMadeQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'" + "AND H.recipe_name=\'" + this.recipe_name + "\'" + "AND H.dateCreated='" + this.current_date +"'";
-        var makeQuery = "INSERT INTO HISTORY VALUES('" + this.username + "','" + this.recipe_name + "','" + this.current_date + "'," + this.rating + ")";
-        
-        this.connection.query(testUserQuery, function(err, result){
-            if(err){
-                //console.error(err);
-                jsonObject.errCode = constantModel.ERROR;
-                var jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
+        //If the user exists
+        var self = this;
+        self.userExists(function(err) {
+            if (err != Constants.SUCCESS) {
+                callback(err);
                 return;
             }
-            var queryResult1 = self.parser.parseUser(result);
-            if(queryResult1.length>0){
-                self.connection.query(testAlreadyMadeQuery, function(err, result){
-                    if(err){
-                        //console.error(err);
-                        jsonObject.errCode = constantModel.ERROR;
-                        var jsonForm = JSON.stringify(jsonObject);
-                        callback(jsonForm);
-                        return;
-                    }
-                    var queryResult2 = self.parser.parseHistory(result);
-                    if(queryResult2.length == 0){
-                        //Did not fail already made today check
-                        self.connection.query(makeQuery, function(err, result){
-                            if(err){
-                                console.error(err);
-                                jsonObject.errCode = constantModel.ERROR;
-                                var jsonForm = JSON.stringify(jsonObject);
-                                callback(jsonForm);
-                                return;
+            var recipeRecord = new RecipeRecord(self.username, self.recipe_name, self.dateCreated);
+            recipeRecord.setUp(self.connection, self.parser);
+            //If Object has already been made before on this day
+            recipeRecord.select(function(err, result) {
+                if (err) {
+                    console.log("LOOK KEVIN LOOK KEVIN HERE IT IS: " + err);
+                    callback(Constants.ERROR);
+                    return;
+                }
+                else{
+                    result = self.parser.parseIngredient(result);
+                    // Object has never been made before on this day
+                    if (result.length == 0) {
+                        recipeRecord.insert(function(err, result) {
+                            if (err) {
+                                callback(Constants.ERROR);
                             }
-                            console.log("SUCCESS");
-                            jsonObject.errCode = constantModel.SUCCESS;
-                            var jsonForm = JSON.stringify(jsonObject);
-                            callback(jsonForm);
-                            return;
+                            else {
+                                callback(Constants.SUCCESS);
+                            }
                         });
                     }
                     else{
-                        console.log("ERROR RECIPE CREATED ALREADY");
-                        jsonObject.errCode = constantModel.ERR_RECIPE_CREATED_ALREADY;
-                        var jsonForm = JSON.stringify(jsonObject);
-                        callback(jsonForm);
-                        return;
+                        callback(Constants.ERR_RECIPE_CREATED_ALREADY);
                     }
-                });
-            }
-            else{
-                console.log("CURRENT USER NOT FOUND");
-                jsonObject.errCode = constantModel.ERR_USER_NOTFOUND;
-                var jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
-                return;
-            }
-        });
-    }
-
-    this.clearAllHistoryFromUser = function(callback) {
-        var jsonObject = {};
-        var deleteQuery = "DELETE FROM HISTORY WHERE username=\' " + this.username + "\'"
-        this.connection.query(deleteQuery, function(err, result){
-            if(err){
-                console.error(err);
-                jsonObject.errCode = constantModel.ERROR;
-                var jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
-                return;
-            }
-            
-            jsonObject.errCode = constantModel.SUCCESS;
-            var jsonForm = JSON.stringify(jsonObject);
-            callback(jsonForm);
+                }
+            });
         });
     }
 
     this.getAllHistoryFromUser = function(callback){
-        var jsonObject = {};
-        var testUserQuery = "SELECT * FROM users U WHERE U.username=\'" + this.username + "/'";
-        var getHistoryQuery = "SELECT * FROM history H WHERE H.username=\'" + this.username + "\'";
-        this.connection.query(testUserQuery, function(err, result){
-            var queryResult1 = self.parser.parseUser(result);
-            if(queryResult1.length > 0){
-                self.connection.query(getHistoryQuery, function(err, result){
-                    if(err){
-                        console.error(err);
-                        jsonObject.errCode = constantModel.ERROR;
-                        var jsonForm = JSON.stringify(jsonObject);
-                        callback(jsonForm);
-                        return;
-                    }
-                    var queryResult2 = self.parser.parseHistory(result);
-                    jsonObject.userHistory = queryResult2;
-                    jsonObject.errCode = constantModel.SUCCESS;
-                    var jsonForm = JSON.stringify(jsonObject);
-                    callback(jsonForm);
-                    return;
-                });
-            }
-            else{
-                jsonObject.errCode = constantModel.INVAL_USER;
-                var jsonForm = JSON.stringify(jsonObject);
-                callback(jsonForm);
+        var self = this;
+        self.userExists(function(err) {
+            if (err != Constants.SUCCESS) {
+                callback(err);
                 return;
             }
+            var recipeRecord = new RecipeRecord(self.username);
+            recipeRecord.setUp(self.connection, self.parser);
+            recipeRecord.select(function(err, result) {
+                if (err) {
+                    callback(Constants.ERROR);
+                }
+                else {
+                    callback(Constants.SUCCESS, self.parser.parseHistory(result));
+                }
+            });
+        });
+    }
+    
+    this.deleteHistory = function(callback) {
+        var self = this;
+        self.userExists(function(err) {
+            if (err != Constants.SUCCESS) {
+                callback(err);
+                return;
+            }
+            var recipeRecord = new RecipeRecord(self.username, self.recipe_name, self.dateCreated);
+            recipeRecord.setUp(self.connection, self.parser);
+            recipeRecord.remove(function(err, result) {
+                if (err) {
+                    callback(Constants.ERROR);
+                }
+                else {
+                    callback(Constants.SUCCESS);
+                }
+            });
+        });
+    }
+    
+    this.clearAllHistoryFromUser = function(callback) {
+        var self = this;
+        self.userExists(function(err) {
+            if (err != Constants.SUCCESS) {
+                callback(err);
+                return;
+            }
+            var recipeRecord = new RecipeRecord(self.username);
+            recipeRecord.setUp(self.connection, self.parser);
+            recipeRecord.remove(function(err, result) {
+                if (err) {
+                    callback(Constants.ERROR);
+                }
+                else {
+                    callback(Constants.SUCCESS);
+                }
+            });
         });
     }
     
@@ -146,20 +140,39 @@ function Recipe(username, recipe_name, date_created, rating){
     this.getParser = function() {
         return this.parser;
     }
-
-    this.connect = function() {
-        //this.connection = new pg.Client(process.env.DATABASE_URL);
-        this.connection.connect();
-    }
     
     this.end = function(){
         this.connection.end();
     }
+    
+    this.setSort = function(sortField, sortBy, start, end) {
+        this.sortField = sortField;
+        this.sortBy = sortBy;
+        this.limit = limit;
+    }
+    
+    
+    this.userExists = function(callback) {
+        var self = this;
+        var userRecord = new UserRecord(this.username);
+        userRecord.setUp(self.connection, self.parser);
+        userRecord.select(function(err, result) {
+            //console.log(err);
+            if (err) {
+                callback(Constants.ERROR);
+                return;
+            }
+            
+            var queryResult = self.parser.parseUser(result);
+            if (queryResult.length == 0) {
+                callback(Constants.INVALID_USER);
+                return;
+            }
+            else {
+                callback(Constants.SUCCESS);
+                return;
+            }
+        });
+    }
 }
-/*
-Recipe.SUCCESS = "SUCCESS";
-Recipe.INVAL_USER = "INVAL_USER"
-Recipe.ERR_CREATED_ALREADY = "ERR_CREATED_ALREADY";
-Recipe.ERROR = "ERROR";
-*/
 module.exports = Recipe;

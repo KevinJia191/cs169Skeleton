@@ -42,6 +42,7 @@ Constants.HISTORY_TABLE = "history";
 
 
 Constants.INGREDIENTS_NUM_FIELDS = 5;
-Constants.USERS_NUM_FIELDS = 2;
+Constants.USERS_NUM_FIELDS = 3;
+Constants.HISTORY_NUM_FIELDS = 3;
 
 module.exports = Constants;
