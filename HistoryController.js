@@ -1,5 +1,6 @@
 var pg = require('pg');
-var HistoryModel = require('./Recipe.js');
+var HistoryModel = require('./HistoryModel.js');
+var RatingModel = require('./RatingModel.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 var PostgreSQLParser = require('./PostgreSQLParser.js');
 
@@ -75,6 +76,7 @@ var HistoryController = function(res) {
     // clears all history items from a user
     this.clearHistory = function(postRequest, callback) {
         var jsonObject = {};     
+        //recipe_name and current date will simply be null
         var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date);
         var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
         historyModel.setDatabaseModel(db);
@@ -82,6 +84,22 @@ var HistoryController = function(res) {
         db.connect();   
         
         historyModel.clearAllHistoryFromUser(function (err, result) {
+            db.end();
+            jsonObject.errCode = err;
+            res.header('Content-Type', 'application/json');
+            res.end(JSON.stringify(jsonObject));
+        });
+    }
+    
+    this.rate = function(postRequest, callback) {
+        var jsonObject = {};     
+        var ratingModel = new RatingModel(postRequest.user, postRequest.recipe_name, postRequest.current_date);
+        var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+        ratingModel.setDatabaseModel(db);
+        ratingModel.setParser(new PostgreSQLParser());
+        db.connect();   
+        
+        ratingModel.rate(function (err, result) {
             db.end();
             jsonObject.errCode = err;
             res.header('Content-Type', 'application/json');

@@ -10,5 +10,9 @@ Mac/Linux:
     $ istanbul cover nodeunit -- -R spec
     
 Windows:
+    For recursive check:
     $ istanbul cover node_modules/nodeunit/bin/nodeunit -- -R spec
+    
+    For our tests folder:
+    $ istanbul cover node_modules/nodeunit/bin/nodeunit -- tests
 

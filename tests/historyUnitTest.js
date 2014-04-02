@@ -1,6 +1,6 @@
 var HistoryController = require('../HistoryController.js');
 var SQLite3Model = require('./SQLite3DatabaseModel.js');
-var HistoryModel = require('../Recipe.js');
+var HistoryModel = require('../HistoryModel.js');
 var SQLite3Parser = require('./SQLite3Parser.js');
 var Constants = require('../Constants.js');
 

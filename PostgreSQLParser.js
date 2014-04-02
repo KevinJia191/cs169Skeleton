@@ -1,7 +1,9 @@
 var Ingredient = require('./Ingredient.js');
 var UserModel = require('./UserModel.js');
-var Recipe = require('./Recipe.js');
+var HistoryModel = require('./HistoryModel.js');
+var RatingModel = require('./RatingModel.js');
 var DatabaseModel = require('./DatabaseModel.js');
+
 function PostgreSQLParser() {
 
     this.parseError = function(err) {
@@ -47,11 +49,23 @@ function PostgreSQLParser() {
         }
         for (index = 0; index < result.rows.length; index++) {
             var row = result.rows[index];
-            var history = new Recipe(row["username"], row["recipe_name"], row["dateCreated"], row["rating"]);
+            var history = new HistoryModel(row["username"], row["recipe_name"], row["dateCreated"]);
             histories[index] = history;
         }
         return histories;
     }
     
+    this.parseRating = function(result){
+        var ratings = new Array();
+        if (result.rows.length == 0) {
+            return ratings;
+        }
+        for (index = 0; index < result.rows.length; index++) {
+            var row = result.rows[index];
+            var rating = new RatingsModel(row["username"], row["recipe_name"], row["rating"]);
+            ratings[index] = rating;
+        }
+        return ratings;
+    }
 }
 module.exports = PostgreSQLParser;

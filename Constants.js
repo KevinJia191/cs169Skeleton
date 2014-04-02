@@ -33,16 +33,20 @@ Constants.GET_RECIPE_DATA = '/recipes/getRecipeData';
 Constants.GET_HISTORY = '/recipes/history';
 Constants.MAKE_RECIPE = '/recipes/make';
 Constants.CLEAR_HISTORY = '/recipes/deleteAllHistory';
+Constants.RATE = '/recipes/rate';
+
 Constants.RESET_FIXTURE = '/TESTAPI/resetFixture';
 
 
 Constants.INGREDIENTS_TABLE = "ingredients";
 Constants.USERS_TABLE = "users";
 Constants.HISTORY_TABLE = "history";
+Constants.RATING_TABLE = "ratings";
 
 
 Constants.INGREDIENTS_NUM_FIELDS = 5;
 Constants.USERS_NUM_FIELDS = 2;
 Constants.HISTORY_NUM_FIELDS = 3;
+Constants.RATINGS_NUM_FIELDS = 3;
 
 module.exports = Constants;

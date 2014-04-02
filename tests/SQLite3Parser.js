@@ -1,6 +1,8 @@
 var Ingredient = require('../Ingredient.js');
 var UserModel = require('../UserModel.js');
-var History = require('../Recipe.js');
+var HistoryModel = require('../HistoryModel.js');
+var RatingModel = require('../RatingModel.js');
+
 var DatabaseModel = require('../DatabaseModel.js');
 function SQLite3Parser() {
 
@@ -51,10 +53,23 @@ function SQLite3Parser() {
         }
         for (index = 0; index < result.length; index++) {
             var row = result[index];
-            var history = new Recipe(row["username"], row["recipe_name"], row["dateCreated"], row["rating"]);
+            var history = new HistoryModel(row["username"], row["recipe_name"], row["dateCreated"], row["rating"]);
             histories[index] = history;
         }
         return histories;
+    }
+    
+    this.parseRating = function(result){
+        var ratings = new Array();
+        if (result.length == 0) {
+            return ratings;
+        }
+        for (index = 0; index < result.length; index++) {
+            var row = result[index];
+            var rating = new RatingModel(row["username"], row["recipe_name"], row["rating"]);
+            ratings[index] = rating;
+        }
+        return ratings;
     }
 }
 module.exports = SQLite3Parser;
