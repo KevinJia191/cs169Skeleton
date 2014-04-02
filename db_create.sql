@@ -1,6 +1,7 @@
 Create table users (
 username text primary key,
-hashed_password text
+hashed_password text,
+salt text
 );
 
 Create table ingredients (

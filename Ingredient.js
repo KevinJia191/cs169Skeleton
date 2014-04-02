@@ -62,7 +62,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date);
+	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date, null, self.unit);
 	    ingredientRecord.setUp(self.connection, self.parser);
 	    //ingredientRecord.put("username", self.username);
 	    //ingredientRecord.put("ingredient_name", self.ingredient_name);
@@ -124,7 +124,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		callback(err);
 		return;
 	    }
-	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date);
+	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date, null, self.unit);
 	    ingredientRecord.setUp(self.connection, self.parser);
 	    ingredientRecord.select(function(err, result) {
 		if (err) {
@@ -220,6 +220,30 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 		    callback(Constants.SUCCESS, self.parser.parseIngredient(result));
 		}
 	    });
+	});
+    }
+
+    this.updateIngredientAmount = function(callback) {
+	var self = this;
+	if (quantity < 0) {
+	    callback(Constants.NEGATIVE_QUANTITY, null);
+	    return;
+	}
+	self.userExists(function(err) {
+	    if (err != Constants.SUCCESS) {
+		callback(err);
+		return;
+	    }
+	    var ingredientRecord = new IngredientRecord(self.username, self.ingredient_name, self.expiration_date, null, self.unit);
+	    ingredientRecord.setUp(self.connection, self.parser);
+	    ingredientRecord.update(function(err, result) {
+		if (err) {
+		    callback(Constants.ERROR);
+		}
+		else {
+		    callback(Constants.SUCCESS);
+		}
+	    }, {"quantity":self.quantity});
 	});
     }
 

@@ -32,13 +32,15 @@ ActiveRecord.prototype.insert = function(callback) {
     var columns = " (";
     var count = 1;
     for (field in this.fields) {
-	if (count == this.numFields) {
-	    values = values + this.getValue(field, this.fields) + ")";
-	    columns = columns + field + ")";
-	}
-	else {
-	    values = values + this.getValue(field, this.fields)+", ";
-	    columns = columns + field + ", ";
+	if (this.fields[field] != null) {
+	    if (count == this.numFields) {
+		values = values + this.getValue(field, this.fields) + ")";
+		columns = columns + field + ")";
+	    }
+	    else {
+		values = values + this.getValue(field, this.fields)+", ";
+		columns = columns + field + ", ";
+	    }
 	}
 	count = count + 1;
     }

@@ -4,13 +4,16 @@ var SQLite3Parser = require('./SQLite3Parser.js');
 var Constants = require('../Constants.js');
 var HelperMethods = require('./TestHelperMethods.js');
 var doSetup = HelperMethods.doSetup;
+var crypto = require('crypto');
+
+
 
 exports["testSignup"] = function(test){
     var db = new SQLite3Model();
-    test.expect(4);
+    test.expect(5);
     doSetup(db, function() {
         //console.log(err);
-        var userModel = new UserModel('testUser', 'testPass');
+        var userModel = new UserModel('testUser', 'testPass', 'abc');
         userModel.setDatabaseModel(db);
         userModel.setParser(new SQLite3Parser());
 	db.connect();
@@ -19,7 +22,10 @@ exports["testSignup"] = function(test){
             db.query("select * from users", function(err, rows) {
                 db.end();
                 test.equal(rows.length, 1, "Length of returns did not match");
-		var exp = {"username":"testUser", "hashed_password":"testPass"};
+		var hashFunction = crypto.createHash('sha256');
+		hashFunction.update("testPass" + 'abc');
+		var hashed_password = hashFunction.digest().toString('hex');
+		var exp = {"username":"testUser", "hashed_password": hashed_password, "salt": "abc"};
 		var row = rows[0];
 		console.log(row);
 		testUsersEqual(row, exp, test);
@@ -34,10 +40,10 @@ exports["testSignup"] = function(test){
 
 exports["testSignupTwice"] = function(test){
     var db = new SQLite3Model();
-    test.expect(4);
+    test.expect(5);
     doSetup(db, function() {
         //console.log(err);
-        var userModel = new UserModel('testUser', 'testPass');
+        var userModel = new UserModel('testUser', 'testPass', 'abc');
         userModel.setDatabaseModel(db);
         userModel.setParser(new SQLite3Parser());
 	db.connect();
@@ -47,7 +53,10 @@ exports["testSignupTwice"] = function(test){
 		db.query("select * from users", function(err, rows) {
                     db.end();
                     test.equal(rows.length, 1, "Length of returns did not match");
-		    var exp = {"username":"testUser", "hashed_password":"testPass"};
+		    var hashFunction = crypto.createHash('sha256');
+		    hashFunction.update("testPass" + 'abc');
+		    var hashed_password = hashFunction.digest().toString('hex');
+		    var exp = {"username":"testUser", "hashed_password": hashed_password, "salt": "abc"};
 		    var row = rows[0];
 		    console.log(row);
 		    testUsersEqual(row, exp, test);
@@ -65,7 +74,7 @@ exports["testLogin"] = function(test){
     test.expect(1);
     doSetup(db, function() {
         //console.log(err);
-        var userModel = new UserModel('testUser', 'testPass');
+        var userModel = new UserModel('testUser', 'testPass', 'abc');
         userModel.setDatabaseModel(db);
         userModel.setParser(new SQLite3Parser());
 	db.connect();
@@ -77,6 +86,7 @@ exports["testLogin"] = function(test){
 	});
     });
 };
+
 
 exports["testLoginInvalidPassword"] = function(test){
     var db = new SQLite3Model();
@@ -172,4 +182,5 @@ exports["testAddInvalidUser2"] = function(test){
 function testUsersEqual(row, exp, test) {
     test.equal(row.username, exp.username);
     test.equal(row.hashed_password, exp.hashed_password);
+    test.equal(row.salt, exp.salt);
 }

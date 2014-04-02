@@ -181,6 +181,7 @@ class TestIngredients(testLib.RestTestCase):
         self.assertResponse(respData,SUCCESS);
         respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Fish', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
         self.assertResponse(respData,SUCCESS);
+    def testAddNegativeQuantity(self):
         respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Mango', 'quantity': -10, 'unit':'count', 'expiration_date':'6/7/15'} )
         self.assertResponse(respData,NEGATIVE_QUANTITY);
     def testRemoveNegativeQuantity(self):
@@ -188,8 +189,20 @@ class TestIngredients(testLib.RestTestCase):
         respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'Candy', 'quantity': -3, 'unit':'count', 'expiration_date':'6/7/15'} )
         self.assertResponse(respData,NEGATIVE_QUANTITY)
     def testGetInventory(self):
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Banana', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,SUCCESS);
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Guava', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,SUCCESS);
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Taco', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,SUCCESS);
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'user1', 'ingredient_name': 'Fish', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        self.assertResponse(respData,SUCCESS);
         respData = self.makeRequest("/ingredients/get", method="POST", data = {'user': 'user1'} )
         self.assertResponse(respData,SUCCESS)
+        print(respData)
+    def testCheckInventory(self):
+        print(yea)
+
     """
     REMOVE
     CHRIS
@@ -210,6 +223,13 @@ class TestIngredients(testLib.RestTestCase):
     def testRemoveAll(self):
         respData = self.makeRequest("/ingredients/removeAll", method="POST", data = {'user': 'user1'} )
         self.assertResponse(respData,SUCCESS)
+    def removeNonExistentIngredient(self):
+        respData = self.makeRequest("/ingredients/remove", method="POST", data = {'user': 'user1', 'ingredient_name': 'FAKE INGREDIENT', 'quantity': 3, 'unit':'count', 'expiration_date':'6/7/15'} )
+    def testAddIngredientsToNonExistent(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        respData = self.makeRequest("/ingredients/add", method="POST", data = {'user': 'nonexistent', 'ingredient_name': 'Fish', 'quantity': 10, 'unit':'count', 'expiration_date':'6/7/15'} )
+        print(respData)
+        self.assertResponse(respData,INVALID_USER)
         
 
 
@@ -230,10 +250,37 @@ class TestRecipe(testLib.RestTestCase):
         respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Apple Pie', 'current_date': '3/11/14', 'rating':'4'} )
         print(respData)
         self.assertResponse(respData,SUCCESS)
+    """
     def testGetCompletedRecipes(self):
         respData = self.makeRequest("/recipes/history", method="GET", data = {'user': 'user1'} )
         print(respData)
         self.assertResponse(respData,SUCCESS)
+    """
+
+    """
+#RATINGS TESTS
+class TestRatings(testLib.RestTestCase):
+    print("ratings are not implimented")
+    def assertResponse(self, respData, code):
+        if (respData["errCode"]==code):
+            return;
+        else:
+            self.assertEquals(respData["errCode"],code);
+    def testValidRating(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
+        respData = self.makeRequest("history/rating", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', "rating":4} )
+        self.assertResponse(respData,SUCCESS)
+    def testInvalidRating(self):
+        self.makeRequest("history/rating", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', "rating":-4} )
+        self.assertResponse(respData,ERROR)
+    def testCharacterRating(self):
+        self.makeRequest("history/rating", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', "rating":"A"} )
+        self.assertResponse(respData,ERROR)
+    def testChangeRatingOfNonexistentRecipe(self):
+        self.makeRequest("history/rating", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'SOCK SOUP', "rating":4} )
+        self.assertResponse(respData,ERROR)
+    """
 
     """
     def testClearAll(self):
@@ -256,5 +303,5 @@ class TestRecipe(testLib.RestTestCase):
 
     #SHOULD PROBABLY TEST INVENTORY RANGE
 
-"""
+    """
 
