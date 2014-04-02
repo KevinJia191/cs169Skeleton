@@ -200,6 +200,9 @@ class TestIngredients(testLib.RestTestCase):
         respData = self.makeRequest("/ingredients/get", method="POST", data = {'user': 'user1'} )
         self.assertResponse(respData,SUCCESS)
         print(respData)
+    def testCheckInventory(self):
+        print(yea)
+
     """
     REMOVE
     CHRIS
@@ -300,5 +303,5 @@ class TestRatings(testLib.RestTestCase):
 
     #SHOULD PROBABLY TEST INVENTORY RANGE
 
-"""
+    """
 
