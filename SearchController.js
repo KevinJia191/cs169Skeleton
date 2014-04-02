@@ -1,7 +1,7 @@
 var yummly = require('yummly');
 var customYum = require('./YummlyAPIProcessor.js');
 var yummlyProcessor = new customYum();
-var Constants = require('Constants.js');
+var Constants = require('./Constants.js');
 var searchcontroller = function(json){
     this.credentials = {
       id: '13944c3c',
