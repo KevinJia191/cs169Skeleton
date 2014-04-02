@@ -7,7 +7,11 @@ helperMethods.doSetup = function(db, callback) {
 	db.query("Create table ingredients (username text references users(username),ingredient_name text,expiration_date text,quantity decimal check(quantity>0),unit text, primary key(username,ingredient_name,expiration_date)); ", function(err, results) {
 	    var createHistory = "Create table history (username text references users(username), recipe_name text, dateCreated text, primary key(username,recipe_name,dateCreated));";
 	    db.query(createHistory, function(err, results) {
-		callback();
+            //TODO: make recipe_name reference history or recipe or something
+            var createRatings = "Create table ratings (username text references users(username), recipe_name, rating int check(rating > 0 AND rating <= 5), primary key(username,recipe_name,rating));";
+            db.query(createRatings, function(err, results){
+                callback();
+            });
 	    });
 	});
     });

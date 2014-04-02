@@ -29,11 +29,12 @@ function RatingModel(username, recipe_name, rating){
                 callback(err);
                 return;
             }
-            var ratingsRecord = new RatingsRecord(self.username, self.recipe_name, self.rating);
-            ratingsRecord.setUp(self.connection, self.parser);
+            var ratingRecord = new RatingRecord(self.username, self.recipe_name, self.rating);
+            ratingRecord.setUp(self.connection, self.parser);
             //If rating on this recipe has already been made
-            ratingsRecord.select(function(err, result) {
+            ratingRecord.select(function(err, result) {
                 if (err) {
+                    console.log(err);
                     callback(Constants.ERROR);
                     return;
                 }
@@ -41,7 +42,7 @@ function RatingModel(username, recipe_name, rating){
                     result = self.parser.parseRating(result);
                     // Object has never been made before on this day
                     if (result.length == 0) {
-                        ratingsRecord.insert(function(err, result) {
+                        ratingRecord.insert(function(err, result) {
                             if (err) {
                                 callback(Constants.ERROR);
                                 return;
@@ -55,7 +56,7 @@ function RatingModel(username, recipe_name, rating){
                     else{//result.length==1, meaning recipe has already been previously rated
                         if(result.rating != self.rating){
                             if(result.rating < 1 || result.rating > 5){
-                                ratingsRecord.insert(function(err, result) {
+                                ratingRecord.insert(function(err, result) {
                                     if (err) {
                                         callback(Constants.ERROR);
                                         return;
