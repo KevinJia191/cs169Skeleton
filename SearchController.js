@@ -23,6 +23,7 @@ var searchcontroller = function(json){
         }
         console.log("PRE SEARCH");
         try {
+          console.log("ENTERED TRY");
           yummly.search({
             credentials: {id: '13944c3c', key: '5a09042c7587234cbd1adc10150874cf'},
             query: {
