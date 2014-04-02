@@ -9,7 +9,6 @@ var IngredientController = require('./IngredientController.js');
 var HistoryController = require('./HistoryController.js');
 var SearchController = require('./SearchController.js');
 var MockFoodAPI = require('./MockFoodAPI.js');
-var Constants = require('./Constants.js');
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -218,12 +217,6 @@ app.post('/recipes/search', function(req, res) {
     //process req, res to get stuff
     var q = req.body.q;
 <<<<<<< HEAD
-    var searchController = new SearchController(null);
-    //var searchController = new MockFoodAPI();
-    searchController.search(q,function(result){
-      res.end(result);
-    });
-=======
     try {
 	var searchController = new SearchController(null);
 	searchController.search(q,function(result){
@@ -231,9 +224,14 @@ app.post('/recipes/search', function(req, res) {
 	});
     } catch(err) {
 	console.log(err);
-	res.end({errCode:Constants.ERROR});
     }
->>>>>>> 9c78a661cc48be73474d22213d839c5e9b7de900
+=======
+    //var searchController = new SearchController(null);
+    var searchController = new MockFoodAPI();
+    searchController.search(q,function(result){
+      res.end(result);
+    });
+>>>>>>> 158e1bbb03bea1b756f2b9f04afabb59e4e40b50
 });
 
 app.post('/recipes/getRecipeData', function(req, res) {
@@ -273,15 +271,9 @@ app.post('/recipes/getRecipeData', function(req, res) {
               }
             });
     */
-    try {
     searchController.getRecipeData(req.body,function(result){
       res.end(result);
     });
-    }
-    catch(err) {
-	console.log("My error:"+err);
-	res.end({errCode:Constants.ERROR});
-    }
 });
 
 app.get('/recipes/history', function(req, res) {
