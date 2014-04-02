@@ -199,6 +199,11 @@ app.post('/ingredients/clearAll', function(req, res) {
     var jsonObject = ingredientController.clearAll(req.body);
 });
 
+app.post('/ingredients/update', function(req, res) {
+    var ingredientController = new IngredientController(res);
+    var jsonObject = ingredientController.updateIngredient(req.body);
+});
+
 app.post('/recipes/search', function(req, res) {
     res.header('Content-Type', 'application/json');
     //example

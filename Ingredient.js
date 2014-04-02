@@ -225,6 +225,10 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 
     this.updateIngredientAmount = function(callback) {
 	var self = this;
+	if (quantity < 0) {
+	    callback(Constants.NEGATIVE_QUANTITY, null);
+	    return;
+	}
 	self.userExists(function(err) {
 	    if (err != Constants.SUCCESS) {
 		callback(err);
