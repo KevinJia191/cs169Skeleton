@@ -203,6 +203,7 @@ For the next 2 tests, the word yummly should be in the api call since the API is
 yummly
 
 */
+/*
 exports['isYummlyInJSON'] = function (test) {
   query="chicken";
   var result;
@@ -242,6 +243,7 @@ exports['isYummlyInJSON2'] = function (test) {
     });
     
 };
+*/
 
 exports['IFALLFAIL'] = function (test) {
 	console.log("important note! If all tests fail, could be API Failure");
