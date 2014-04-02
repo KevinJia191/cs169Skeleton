@@ -8,7 +8,7 @@ var UserController = require("./UserController.js");
 var IngredientController = require('./IngredientController.js');
 var HistoryController = require('./HistoryController.js');
 var SearchController = require('./SearchController.js');
-var MockAPI = require('./MockFoodAPI.js');
+var MockFoodAPI = require('./MockFoodAPI.js');
 
 app.configure(function(){
   app.use(express.bodyParser());
