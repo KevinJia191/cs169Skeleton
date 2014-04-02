@@ -54,12 +54,17 @@ function RatingModel(username, recipe_name, rating){
                     }
                     else{//result.length==1, meaning recipe has already been previously rated
                         if(result.rating != self.rating){
-                            ratingsRecord.insert(function(err, result) {
-                                if (err) {
-                                    callback(Constants.ERROR);
-                                    return;
-                                }
-                            }); 
+                            if(result.rating < 1 || result.rating > 5){
+                                ratingsRecord.insert(function(err, result) {
+                                    if (err) {
+                                        callback(Constants.ERROR);
+                                        return;
+                                    }
+                                }); 
+                            }
+                            else{
+                                callback(Constants.INVALID_RATING);
+                            }
                         }
                         callback(Constants.SUCCESS);
                         return;

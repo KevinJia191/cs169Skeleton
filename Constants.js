@@ -20,6 +20,8 @@ Constants.ERR_INVAL_CRED = "ERR_INVAL_CRED"; //Wrong Username, Password Combinat
 Constants.BAD_USER = "BAD_USER"; //username is longer than 128 characters or of length 0
 Constants.BAD_PASS = "BAD_PASS"; //password is longer than 128 characters
 
+Constants.INVALID_RATING = "INVALID_RATING"; //user tried to rate <1 or >5
+
 //URLS
 Constants.LOGIN = '/users/login';
 Constants.SEARCH = '/recipes/search';
