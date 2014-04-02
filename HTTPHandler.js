@@ -209,10 +209,14 @@ app.post('/recipes/search', function(req, res) {
     //example
     //process req, res to get stuff
     var q = req.body.q;
-    var searchController = new SearchController(null);
-    searchController.search(q,function(result){
-      res.end(result);
-    });
+    try {
+	var searchController = new SearchController(null);
+	searchController.search(q,function(result){
+	    res.end(result);
+	});
+    } catch(err) {
+	console.log(err);
+    }
 });
 
 app.get('/recipes/getRecipeData', function(req, res) {
