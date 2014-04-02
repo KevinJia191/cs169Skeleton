@@ -62,7 +62,7 @@ function PostgreSQLParser() {
         }
         for (index = 0; index < result.rows.length; index++) {
             var row = result.rows[index];
-            var rating = new RatingsModel(row["username"], row["recipe_name"], row["rating"]);
+            var rating = new RatingModel(row["username"], row["recipe_name"], row["rating"]);
             ratings[index] = rating;
         }
         return ratings;
