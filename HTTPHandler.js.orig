@@ -216,6 +216,7 @@ app.post('/recipes/search', function(req, res) {
     //example
     //process req, res to get stuff
     var q = req.body.q;
+<<<<<<< HEAD
     try {
 	var searchController = new SearchController(null);
 	searchController.search(q,function(result){
@@ -224,6 +225,13 @@ app.post('/recipes/search', function(req, res) {
     } catch(err) {
 	console.log(err);
     }
+=======
+    //var searchController = new SearchController(null);
+    var searchController = new MockFoodAPI();
+    searchController.search(q,function(result){
+      res.end(result);
+    });
+>>>>>>> 158e1bbb03bea1b756f2b9f04afabb59e4e40b50
 });
 
 app.post('/recipes/getRecipeData', function(req, res) {
