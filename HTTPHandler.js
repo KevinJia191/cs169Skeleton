@@ -8,7 +8,6 @@ var UserController = require("./UserController.js");
 var IngredientController = require('./IngredientController.js');
 var HistoryController = require('./HistoryController.js');
 var SearchController = require('./SearchController.js');
-var MockFoodAPI = require('./MockFoodAPI.js');
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -216,8 +215,7 @@ app.post('/recipes/search', function(req, res) {
     //example
     //process req, res to get stuff
     var q = req.body.q;
-    //var searchController = new SearchController(null);
-    var searchController = new MockFoodAPI();
+    var searchController = new SearchController(null);
     searchController.search(q,function(result){
       res.end(result);
     });
