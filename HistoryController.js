@@ -45,12 +45,17 @@ var HistoryController = function(res) {
         //result will have something if successful
         historyModel.getAllHistoryFromUser(function (err, result) {
             db.end();
-            jsonObject.errCode = err;
+            var json = {errCode : err};
             if(result != null){
-                jsonObject.userHistory = result;
+		var history = new Array();
+		for (index = 0; index < result.length; index++) {
+		    var recipe = { "recipe_name":result[index].recipe_name, "date_created": result[index].dateCreated};
+		    history[index] = recipe;
+	    }
+	    json["history"] = history;
             }
             res.header('Content-Type', 'application/json');
-            res.end(JSON.stringify(jsonObject));
+            res.end(JSON.stringify(json));
         });
     }
     
