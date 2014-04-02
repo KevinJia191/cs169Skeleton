@@ -1,6 +1,7 @@
 var yummly = require('yummly');
 var customYum = require('./YummlyAPIProcessor.js');
 var yummlyProcessor = new customYum();
+var Constants = require('Constants.js');
 var searchcontroller = function(json){
     this.credentials = {
       id: '13944c3c',
@@ -127,7 +128,8 @@ var searchcontroller = function(json){
           id: recipe_id // id of the first recipe returned by search
         }, function (error, response, json) {
           if (error) {
-            console.error(error);
+            console.error("*Error*:"+error);
+	      callback({"errCode" : Constants.ERROR});
           } else {
             console.log("starting conversion");
             var new_son = JSON.stringify(json);            
@@ -135,7 +137,6 @@ var searchcontroller = function(json){
             callback(new_son);
           }
         });
-        return {errCode : 1};
     }
 }
 
