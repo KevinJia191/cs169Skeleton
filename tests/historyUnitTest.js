@@ -30,7 +30,6 @@ exports["testMakeRecipe"] = function(test){
     });
 };
 
-<<<<<<< HEAD
 exports["testMakeTwoRecipes"] = function(test){
     var db = new SQLite3Model();
     test.expect(9);
@@ -113,7 +112,6 @@ function testRecipeEqual(row, exp, test) {
     test.equal(row.recipe_name, exp.recipe_name);
     test.equal(row.dateCreated, exp.dateCreated);
 }
-=======
 exports["testRateRecipe"] = function(test){
     var db = new SQLite3Model();
     test.expect(2);
@@ -132,4 +130,3 @@ exports["testRateRecipe"] = function(test){
         });
     });
 };
->>>>>>> b57176debbd0f736bfb879d286c1a724823aa7ae
