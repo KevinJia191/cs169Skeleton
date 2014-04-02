@@ -90,5 +90,21 @@ var IngredientController = function(res) {
 	    res.end(JSON.stringify(json));
 	});
     }
+
+    this.updateIngredient = function(postRequest) {
+	var ingredientModel = new IngredientModel(postRequest["user"], postRequest["ingredient_name"], postRequest["expiration_date"], postRequest["quantity"], postRequest["unit"]);
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new PostgreSQLParser());
+	db.connect();
+	ingredientModel.updateIngredientAmount(function (err, result) {
+	    db.end();
+	    var json = {errCode : err};
+	    res.header('Content-Type', 'application/json');
+	    res.end(JSON.stringify(json));
+	});
+    }
+
+
 }
 module.exports = IngredientController;
