@@ -42,20 +42,27 @@ function RatingModel(username, recipe_name, rating){
                     result = self.parser.parseRating(result);
                     // Object has never been made before on this day
                     if (result.length == 0) {
-                        ratingRecord.insert(function(err, result) {
-                            if (err) {
-                                callback(Constants.ERROR);
-                                return;
-                            }
-                            else {
-                                callback(Constants.SUCCESS);
-                                return;
-                            }
-                        });
+                        if(self.rating >= 1 && self.rating <= 5){
+                            ratingRecord.insert(function(err, result) {
+                                if (err) {
+                                    callback(Constants.ERROR);
+                                    return;
+                                }
+                                else {
+                                    callback(Constants.SUCCESS);
+                                    return;
+                                }
+                            });
+                        }
+                        else{
+                            console.log(result.rating);
+                            callback(Constants.INVALID_RATING);
+                            return;
+                        }
                     }
                     else{//result.length==1, meaning recipe has already been previously rated
                         if(result.rating != self.rating){
-                            if(result.rating < 1 || result.rating > 5){
+                            if(self.rating >= 1 && self.rating <= 5){
                                 ratingRecord.insert(function(err, result) {
                                     if (err) {
                                         callback(Constants.ERROR);
@@ -65,6 +72,7 @@ function RatingModel(username, recipe_name, rating){
                             }
                             else{
                                 callback(Constants.INVALID_RATING);
+                                return;
                             }
                         }
                         callback(Constants.SUCCESS);
