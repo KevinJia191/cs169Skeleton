@@ -10,19 +10,44 @@ var HistoryController = require('./HistoryController.js');
 var SearchController = require('./SearchController.js');
 var MockFoodAPI = require('./MockFoodAPI.js');
 var Constants = require('./Constants.js');
-
+var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 app.configure(function(){
-  app.use(express.bodyParser());
-  app.use(app.router);
+    app.use(express.bodyParser({limit: '5mb'}));
+    app.use(app.router);
 });
 
 
 app.use(logfmt.requestLogger());
 
+app.post('/picture/get', function(req, res) {
+    console.log(req.body.image.length);
+    console.log(req.body.id);
+    imageBytes = req.body.image;
+    imageid = req.body.id;
+    res.writeHead(200);
+    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+    db.connect();
+    var query = "insert into test values('"+imageid+"',"+imageBytes+")";
+    //console.log(query);
+    db.query(query, function(err) {
+	//console.log(err);
+	var selectQuery = "select * from test where id ='"+imageid+"'";
+	//console.log(selectQuery);
+	db.query(selectQuery, function(err, result){
+	    //console.log(result.rows[0].picture.toJSON());
+	    bytes = result.rows[0].picture.toJSON();
+	    res.end(JSON.stringify({"image": bytes}));
+		    
+	    db.end();
+	});
+    }); 
+});
+
+
 app.get('/', function(req, res) {
   res.writeHead(200);
     res.write('<html><body>');
-    res.write('<form action="users/login" method="post">Username <input type="text" name="user"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
+    res.write('<form action="users/login" method="post">Username :) <input type="text" name="user"><br>Password <input type="text" name="password"><input type="submit" value="Login" onclick=this.form.action="users/login"><input type="submit" value="add" onclick=this.form.action="users/signup"></form>');
     res.write('<form action="recipes/history" method="get"><input type="text" name="username">History Get Button <input type="submit" value="getHistory"></form>');
     res.write('<form action="yummly" method="post">Recipie Name <input type="text" name="q"><input type="submit" value="TestSearch" onclick=this.form.action="recipes/search"></form>');
     res.write('<form action="recipes/deleteAllHistory" method="post"><input type="text" name="username">Clear History<input type="submit" value="delete all history post Button"></form>');
