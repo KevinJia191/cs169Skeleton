@@ -13,35 +13,14 @@ var Constants = require('./Constants.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 app.configure(function(){
     app.use(express.bodyParser({limit: '5mb'}));
+    app.use(express.json({limit: '5mb'}));
+app.use(express.urlencoded({limit: '5mb'}));
     app.use(app.router);
 });
 
 
 app.use(logfmt.requestLogger());
 
-app.post('/picture/get', function(req, res) {
-    console.log(req.body.image.length);
-    console.log(req.body.id);
-    imageBytes = req.body.image;
-    imageid = req.body.id;
-    res.writeHead(200);
-    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
-    db.connect();
-    var query = "insert into test values('"+imageid+"',"+imageBytes+")";
-    //console.log(query);
-    db.query(query, function(err) {
-	//console.log(err);
-	var selectQuery = "select * from test where id ='"+imageid+"'";
-	//console.log(selectQuery);
-	db.query(selectQuery, function(err, result){
-	    //console.log(result.rows[0].picture.toJSON());
-	    bytes = result.rows[0].picture.toJSON();
-	    res.end(JSON.stringify({"image": bytes}));
-		    
-	    db.end();
-	});
-    }); 
-});
 
 
 app.get('/', function(req, res) {
@@ -349,6 +328,34 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
     res.write(format_son);
     res.end();
 
+});
+
+app.post('/picture/get', function(req, res) {
+    console.log("incoming bytes:"+req.body.image.length);
+    console.log("image id"+req.body.id);
+    imageBytes = req.body.image;
+    imageid = req.body.id;
+    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+    db.connect();
+    var query = "insert into test values('"+imageid+"',"+imageBytes+")";
+    db.query(query, function(err) {
+	console.log("insertErr:"+err);
+	var selectQuery = "select * from test where id ='"+imageid+"'";
+	db.query(selectQuery, function(err, result){
+	    db.end();
+	    console.log("Select err:"+err);
+	    console.log("Picture length:"+result.rows[0].picture.length);
+	    var bytes = result.rows[0].picture.toJSON();
+	    console.log("Bytes length:"+bytes.length);
+	    var body = JSON.stringify({"image": bytes});
+	    console.log( Buffer.byteLength(body, 'utf8'));
+	    res.header({'content-length': Buffer.byteLength(body, 'utf8'), 'content-type': 'application/json'});
+	    //res.header('Content-Type', 'application/json');
+	    //res.header('Content-Length': Buffer.byteLength(body, 'utf8'));
+	    res.write(body);
+	    res.end();
+	});
+    }); 
 });
 
 var port = Number(process.env.PORT || 5000);
