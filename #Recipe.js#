@@ -5,20 +5,23 @@ var RecipeRecord = require('./RecipeRecord.js');
 var UserRecord = require('./UserRecord.js');
 /*
 Model for a "History" element : primary key'd by (username, recipe_name, dateCreated)
-Also Model for "Rating" element, primary key'd by username, recipe_name, rating
 */
-function HistoryModel(username, recipe_name, datecreated, rating){
+function Recipe(username, recipe_name, dateCreated){
     this.username = username;
     this.recipe_name = recipe_name;
-    this.datecreated = datecreated;
+    this.dateCreated = dateCreated;
+    
     this.connection = null;
-    this.parser = null;    
+    this.parser = null;
+    
     this.sortField = null;
     this.sortBy = null;
     this.limit = null;
 
-    this.fields = {"username": this.username, "recipe_name": this.recipe_name, "datecreated": this.datecreated};
+    
+    this.fields = {"username": username, "recipe_name":recipe_name, "dateCreated":dateCreated};
 
+    
     /*
     Make's this Recipe object and inserts into a user's history table
     */
@@ -30,11 +33,12 @@ function HistoryModel(username, recipe_name, datecreated, rating){
                 callback(err);
                 return;
             }
-            var recipeRecord = new RecipeRecord(self.username, self.recipe_name, self.datecreated);
+            var recipeRecord = new RecipeRecord(self.username, self.recipe_name, self.dateCreated);
             recipeRecord.setUp(self.connection, self.parser);
             //If Object has already been made before on this day
             recipeRecord.select(function(err, result) {
                 if (err) {
+                    console.log("LOOK KEVIN LOOK KEVIN HERE IT IS: " + err);
                     callback(Constants.ERROR);
                     return;
                 }
@@ -73,6 +77,7 @@ function HistoryModel(username, recipe_name, datecreated, rating){
                     callback(Constants.ERROR);
                 }
                 else {
+		    console.log(result)
                     callback(Constants.SUCCESS, self.parser.parseHistory(result));
                 }
             });
@@ -86,7 +91,7 @@ function HistoryModel(username, recipe_name, datecreated, rating){
                 callback(err);
                 return;
             }
-            var recipeRecord = new RecipeRecord(self.username, self.recipe_name, self.datecreated);
+            var recipeRecord = new RecipeRecord(self.username, self.recipe_name, self.dateCreated);
             recipeRecord.setUp(self.connection, self.parser);
             recipeRecord.remove(function(err, result) {
                 if (err) {
@@ -171,4 +176,4 @@ function HistoryModel(username, recipe_name, datecreated, rating){
         });
     }
 }
-module.exports = HistoryModel;
+module.exports = Recipe;

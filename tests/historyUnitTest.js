@@ -21,7 +21,7 @@ exports["testMakeRecipe"] = function(test){
             db.query("select * from "+ Constants.HISTORY_TABLE, function(err, rows) {
                 db.end();
                 test.equal(rows.length, 1, "Should be just one recipe made");
-		var exp = { username: 'jernchr', recipe_name: 'OnionSoup', dateCreated: '5/21/17'};
+		var exp = { username: 'jernchr', recipe_name: 'OnionSoup', datecreated: '5/21/17'};
 		var row = rows[0];
 		testRecipeEqual(row, exp, test);
                 test.done();
@@ -48,8 +48,8 @@ exports["testMakeTwoRecipes"] = function(test){
 		db.query("select * from "+ Constants.HISTORY_TABLE, function(err, rows) {
                     db.end();
                     test.equal(rows.length, 2, "Should be two recipes made");
-		    var exp = { username: 'jernchr', recipe_name: 'OnionSoup', dateCreated: '5/21/17'};
-		    var exp2 = { username: 'jernchr', recipe_name: 'Chicken Parmesan', dateCreated: '5/21/19'};
+		    var exp = { username: 'jernchr', recipe_name: 'OnionSoup', datecreated: '5/21/17'};
+		    var exp2 = { username: 'jernchr', recipe_name: 'Chicken Parmesan', datecreated: '5/21/19'};
 		    if (rows[0]["recipe_name"] == "Chicken Parmesan") {
 
 			testRecipeEqual(rows[0], exp2, test);
@@ -86,10 +86,9 @@ exports["getHistory"] = function(test){
 		historyModel.getAllHistoryFromUser(function(err, results) {
 		    test.equal(err, Constants.SUCCESS, "Get history should be success");
 		    test.equal(results.length, 2);
-		    var exp = { username: 'jernchr', recipe_name: 'OnionSoup', dateCreated: '5/21/17'};
-		    var exp2 = { username: 'jernchr', recipe_name: 'Chicken Parmesan', dateCreated: '5/21/19'};
+		    var exp = { username: 'jernchr', recipe_name: 'OnionSoup', datecreated: '5/21/17'};
+		    var exp2 = { username: 'jernchr', recipe_name: 'Chicken Parmesan', datecreated: '5/21/19'};
 		    if (results[0].fields["recipe_name"] == "Chicken Parmesan") {
-			console.log(results[1].fields);
 			testRecipeEqual(results[0].fields, exp2, test);
 			testRecipeEqual(results[1].fields, exp, test);
 		    }
@@ -108,9 +107,12 @@ exports["getHistory"] = function(test){
 
 
 function testRecipeEqual(row, exp, test) {
+    for (field in row){
+	console.log(row);
+    }
     test.equal(row.username, exp.username, "Failed");
     test.equal(row.recipe_name, exp.recipe_name);
-    test.equal(row.dateCreated, exp.dateCreated);
+    test.equal(row.datecreated, exp.datecreated);
 }
 exports["testRateRecipe"] = function(test){
     var db = new SQLite3Model();

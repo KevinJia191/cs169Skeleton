@@ -49,9 +49,10 @@ function PostgreSQLParser() {
         }
         for (index = 0; index < result.rows.length; index++) {
             var row = result.rows[index];
-            var history = new HistoryModel(row["username"], row["recipe_name"], row["dateCreated"]);
+            var history = new HistoryModel(row["username"], row["recipe_name"], row["datecreated"]);
             histories[index] = history;
         }
+	console.log(histories);
         return histories;
     }
     

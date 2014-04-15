@@ -49,7 +49,7 @@ function SQLite3Parser() {
         }
         for (index = 0; index < result.length; index++) {
             var row = result[index];
-            var history = new HistoryModel(row["username"], row["recipe_name"], row["dateCreated"], row["rating"]);
+            var history = new HistoryModel(row["username"], row["recipe_name"], row["datecreated"]);
             histories[index] = history;
         }
         return histories;

@@ -5,7 +5,7 @@ function RecipeRecord(username, recipe_name, dateCreated) {
     ActiveRecord.call(this);
     this.fields["username"] = username;
     this.fields["recipe_name"] = recipe_name;
-    this.fields["dateCreated"] = dateCreated;
+    this.fields["datecreated"] = dateCreated;
     this.numFields = Constants.HISTORY_NUM_FIELDS;
     this.tableName = Constants.HISTORY_TABLE;
 }
