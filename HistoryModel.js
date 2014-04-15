@@ -68,6 +68,7 @@ function HistoryModel(username, recipe_name, dateCreated, rating){
     this.getAllHistoryFromUser = function(callback){
         var self = this;
         self.userExists(function(err) {
+	    console.log("Checking if user exists");
             if (err != Constants.SUCCESS) {
                 callback(err);
                 return;

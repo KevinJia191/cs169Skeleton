@@ -281,7 +281,7 @@ app.post('/recipes/getRecipeData', function(req, res) {
     }
 });
 
-app.get('/recipes/history', function(req, res) {
+app.post('/recipes/history', function(req, res) {
     var historyController = new HistoryController(res);
     historyController.getHistory(req.body);
 });

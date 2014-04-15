@@ -49,7 +49,9 @@ var HistoryController = function(res) {
             if(result != null){
 		var history = new Array();
 		for (index = 0; index < result.length; index++) {
+		    console.log("date:"+result[index].dateCreated);
 		    var recipe = { "recipe_name":result[index].recipe_name, "date_created": result[index].dateCreated};
+		    console.log(recipe);
 		    history[index] = recipe;
 	    }
 	    json["history"] = history;
