@@ -291,8 +291,7 @@ exports["testGetIngredients"] = function(test){
 		var ingredientModel3 = new IngredientModel('jernchr');
 		ingredientModel3.setDatabaseModel(db);
 		ingredientModel3.setParser(new SQLite3Parser());
-		ingredientModel3.getInventory(function(err, rows) {
-		    rows.sort(function(r0, r1) { return r1.quantity - r0.quantity});
+		ingredientModel3.getInventory("quantity", "DESC", function(err, rows) {
 		    test.equal(err, Constants.SUCCESS);
 		    test.equal(rows.length, 2);
 		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 12, unit: 'oz' };

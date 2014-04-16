@@ -203,7 +203,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	});
     }
     
-    this.getInventory = function(callback) {
+    this.getInventory = function(field, sort, callback) {
 	var self = this;
 	self.userExists(function(err) {
 	    if (err != Constants.SUCCESS) {
@@ -212,6 +212,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	    }
 	    var ingredientRecord = new IngredientRecord(self.username);
 	    ingredientRecord.setUp(self.connection, self.parser);
+	    ingredientRecord.sort(field, sort);
 	    ingredientRecord.select(function(err, result) {
 		if (err) {
 		    callback(Constants.ERROR);
