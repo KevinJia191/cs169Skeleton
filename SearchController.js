@@ -28,7 +28,9 @@ var searchcontroller = function(json){
           yummly.search({
             credentials: {id: '13944c3c', key: '5a09042c7587234cbd1adc10150874cf'},
             query: {
-              q: recipie
+              q: recipie,
+              maxResults: 25,
+              start: 25
             }
           }, function (error, response, json) {
             console.log(response.statusCode);
@@ -52,25 +54,6 @@ var searchcontroller = function(json){
               }
               var new_son = "";
               yummlyProcessor.search(json.matches,callback);
-              /*
-              yummlyProcessor.walk()
-              for (var i=0;i<json.matches.length;i++) {
-                  recArray.push(json.matches[i].id);
-                  recnameArray.push(json.matches[i].recipeName);
-                  siuArray.push(json.matches[i].smallImageUrls);
-                  dArray.push(json.matches[i].sourceDisplayName);
-                  ilArray.push(json.matches[i].ingredients);
-              }
-              new_son = {
-              recipe_id : recArray, 
-              recipe_name: recnameArray, 
-              smallImageUrls:siuArray, 
-              details: dArray,
-              ingredient_list: ilArray
-              };
-              var format_son = JSON.stringify(new_son);
-              */
-              //callback(format_son);
             }
         });
 
@@ -94,34 +77,7 @@ var searchcontroller = function(json){
     */
     this.getRecipeData = function(recipe_body, callback){
         var recipe_id = recipe_body.recipe_id;
-        /*
-        var credentials = {
-          id: '13944c3c',
-          key: '5a09042c7587234cbd1adc10150874cf'
-        }
-            yummly.search({ // calling search first to get a recipe id
-          credentials: credentials,
-          query: {
-            q: 'pasta'
-          }
-        }, function (error, response, json) {
-          if (error) {
-            console.error(error);
-          } 
-            yummly.recipe({
-              credentials: credentials,
-              id: json.matches[0].id // id of the first recipe returned by search
-            }, function (error, response, json) {
-              if (error) {
-                console.error(error);
-              } else {
-                //console.log(json);
-                var format_son = JSON.stringify(json);
-                res.end(format_son);
-              }
-            });
-        });
-        */
+
         console.log("starting data");
         yummly.recipe({
           credentials: this.credentials,
