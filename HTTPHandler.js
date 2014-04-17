@@ -12,15 +12,60 @@ var MockFoodAPI = require('./MockFoodAPI.js');
 var Constants = require('./Constants.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 app.configure(function(){
+    app.use(express.cookieParser());
+    app.use(express.session({secret: '1234567890QWERTY'}));
     app.use(express.bodyParser({limit: '5mb'}));
     app.use(express.json({limit: '5mb'}));
-app.use(express.urlencoded({limit: '5mb'}));
+    app.use(express.urlencoded({limit: '5mb'}));
     app.use(app.router);
 });
 
 
 app.use(logfmt.requestLogger());
 
+app.post('/awesome', function(req, res) {
+    res.header('Content-Type', 'application/json');
+    console.log("/awesome");
+    req.session.derp = 'EVERYTHING IS AWESOME';
+    myjson= {"hi": "there"};
+    res.end(JSON.stringify(myjson));
+});
+
+app.post('/awesome2', function(req, res) {
+    console.log("/awesome2");
+    res.header('Content-Type', 'application/json');
+    //console.log(req);
+    myjson = {};
+    if(req.session.derp){
+	myjson= {"hi": req.session.derp};
+    }
+    else {
+	myjson = {"no":"data"};
+    }
+    res.end(JSON.stringify(myjson));
+});
+
+
+app.post('/awesome3', function(req, res) {
+    res.header('Content-Type', 'application/json');
+    myjson= {"hi": "there"};
+    res.end(JSON.stringify(myjson));
+});
+
+
+
+app.post('/cookietest', function(req, res) {
+    console.log("Running /cookietest");
+    res.header('Content-Type', 'application/json');
+    console.log(req);
+    console.log(req.cookies);
+    res.cookie("flerp", "werp");
+    myjson= {"hi": "there"};
+    res.send(JSON.stringify(myjson));
+    res.end();
+    
+	
+});
 
 
 app.get('/', function(req, res) {
