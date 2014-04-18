@@ -29,6 +29,8 @@ NEGATIVE_QUANTITY = "NEGATIVE_QUANTITY";
 DATE_ERROR = "DATE_ERROR";  
 DOESNT_EXIST = "DOESNT_EXIST";
 
+INVALID_RATING = "INVALID_RATING";
+
 ERR_USER_NOTFOUND = "ERR_USER_NOTFOUND";
 ERR_USER_EXISTS = "ERR_USER_EXISTS";
 CERR_INVAL_CRED = "ERR_INVAL_CRED";
@@ -263,10 +265,14 @@ class TestSession(testLib.RestTestCase):
         self.assertTrue(r.cookies['sid'])
 
     def testReceiveCookieLogin(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        r = requests.post("http://"+self.server+"/users/signup", data = {'user' :'user1', 'password' : 'user1'})
         r = requests.post("http://"+self.server+"/users/login", data = {'user' :'user1', 'password' : 'user1'})
         self.assertTrue(r.cookies['sid'])
 
     def testVerifyWithCookie(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        r = requests.post("http://"+self.server+"/users/signup", data = {'user' :'user1', 'password' : 'user1'})
         r1 = requests.post("http://"+self.server+"/users/login", data = {'user' :'user1', 'password' : 'user1'})
         r2 = requests.post("http://"+self.server+"/users/verify", cookies=r1.cookies)
         self.assertEquals(r2.text, '{"errCode":"SIGNED_IN"}')
@@ -274,6 +280,30 @@ class TestSession(testLib.RestTestCase):
     def testNoCookieFails(self):
         r = requests.post("http://"+self.server+"/users/verify")
         self.assertEquals(r.text, '{"errCode":"NOT_SIGNED_IN"}')
+
+class TestRatings(testLib.RestTestCase):
+    def assertResponse(self, respData, code):
+        if (respData["errCode"]==code):
+            return;
+        else:
+            self.assertEquals(respData["errCode"],code);
+    def testValidRating(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
+        self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
+        respData = self.makeRequest("recipes/rate", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', "rating":4} )
+        self.assertResponse(respData, SUCCESS)
+
+    def testIncorrectRating(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
+        self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
+        respData = self.makeRequest("recipes/rate", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', "rating":7} )
+        self.assertResponse(respData, INVALID_RATING)    
+
+    
+
+
 
 
     """
