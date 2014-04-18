@@ -12,7 +12,7 @@ var MockFoodAPI = require('./MockFoodAPI.js');
 var Constants = require('./Constants.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 
-var SessionModel = require('./SessionController.js');
+var SessionController = require('./SessionController.js');
 
 var MemoryStore = express.session.MemoryStore;
 var sessionStore = new MemoryStore();
@@ -31,8 +31,10 @@ app.configure(function(){
 });
 
 
+<<<<<<< HEAD
+app.use(logfmt.requestLogger());
+
 app.post('/awesome', function(req, res) {
-    console.log(req);
     res.header('Content-Type', 'application/json');
     console.log("/awesome");
     req.session.derp = 'EVERYTHING IS AWESOME';
@@ -41,13 +43,12 @@ app.post('/awesome', function(req, res) {
 });
 
 app.post('/awesome2', function(req, res) {
-    console.log(req);
     console.log("/awesome2");
     res.header('Content-Type', 'application/json');
     //console.log(req);
     myjson = {};
-    if(req.session.user){
-	myjson= {"hi": req.session.user};
+    if(req.session.derp){
+	myjson= {"hi": req.session.derp};
     }
     else {
 	myjson = {"no":"data"};
@@ -77,6 +78,9 @@ app.post('/cookietest', function(req, res) {
 	
 });
 
+=======
+>>>>>>> fcf018c896149c0b0a5f26ff0b2cf5835a3cdd50
+
 app.get('/', function(req, res) {
   res.writeHead(200);
     res.write('<html><body>');
@@ -91,29 +95,31 @@ app.get('/', function(req, res) {
     res.end('</body></html>');
 });
 
-app.post('/users/signup', function(req, res) {
-    var userController = new UserController(res);
-    userController.signup(req.body);
-});
-
-app.post('/users/login', function(req, res) {
-    var userController = new UserController(res);
-    userController.login(req.body);
-});
-
 app.post('/users/signup2', function(req, res) {
-    req.session.regenerate(function() {
-        req.session.user = req.body.user;
-        req.session.save();
-    });
-
     var userController = new UserController(res);
     userController.signup(req.body);
 });
 
 app.post('/users/login2', function(req, res) {
+    var userController = new UserController(res);
+    userController.login(req.body);
+});
+
+app.post('/users/signup', function(req, res) {
     req.session.regenerate(function() {
         req.session.user = req.body.user;
+        req.session.success = Constants.SUCCESS;
+        req.session.save();
+    });
+
+    var userController = new UserController(res);
+    userController.signup(req.body);
+});
+
+app.post('/users/login', function(req, res) {
+    req.session.regenerate(function() {
+        req.session.user = req.body.user;
+        req.session.success = Constants.SUCCESS;
         req.session.save();
     });
 
@@ -122,22 +128,8 @@ app.post('/users/login2', function(req, res) {
 });
 
 
+app.get('/sessionLogin', function(req,res) {
 
-
-app.post('/sessionLogin', function(req,res) {
-    //console.log(req);
-    console.log("user session:"+req.session.user);
-    if (req.session.user) {
-	var sessionModel = new SessionModel(res);
-	sessionModel.verify(req.session);
-    }
-    else {
-	var json = {"errCode" : Constants.ERROR};
-	res.end(JSON.stringify(json));
-    }
-
-
-/*
     res.header('Content-Type', 'application/json');
     var json = {errCode : ''}
 
@@ -160,7 +152,6 @@ app.post('/sessionLogin', function(req,res) {
       res.end(JSON.stringify(json));
 
     }
-    */
 });
   
 

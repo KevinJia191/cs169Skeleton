@@ -2,6 +2,7 @@
 Searchcontroller Tests
 */
 var SearchController = require('../MockFoodAPI.js');
+//var SearchController = require('../SearchController.js');
 var query;
 
 /*
@@ -24,10 +25,12 @@ If Passed Tests == 0; then this means that the API could be down!
 
 exports['chickenSearch'] = function (test) {
 	query="chicken";
+    var postRequest = {};
+    postRequest.q = query;
 	var result;
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
+    searchController.search(postRequest,function(result){
       s = result;
       if(s.indexOf(query)==-1){
       	result = -1;
@@ -42,10 +45,12 @@ exports['chickenSearch'] = function (test) {
 
 exports['milkSearch'] = function (test) {
 	query="milk";
+    var postRequest = {};
+    postRequest.q = query;
 	var result;
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
+    searchController.search(postRequest,function(result){
       s = result;
       if(s.indexOf(query)==-1){
       	result = -1;
@@ -61,10 +66,12 @@ exports['milkSearch'] = function (test) {
 
 exports['vegetableSearch'] = function (test) {
 	query="vegetable";
+    var postRequest = {};
+    postRequest.q = query;
 	var result;
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
+    searchController.search(postRequest,function(result){
       s = result;
       if(s.indexOf(query)==-1){
       	result = -1;
@@ -80,10 +87,12 @@ exports['vegetableSearch'] = function (test) {
 
 exports['pastaSearch'] = function (test) {
 	query="pasta";
+    var postRequest = {};
+    postRequest.q = query;
 	var result;
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
+    searchController.search(postRequest,function(result){
       s = result;
       console.log(s.indexOf(query));
       if(s.indexOf(query)==-1){
@@ -100,10 +109,12 @@ exports['pastaSearch'] = function (test) {
 
 exports['italianSearch'] = function (test) {
 	query="italian";
+    var postRequest = {};
+    postRequest.q = query;
 	var result;
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
+    searchController.search(postRequest,function(result){
       s = result;
       console.log(s.indexOf(query));
       if(s.indexOf(query)==-1){
@@ -120,10 +131,12 @@ exports['italianSearch'] = function (test) {
 
 exports['fishSearch'] = function (test) {
 	query="fish";
+    var postRequest = {};
+    postRequest.q = query;
 	var result;
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
+    searchController.search(postRequest,function(result){
       s = result;
       if(s.indexOf(query)==-1){
       	result = -1;
@@ -134,18 +147,20 @@ exports['fishSearch'] = function (test) {
 	  test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
 	  test.done();
     });
-    var x = searchController.search(query);
+    var x = searchController.search(postRequest);
 };
 
 exports['nameSearch'] = function (test) {
 	//My name should not be a valid search that returns some recipie for my name
 	//should return no items
 	query="akhilnambiar";
+    var postRequest = {};
+    postRequest.q = query;
 	var result;
 	var noItemsERROR = 2;
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
+    searchController.search(postRequest,function(result){
       s = result;
       if(s.indexOf(noItemsERROR)==-1){
       	result = -1;
@@ -161,11 +176,13 @@ exports['nameSearch'] = function (test) {
 
 exports['nonExistent'] = function (test) {
 	query="beef stew";
+    var postRequest = {};
+    postRequest.q = query;
 	var result;
 	console.log("starting nonExistent search: search for beef stew and chicken doesn't show up");
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
+    searchController.search(postRequest,function(result){
       s = result;
       if(s.indexOf("chicken")==-1){
       	result = -1;
@@ -180,11 +197,13 @@ exports['nonExistent'] = function (test) {
 
 exports['nameSearch2'] = function (test) {
 	query="GEORGENECULA";
+    var postRequest = {};
+    postRequest.q = query;
 	var result;
 	var noItemsERROR = 2;
 	var s;
 	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
+    searchController.search(postRequest,function(result){
       s = result;
       if(s.indexOf(noItemsERROR)==-1){
       	result = -1;
@@ -197,81 +216,8 @@ exports['nameSearch2'] = function (test) {
     });
     
 };
-/*
-
-For the next 2 tests, the word yummly should be in the api call since the API is from
-yummly
-
-*/
-/*
-exports['isYummlyInJSON'] = function (test) {
-  query="chicken";
-  var result;
-  var noItemsERROR = 2;
-  var s;
-  var searchController = new SearchController(null);
-    searchController.search(query,function(result){
-      s = result;
-      if(s.indexOf("yummly")==-1){
-        result = -1;
-      }
-      else{
-        result = 1;
-      }
-    test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
-    test.done();
-    });
-    
-};
-
-exports['isYummlyInJSON2'] = function (test) {
-  query="beef";
-  var result;
-  var noItemsERROR = 2;
-  var s;
-  var searchController = new SearchController(null);
-    searchController.search(query,function(result){
-      s = result;
-      if(s.indexOf("yummly")==-1){
-        result = -1;
-      }
-      else{
-        result = 1;
-      }
-    test.equal(result,1,query+" DID NOT HAVE THE CORRECT SEARCH API CALL");
-    test.done();
-    });
-    
-};
-*/
 
 exports['IFALLFAIL'] = function (test) {
 	console.log("important note! If all tests fail, could be API Failure");
 	test.done();
 }
-
-/*
-exports['invalidQuery'] = function (test) {
-	//SEarch for something that doesn't make sesnes
-
-	query="%5";
-	var result;
-	console.log("starting nonExistent search: search for beef stew and chicken doesn't show up");
-	var s;
-	var searchController = new SearchController(null);
-    searchController.search(query,function(result){
-      s = result;
-      console.log(s.indexOf("chicken"));
-      if(s.indexOf("chicken")==-1){
-      	console.log('item that was searched for not showing in API call');
-      	result = -1;
-      }
-      else{
-      	result = 1;
-      }
-      console.log("result is "+result);
-	  test.equal(result,-1,query+"chicken parmesean should not be a result of searching for beef stew!");
-	  test.done();
-    });  
-};
-*/

@@ -10,8 +10,13 @@ var searchcontroller = function(json){
         
     this.json = json;
 
-    this.search = function(recipie,callback){
-
+    //Kevin Jia:
+    //I changed this function's input to take in a whole json(req.body) instead of just recipe, cause we're adding more
+    //things to parse through, instead of just recipe
+    //postRequest is of the form:
+    //  q: search keyword
+    //  allowedCourseFilteres: [Breakfast: true...]
+    this.search = function(postRequest,callback){
         jsonArray = []
         recArray=[];
         recnameArray=[];
@@ -22,67 +27,46 @@ var searchcontroller = function(json){
           id: '13944c3c',
           key: '5a09042c7587234cbd1adc10150874cf'
         }
-        console.log("PRE SEARCH");
         try {
-          console.log("ENTERED TRY");
-          yummly.search({
+          //allowedCourse : ["course^course-Appetizers"]
+          //See https://developer.yummly.com/documentation for details here... it's scary
+            yummly.search({
             credentials: {id: '13944c3c', key: '5a09042c7587234cbd1adc10150874cf'},
-            query: {
-              q: recipie
-            }
-          }, function (error, response, json) {
-            console.log(response.statusCode);
-            //console.log(json.matches[0].id);
-            if (error) {
-              console.log(response.statusCode);
-              console.error(error);
-              var err_son = {
-                  errCode:2
+                query: {
+                  q: postRequest.q,
+                  maxResults: 25,
+                  start: 25,
+                  allowedCourse : postRequest.allowedCourse,
+                  allowedAllergy : postRequest.allowedAllergy
                 }
-                callback(JSON.stringify(err_son));
-                return;
-            } else {
-              console.log(json.matches.length);
-              if (json.matches.length==0){
-                var err_son = {
-                  errCode:2
+            }, function (error, response, json) {
+                if (error) {
+                  var err_son = {
+                      errCode:"YUMMLY ERROR"
+                    }
+                    callback(JSON.stringify(err_son));
+                    return;
+                } 
+                else {
+                    if (json.matches.length==0){
+                        var err_son = {
+                          errCode:"No recipe's found"
+                        }
+                        callback(JSON.stringify(err_son));
+                    return;
+                    }
+                    var new_son = "";
+                    yummlyProcessor.search(json.matches,callback);
                 }
-                callback(JSON.stringify(err_son));
-                return;
-              }
-              var new_son = "";
-              yummlyProcessor.search(json.matches,callback);
-              /*
-              yummlyProcessor.walk()
-              for (var i=0;i<json.matches.length;i++) {
-                  recArray.push(json.matches[i].id);
-                  recnameArray.push(json.matches[i].recipeName);
-                  siuArray.push(json.matches[i].smallImageUrls);
-                  dArray.push(json.matches[i].sourceDisplayName);
-                  ilArray.push(json.matches[i].ingredients);
-              }
-              new_son = {
-              recipe_id : recArray, 
-              recipe_name: recnameArray, 
-              smallImageUrls:siuArray, 
-              details: dArray,
-              ingredient_list: ilArray
-              };
-              var format_son = JSON.stringify(new_son);
-              */
-              //callback(format_son);
-            }
-        });
-
+            });
         }
         catch(e){
-          console.log("Yummly API is Down");
-          var err_son = {
+            console.log("Yummly API is Down");
+            var err_son = {
                   errCode:"YummlyAPI Unavailable"
-                }
-          callback(JSON.stringify(err_son));
+            }
+            callback(JSON.stringify(err_son));
         }
-          
     }
     /*
     #important
@@ -94,34 +78,7 @@ var searchcontroller = function(json){
     */
     this.getRecipeData = function(recipe_body, callback){
         var recipe_id = recipe_body.recipe_id;
-        /*
-        var credentials = {
-          id: '13944c3c',
-          key: '5a09042c7587234cbd1adc10150874cf'
-        }
-            yummly.search({ // calling search first to get a recipe id
-          credentials: credentials,
-          query: {
-            q: 'pasta'
-          }
-        }, function (error, response, json) {
-          if (error) {
-            console.error(error);
-          } 
-            yummly.recipe({
-              credentials: credentials,
-              id: json.matches[0].id // id of the first recipe returned by search
-            }, function (error, response, json) {
-              if (error) {
-                console.error(error);
-              } else {
-                //console.log(json);
-                var format_son = JSON.stringify(json);
-                res.end(format_son);
-              }
-            });
-        });
-        */
+
         console.log("starting data");
         yummly.recipe({
           credentials: this.credentials,
