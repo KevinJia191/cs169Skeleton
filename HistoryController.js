@@ -57,7 +57,7 @@ var HistoryController = function(res) {
             res.end(JSON.stringify(json));
         });
     }
-    
+    /*
     //Temporary function for frontend testing
     // postRequest is a json containing the fields: user
     this.getHistoryTemp = function(postRequest) {
@@ -91,6 +91,7 @@ var HistoryController = function(res) {
             res.end(JSON.stringify(json));
         });
     }
+    */
     
     //postRequest is a json containing the fields: user, recipe_name, curren_date
     //deletes one history item

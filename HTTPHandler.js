@@ -140,11 +140,12 @@ app.post('/recipes/history', function(req, res) {
     var historyController = new HistoryController(res);
     historyController.getHistory(req.body);
 });
-
+/*
 app.post('/recipes/historyTemp', function(req, res) {
     var historyController = new HistoryController(res);
     historyController.getHistoryTemp(req.body);
 });
+*/
 
 app.post('/recipes/make', function(req, res) {    
     var historyController = new HistoryController(res); 
