@@ -7,6 +7,7 @@ var DatabaseModel = require('./DatabaseModel.js');
 function PostgreSQLParser() {
 
     this.parseError = function(err) {
+	console.log(err);
 	if (err) {
 	    return DatabaseModel.ERROR;
 	}

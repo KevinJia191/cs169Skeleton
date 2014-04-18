@@ -19,7 +19,7 @@ var sessionStore = new MemoryStore();
 
 app.use(logfmt.requestLogger());
 app.use(express.cookieParser());
-app.use(express.session({secret: 'secrete_key', key: 'sid', store: sessionStore}));
+app.use(express.session({secret: 'secrete_key', key: 'sid', store: sessionStore, expires: new Date(Date.now() + (7 * 86400 * 1000))}));
 
 app.configure(function(){
     app.use(express.cookieParser());
