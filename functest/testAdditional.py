@@ -266,9 +266,14 @@ class TestRatings(testLib.RestTestCase):
             return;
         else:
             self.assertEquals(respData["errCode"],code);
-    def testValidRating(self):
+    def testSetupRatings(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
+        respData1 = self.makeRequest("recipes/make", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Banana Pie', 'current_date': '4/18/14'} )
+        respData2 = self.makeRequest("recipes/make", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', 'current_date': '4/18/14'} )
+        self.assertResponse(respData1,SUCCESS)
+        self.assertResponse(respData2,SUCCESS)
+    def testValidRating(self):
         respData = self.makeRequest("history/rating", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', "rating":4} )
         self.assertResponse(respData,SUCCESS)
     def testInvalidRating(self):
@@ -280,6 +285,9 @@ class TestRatings(testLib.RestTestCase):
     def testChangeRatingOfNonexistentRecipe(self):
         self.makeRequest("history/rating", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'SOCK SOUP', "rating":4} )
         self.assertResponse(respData,ERROR)
+    def testGetRating(self):
+        self.makeRequest("recipes/getRating", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', "rating":4} )
+        self.assertResponse(respData,SUCCESS)    
     """
 
     """
