@@ -175,16 +175,13 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
     ////pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       client.query('DELETE from ingredients', function(err, result) {
-        done();
-        if(err) return console.error(err);
-      });
-      client.query('DELETE from history', function(err, result) {
-        done();
-        if(err) return console.error(err);
-      });
-      client.query('DELETE from users', function(err, result) {
-        done();
-        if(err) return console.error(err);
+	  client.query('DELETE from history', function(err, result) {
+	      client.query('DELETE from ratings', function(err, result) {
+		  client.query('DELETE from users', function(err, result) {
+		  
+	      });
+	      });
+	  });
       });
     });
     var new_son = {
