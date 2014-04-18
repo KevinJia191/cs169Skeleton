@@ -77,7 +77,7 @@ var IngredientController = function(res) {
 	ingredientModel.setDatabaseModel(db);
 	ingredientModel.setParser(new PostgreSQLParser());
 	db.connect();
-	ingredientModel.getInventory(function (err, result) {
+	ingredientModel.getInventory(postRequest["sort_field"], postRequest["order"], function (err, result) {
 	    db.end();
 	    var json = {errCode : err};
 	    var inventory = new Array();

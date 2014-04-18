@@ -1,6 +1,6 @@
 var ActiveRecord = require('./ActiveRecord.js');
 var Constants = require('./Constants.js');
-
+var util = require("util");
 function IngredientRecord(username, ingredient_name, expiration_date, quantity, unit) {
     ActiveRecord.call(this);
     this.fields["username"] = username;
@@ -13,5 +13,6 @@ function IngredientRecord(username, ingredient_name, expiration_date, quantity, 
 }
 IngredientRecord.prototype = Object.create(ActiveRecord.prototype);
 IngredientRecord.prototype.constructor = ActiveRecord;
+//util.inherits(IngredientRecord, ActiveRecord);
 
 module.exports = IngredientRecord;

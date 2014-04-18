@@ -5,10 +5,13 @@ var RatingModel = require('./RatingModel.js');
 var DatabaseModel = require('./DatabaseModel.js');
 
 function PostgreSQLParser() {
+    this.errMap = { '23505':DatabaseModel.UNIQUE_VIOLATION, '23503':DatabaseModel.FOREIGN_KEY_VIOLATION, '2300': DatabaseModel.CONSTRAINT_VIOLATED};
+
 
     this.parseError = function(err) {
 	if (err) {
-	    return DatabaseModel.ERROR;
+	    console.log(this.errMap[err["code"]]);
+	    return {"errCode": this.errMap[err["code"]]};
 	}
 	else {
 	    return DatabaseModel.SUCCESS;

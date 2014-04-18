@@ -109,9 +109,7 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 
     /* 
      * Removes a quantity of an ingredient from  the User's inventory.
-     * These fields CANNOT be null: username, ingredient_name, expiration_date, quantity
-     * If unit is not specified, the currently stored unit for this ingredient will be used.
-     * result will be the amount of the ingredient left.
+     * These fields CANNOT be null: username, ingredient_name, expiration_date, quantity. Ignores unit.
      */
     this.remove = function(callback) {
 	var self = this;

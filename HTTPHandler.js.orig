@@ -12,14 +12,14 @@ var MockFoodAPI = require('./MockFoodAPI.js');
 var Constants = require('./Constants.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 
-var SessionModel = require('./SessionController.js');
+var SessionController = require('./SessionController.js');
 
 var MemoryStore = express.session.MemoryStore;
 var sessionStore = new MemoryStore();
 
 app.use(logfmt.requestLogger());
 app.use(express.cookieParser());
-app.use(express.session({secret: 'secrete_key', key: 'sid', store: sessionStore, expires: new Date(Date.now() + (7 * 86400 * 1000))}));
+app.use(express.session({secret: 'secrete_key', key: 'sid', store: sessionStore}));
 
 app.configure(function(){
     app.use(express.cookieParser());
@@ -29,6 +29,57 @@ app.configure(function(){
     app.use(express.urlencoded({limit: '5mb'}));
     app.use(app.router);
 });
+
+
+<<<<<<< HEAD
+app.use(logfmt.requestLogger());
+
+app.post('/awesome', function(req, res) {
+    res.header('Content-Type', 'application/json');
+    console.log("/awesome");
+    req.session.derp = 'EVERYTHING IS AWESOME';
+    myjson= {"hi": "there"};
+    res.end(JSON.stringify(myjson));
+});
+
+app.post('/awesome2', function(req, res) {
+    console.log("/awesome2");
+    res.header('Content-Type', 'application/json');
+    //console.log(req);
+    myjson = {};
+    if(req.session.derp){
+	myjson= {"hi": req.session.derp};
+    }
+    else {
+	myjson = {"no":"data"};
+    }
+    res.end(JSON.stringify(myjson));
+});
+
+
+app.post('/awesome3', function(req, res) {
+    res.header('Content-Type', 'application/json');
+    myjson= {"hi": "there"};
+    res.end(JSON.stringify(myjson));
+});
+
+
+
+app.post('/cookietest', function(req, res) {
+    console.log("Running /cookietest");
+    res.header('Content-Type', 'application/json');
+    console.log(req);
+    console.log(req.cookies);
+    res.cookie("flerp", "werp");
+    myjson= {"hi": "there"};
+    res.send(JSON.stringify(myjson));
+    res.end();
+    
+	
+});
+
+=======
+>>>>>>> fcf018c896149c0b0a5f26ff0b2cf5835a3cdd50
 
 app.get('/', function(req, res) {
   res.writeHead(200);
@@ -44,32 +95,70 @@ app.get('/', function(req, res) {
     res.end('</body></html>');
 });
 
-app.post('/users/signup', function(req, res) {
+app.post('/users/signup2', function(req, res) {
     var userController = new UserController(res);
-    userController.signup(req);
+    userController.signup(req.body);
+});
+
+app.post('/users/login2', function(req, res) {
+    var userController = new UserController(res);
+    userController.login(req.body);
+});
+
+app.post('/users/signup', function(req, res) {
+    req.session.regenerate(function() {
+        req.session.user = req.body.user;
+        req.session.success = Constants.SUCCESS;
+        req.session.save();
+    });
+
+    var userController = new UserController(res);
+    userController.signup(req.body);
 });
 
 app.post('/users/login', function(req, res) {
-    var userController = new UserController(res);
-    userController.login(req);
-});
+    req.session.regenerate(function() {
+        req.session.user = req.body.user;
+        req.session.success = Constants.SUCCESS;
+        req.session.save();
+    });
 
-app.post('/users/verify', function(req, res) {
     var userController = new UserController(res);
-    userController.verify(req);
-});
-
-app.post('/users/logout', function(req, res) {
-    var userController = new UserController(res);
-    userController.logout(req);
+    userController.login(req.body);
 });
 
 
+app.get('/sessionLogin', function(req,res) {
+
+    res.header('Content-Type', 'application/json');
+    var json = {errCode : ''}
+
+    try {
+
+      var sid = req.cookies.sid.split(':')[1].split('.')[0];
+      sessionStore.get(sid, function(err, sess){
+        if (err || sess == undefined){
+          json.errCode = Constants.ERR_USER_NOTFOUND;
+          res.end(JSON.stringify(json));
+        } else {
+          // check database
+          var sessionController = new SessionController(res);
+          sessionController.checkUser(sess.user);
+        };
+      });
+
+    }catch (err) {
+      json.errCode = Constants.ERR_USER_NOTFOUND;
+      res.end(JSON.stringify(json));
+
+    }
+});
+  
 
 
 app.post('/users/changePassword', function(req, res) {
     var userController = new UserController(res);
-    userController.changePassword(req);
+    userController.changePassword(req.body);
 });
 
 
@@ -141,11 +230,6 @@ app.post('/recipes/history', function(req, res) {
     historyController.getHistory(req.body);
 });
 
-app.post('/recipes/historyTemp', function(req, res) {
-    var historyController = new HistoryController(res);
-    historyController.getHistoryTemp(req.body);
-});
-
 app.post('/recipes/make', function(req, res) {    
     var historyController = new HistoryController(res); 
     historyController.make(req.body);
@@ -159,11 +243,6 @@ app.post('/recipes/deleteAllHistory', function(req, res) {
 app.post('/recipes/rate', function(req, res) {
     var historyController = new HistoryController(res);
     historyController.rate(req.body);
-});
-
-app.post('/recipes/getRating', function(req, res) {
-    var historyController = new HistoryController(res);
-    historyController.getRating(req.body);
 });
 
 app.post('/TESTAPI/resetFixture', function(req, res) {

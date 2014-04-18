@@ -12,6 +12,27 @@ function UserModel(username, password, salt, newPassword){
     this.parser = null;
     var self = this;
     
+    this.findUser = function(callback) {
+	var self = this;
+	var userRecord = new UserRecord(this.username);
+	userRecord.setUp(self.connection, self.parser);
+	userRecord.select(function(err, result) {
+	    console.log(err);
+	    if (err) {
+		callback(Constants.ERROR);
+		return;
+	    }
+	    result = self.parser.parseIngredient(result);
+	    if (result.length == 0) {
+		callback(Constants.INVALID_USER);
+	    }
+	    else {
+		callback(Constants.SUCCESS);
+	    }
+	});
+    }
+
+
 
     this.signUp = function(callback) { 
 	var self = this;

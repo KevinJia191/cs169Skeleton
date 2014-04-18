@@ -68,6 +68,36 @@ exports["testUpdateAddIngredient"] = function(test){
 	    
 };
 
+exports["testUpdateAmount"] = function(test){
+    var db = new SQLite3Model();
+    doSetup(db, function() {
+	var ingredientModel = new IngredientModel('jernchr', 'pepper', '5/21/17', 4, 'oz');
+	ingredientModel.setDatabaseModel(db);
+	ingredientModel.setParser(new SQLite3Parser());
+	db.connect();
+	ingredientModel.add( function(err, results) {
+	    var ingredientModel2 = new IngredientModel('jernchr', 'pepper', '5/21/17', 20, 'oz');
+	    ingredientModel2.setDatabaseModel(db);
+	    ingredientModel2.setParser(new SQLite3Parser());
+	    ingredientModel2.updateIngredientAmount(function(err, result) {
+		db.query("select * from ingredients", function(err, rows) {
+		    db.end();
+		    test.expect(6);
+		    test.equal(rows.length, 1, "Length of returns did not match");
+		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 20, unit: 'oz' };
+		    var row = rows[0];
+		    testIngredientEqual(row, exp, test);
+		    test.done();
+		});
+	    });
+	});
+	
+    });
+	    
+};
+
+
+
 exports["testAddTwoIngredients"] = function(test){
     var db = new SQLite3Model();
     doSetup(db, function() {
@@ -291,8 +321,7 @@ exports["testGetIngredients"] = function(test){
 		var ingredientModel3 = new IngredientModel('jernchr');
 		ingredientModel3.setDatabaseModel(db);
 		ingredientModel3.setParser(new SQLite3Parser());
-		ingredientModel3.getInventory(function(err, rows) {
-		    rows.sort(function(r0, r1) { return r1.quantity - r0.quantity});
+		ingredientModel3.getInventory("quantity", "DESC", function(err, rows) {
 		    test.equal(err, Constants.SUCCESS);
 		    test.equal(rows.length, 2);
 		    var exp = { username: 'jernchr', ingredient_name: 'pepper', expiration_date: '5/21/17', quantity: 12, unit: 'oz' };

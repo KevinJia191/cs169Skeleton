@@ -7,43 +7,43 @@ var PostgreSQLParser = require('./PostgreSQLParser.js');
 var Constants = require('./Constants.js');
 
 
-var SessionController = function(res) {
-
-
-    this.checkUser = function(user) {
-    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
-    	var userRecord = new UserRecord(user);
+var SessionModel = function(res) {
+    this.res = res;
+    this.verify = function(session) {
+	console.log("model:"+session.user);
+	var self = this;
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+    	var userRecord = new UserRecord(session.user);
     	var parser = new PostgreSQLParser();
     	userRecord.setUp(db, parser);
         db.connect();
         var json = {errCode : ''};
-	    res.header('Content-Type', 'application/json');
-
         userRecord.select(function(err, result) {
-		    console.log(err);
-		    if (err) {
-		    	db.end();
-				json.errCode = Constants.ERROR;
-				res.end(JSON.stringify(json));
-		    }
-		    result = parser.parseUser(result);
-		    if (result.length == 0) {
-		    	db.end();
-				json.errCode = Constants.ERR_USER_NOTFOUND;
-				res.end(JSON.stringify(json));
-		    }
-		    else {
-		    	db.end();
-				json.errCode = Constants.SUCCESS;
-				res.end(JSON.stringify(json));
-		    }
-		});
+	    self.res.header('Content-Type', 'application/json');
+	    console.log(err);
+	    if (err) {
+		db.end();
+		json.errCode = Constants.ERROR;
+		self.res.end(JSON.stringify(json));
+	    }
+	    result = parser.parseUser(result);
+	    if (result.length == 0) {
+		db.end();
+		json.errCode = Constants.ERR_USER_NOTFOUND;
+		self.res.end(JSON.stringify(json));
+	    }
+	    else {
+		db.end();
+		json.errCode = Constants.SUCCESS;
+		self.res.end(JSON.stringify(json));
+	    }
+	});
 
     };
 
 
 }
-module.exports = SessionController;
+module.exports = SessionModel;
 
 
 

@@ -11,7 +11,7 @@ function ActiveRecord() {
     this.parser = null;
     this.numFields = 0;
     this.sortField = null;
-    this.sortBy = null;
+    this.order = null;
 }
 
 ActiveRecord.prototype.put = function(key, value) {
@@ -84,8 +84,8 @@ ActiveRecord.prototype.select = function(callback) {
     var selectQuery = "select * from " + this.tableName  +" where "+this.createConstraints(this.fields);
     if (this.sortField != null) {
 	selectQuery = selectQuery + "order by "+this.sortField;
-	if (this.sortBy != null) { 
-	    selectQuery = selectQuery + " " + this.sortBy;
+	if (this.order != null) { 
+	    selectQuery = selectQuery + " " + this.order;
 	}
     }
     console.log(selectQuery);
@@ -130,15 +130,15 @@ ActiveRecord.prototype.setUp = function(model, parser) {
  * Sets how the list returned by get is sorted by. sortField is the field to sort on. sortBy is either "ASC" or "DESC" (ascending/descending).
  *
  */
-ActiveRecord.prototype.setSort = function(sortField, sortBy) {
-    if (this.fields.hasOwnProperty(sortField)) {
-	this.sortField = sortField;
+ActiveRecord.prototype.sort = function(field, order) {
+    if (field != null && this.fields.hasOwnProperty(field)) {
+	this.sortField = field;
     }
     else {
 	return false;
     }
-    if (sortBy == "ASC" || sortBy == "DESC") {
-	this.sortBy = sortBy;
+    if (order == "ASC" || order == "DESC") {
+	this.order = order;
 	return true;
     }
     else {
