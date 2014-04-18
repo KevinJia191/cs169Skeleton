@@ -30,53 +30,6 @@ app.configure(function(){
     app.use(app.router);
 });
 
-
-app.post('/awesome', function(req, res) {
-    console.log(req);
-    res.header('Content-Type', 'application/json');
-    console.log("/awesome");
-    req.session.derp = 'EVERYTHING IS AWESOME';
-    myjson= {"hi": "there"};
-    res.end(JSON.stringify(myjson));
-});
-
-app.post('/awesome2', function(req, res) {
-    console.log(req);
-    console.log("/awesome2");
-    res.header('Content-Type', 'application/json');
-    //console.log(req);
-    myjson = {};
-    if(req.session.user){
-	myjson= {"hi": req.session.user};
-    }
-    else {
-	myjson = {"no":"data"};
-    }
-    res.end(JSON.stringify(myjson));
-});
-
-
-app.post('/awesome3', function(req, res) {
-    res.header('Content-Type', 'application/json');
-    myjson= {"hi": "there"};
-    res.end(JSON.stringify(myjson));
-});
-
-
-
-app.post('/cookietest', function(req, res) {
-    console.log("Running /cookietest");
-    res.header('Content-Type', 'application/json');
-    console.log(req);
-    console.log(req.cookies);
-    res.cookie("flerp", "werp");
-    myjson= {"hi": "there"};
-    res.send(JSON.stringify(myjson));
-    res.end();
-    
-	
-});
-
 app.get('/', function(req, res) {
   res.writeHead(200);
     res.write('<html><body>');
@@ -93,81 +46,30 @@ app.get('/', function(req, res) {
 
 app.post('/users/signup', function(req, res) {
     var userController = new UserController(res);
-    userController.signup(req.body);
+    userController.signup(req);
 });
 
 app.post('/users/login', function(req, res) {
     var userController = new UserController(res);
-    userController.login(req.body);
+    userController.login(req);
 });
 
-app.post('/users/signup2', function(req, res) {
-    req.session.regenerate(function() {
-        req.session.user = req.body.user;
-        req.session.save();
-    });
-
+app.post('/users/verify', function(req, res) {
     var userController = new UserController(res);
-    userController.signup(req.body);
+    userController.verify(req);
 });
 
-app.post('/users/login2', function(req, res) {
-    req.session.regenerate(function() {
-        req.session.user = req.body.user;
-        req.session.save();
-    });
-
+app.post('/users/logout', function(req, res) {
     var userController = new UserController(res);
-    userController.login(req.body);
+    userController.logout(req);
 });
 
 
-
-
-app.post('/sessionLogin', function(req,res) {
-    //console.log(req);
-    console.log("user session:"+req.session.user);
-    if (req.session.user) {
-	var sessionModel = new SessionModel(res);
-	sessionModel.verify(req.session);
-    }
-    else {
-	var json = {"errCode" : Constants.ERROR};
-	res.end(JSON.stringify(json));
-    }
-
-
-/*
-    res.header('Content-Type', 'application/json');
-    var json = {errCode : ''}
-
-    try {
-
-      var sid = req.cookies.sid.split(':')[1].split('.')[0];
-      sessionStore.get(sid, function(err, sess){
-        if (err || sess == undefined){
-          json.errCode = Constants.ERR_USER_NOTFOUND;
-          res.end(JSON.stringify(json));
-        } else {
-          // check database
-          var sessionController = new SessionController(res);
-          sessionController.checkUser(sess.user);
-        };
-      });
-
-    }catch (err) {
-      json.errCode = Constants.ERR_USER_NOTFOUND;
-      res.end(JSON.stringify(json));
-
-    }
-    */
-});
-  
 
 
 app.post('/users/changePassword', function(req, res) {
     var userController = new UserController(res);
-    userController.changePassword(req.body);
+    userController.changePassword(req);
 });
 
 

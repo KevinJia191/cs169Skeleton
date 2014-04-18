@@ -3,6 +3,10 @@ function Constants(){
 }
 
 
+Constants.SIGNED_IN = "SIGNED_IN";
+Constants.NOT_SIGNED_IN = "NOT_SIGNED_IN";
+
+
 //ERROR CODES
 Constants.SUCCESS = "SUCCESS"; //SUCCESSFUL OPERATION
 
