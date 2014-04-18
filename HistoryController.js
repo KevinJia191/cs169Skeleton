@@ -111,6 +111,23 @@ var HistoryController = function(res) {
             res.end(JSON.stringify(jsonObject));
         });
     }
+
+    this.getRating = function(postRequest, callback) {
+	var jsonObject = {};     
+        var ratingModel = new RatingModel(postRequest.user, postRequest.recipe_name);
+        var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+        ratingModel.setDatabaseModel(db);
+        ratingModel.setParser(new PostgreSQLParser());
+        db.connect();   
+	ratingModel.getRating(function(err, result) {
+	    db.end();
+	    jsonObject.errCode = err;
+	    jsonObject.rating = result;
+            res.header('Content-Type', 'application/json');
+            res.end(JSON.stringify(jsonObject));
+	});
+        
+    }
 }
 
 

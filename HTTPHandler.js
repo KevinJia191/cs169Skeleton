@@ -156,6 +156,11 @@ app.post('/recipes/rate', function(req, res) {
     historyController.rate(req.body);
 });
 
+app.post('/recipes/getRating', function(req, res) {
+    var historyController = new HistoryController(res);
+    historyController.getRating(req.body);
+});
+
 app.post('/TESTAPI/resetFixture', function(req, res) {
     console.log("/TESTAPI/resetFixture");
     res.header('Content-Type', 'application/json');

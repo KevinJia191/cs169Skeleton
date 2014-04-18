@@ -21,6 +21,29 @@ function RatingModel(username, recipe_name, rating){
     
     this.fields = {"username": username, "recipe_name":recipe_name, "rating":rating};
     
+    this.getRating = function(callback) {
+	var self = this;
+	self.userExists(function(err) {
+	    if (err != Constants.SUCCESS) {
+		callback(err);
+		return;
+	    }
+	    var ratingRecord = new RatingRecord(self.username, self.recipe_name);
+	    ratingRecord.setUp(self.connection, self.parser);
+	    ratingRecord.select(function(err, result) {
+		if (err) {
+		    callback(Constants.ERROR);
+		}
+		else {
+		    console.log(self.parser.parseRating(result));
+		    callback(Constants.SUCCESS, self.parser.parseRating(result)[0].rating);
+		}
+	    });
+	});
+    }
+
+
+
     this.rate = function(callback) {
         //If the user exists
         var self = this;
@@ -29,7 +52,7 @@ function RatingModel(username, recipe_name, rating){
                 callback(err);
                 return;
             }
-            var ratingRecord = new RatingRecord(self.username, self.recipe_name, self.rating);
+            var ratingRecord = new RatingRecord(self.username, self.recipe_name);
             ratingRecord.setUp(self.connection, self.parser);
             //If rating on this recipe has already been made
             ratingRecord.select(function(err, result) {
@@ -43,6 +66,7 @@ function RatingModel(username, recipe_name, rating){
                     // Object has never been made before on this day
                     if (result.length == 0) {
                         if(self.rating >= 1 && self.rating <= 5){
+			    ratingRecord.put("rating", self.rating);
                             ratingRecord.insert(function(err, result) {
                                 if (err) {
                                     callback(Constants.ERROR);
@@ -63,20 +87,27 @@ function RatingModel(username, recipe_name, rating){
                     else{//result.length==1, meaning recipe has already been previously rated
                         if(result.rating != self.rating){
                             if(self.rating >= 1 && self.rating <= 5){
-                                ratingRecord.insert(function(err, result) {
+				ratingRecord.setUp(self.connection, self.parser);
+                                ratingRecord.update(function(err, result) {
                                     if (err) {
                                         callback(Constants.ERROR);
                                         return;
                                     }
-                                }); 
+				    else {
+					callback(Constants.SUCCESS);
+					return;
+				    }
+                                }, {"rating": self.rating}); 
                             }
                             else{
                                 callback(Constants.INVALID_RATING);
                                 return;
                             }
                         }
-                        callback(Constants.SUCCESS);
-                        return;
+			else {
+                            callback(Constants.SUCCESS);
+                            return;
+			}
                     }
                 }
             });
