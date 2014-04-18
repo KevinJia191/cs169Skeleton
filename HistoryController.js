@@ -69,12 +69,20 @@ var HistoryController = function(res) {
         db.connect();
         
         historyModel.getAllHistoryFromUser(function (err, result) {
-            db.end();
+            //db.end();
             var json = {errCode : err};
             if(result != null){
                 var history = new Array();
                 for (index = 0; index < result.length; index++) {
                     var recipe = { "recipe_name":result[index].recipe_name, "date_created": result[index].datecreated};
+                    db.query("select * from "+ Constants.RATING_TABLE + "where username EQUALS " + postRequest.user + "AND recipe_name EQUALS " + postRequest.recipe_name, function(err, result) {
+                        if(result.rows.length > 0){
+                            recipe.rating = result.rows[0];
+                        }
+                        else{
+                            recipe.rating = null;
+                        }
+                    }
                     history[index] = recipe;
                 }
                 json["history"] = history;
