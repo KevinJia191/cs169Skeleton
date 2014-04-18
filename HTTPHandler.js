@@ -87,16 +87,16 @@ app.post('/ingredients/update', function(req, res) {
 
 app.post('/recipes/search', function(req, res) {
     res.header('Content-Type', 'application/json');
-    var q = req.body.q;
-
+    
     try {
-	var searchController = new SearchController(null);
-	searchController.search(q,function(result){
-	    res.end(result);
-	});
-    } catch(err) {
-	console.log(err);
-	res.end({errCode:Constants.ERROR});
+        var searchController = new SearchController(null);
+        searchController.search(req.body, function(result){
+            res.end(result);
+        });
+    } 
+    catch(err) {
+        console.log(err);
+        res.end({errCode:Constants.ERROR});
     }
 });
 
@@ -108,13 +108,13 @@ app.post('/recipes/getRecipeData', function(req, res) {
     console.log("starting get recipie data in HTTP Handler");
 
     try {
-    searchController.getRecipeData(req.body,function(result){
-      res.end(result);
-    });
+        searchController.getRecipeData(req.body,function(result){
+          res.end(result);
+        });
     }
     catch(err) {
-	console.log("My error:"+err);
-	res.end({errCode:Constants.ERROR});
+        console.log("My error:"+err);
+        res.end({errCode:Constants.ERROR});
     }
 });
 
