@@ -98,7 +98,7 @@ var HistoryController = function(res) {
     
     this.rate = function(postRequest, callback) {
         var jsonObject = {};     
-        var ratingModel = new RatingModel(postRequest.user, postRequest.recipe_name, postRequest.current_date);
+        var ratingModel = new RatingModel(postRequest.user, postRequest.recipe_name, postRequest.rating);
         var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
         ratingModel.setDatabaseModel(db);
         ratingModel.setParser(new PostgreSQLParser());

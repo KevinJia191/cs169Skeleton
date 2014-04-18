@@ -20,7 +20,8 @@ function DatabaseModel() {
 
 DatabaseModel.SUCCESS = null;
 DatabaseModel.ERROR = "ERROR";
-DatabaseModel.DUPLICATE_KEY = "DUPLICATE_KEY";
+DatabaseModel.UNIQUE_VIOLATION = "UNIQUE_VIOLATION";
 DatabaseModel.CONSTRAINT_VIOLATED = "CONSTRAINT_VIOLATED";
+DatabaseModel.FOREIGN_KEY_VIOLATION = "FOREIGN_KEY_VIOLATION";
 
 module.exports = DatabaseModel;
