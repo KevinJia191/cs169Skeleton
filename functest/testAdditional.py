@@ -2,6 +2,7 @@ import unittest
 import os
 import testLib
 import testSimple
+import requests
        
 #error codes for signing up
 SUCCESS = "SUCCESS"; 
@@ -250,6 +251,29 @@ class TestRecipe(testLib.RestTestCase):
         respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Apple Pie', 'current_date': '3/11/14', 'rating':'4'} )
         print(respData)
         self.assertResponse(respData,SUCCESS)
+    
+
+class TestSession(testLib.RestTestCase):
+
+    def testReceiveCookieSignUp(self):
+        self.makeRequest("/TESTAPI/resetFixture", method="POST")
+        r = requests.post("http://localhost:5000/users/signup", data = {'user' :'user1', 'password' : 'user1'})
+        self.assertTrue(r.cookies['sid'])
+
+    def testReceiveCookieLogin(self):
+        r = requests.post("http://localhost:5000/users/login", data = {'user' :'user1', 'password' : 'user1'})
+        self.assertTrue(r.cookies['sid'])
+
+    def testVerifyWithCookie(self):
+        r1 = requests.post("http://localhost:5000/users/login", data = {'user' :'user1', 'password' : 'user1'})
+        r2 = requests.post("http://localhost:5000/users/verify", cookies=r1.cookies)
+        self.assertEquals(r2.text, '{"errCode":"SIGNED_IN"}')
+
+    def testNoCookieFails(self):
+        r = requests.post("http://localhost:5000/users/verify")
+        self.assertEquals(r.text, '{"errCode":"NOT_SIGNED_IN"}')
+
+
     """
     def testGetCompletedRecipes(self):
         respData = self.makeRequest("/recipes/history", method="GET", data = {'user': 'user1'} )
