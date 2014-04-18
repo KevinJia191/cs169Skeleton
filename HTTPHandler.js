@@ -11,15 +11,22 @@ var SearchController = require('./SearchController.js');
 var MockFoodAPI = require('./MockFoodAPI.js');
 var Constants = require('./Constants.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
+
+var SessionController = require('./SessionController.js');
+
+var MemoryStore = express.session.MemoryStore;
+var sessionStore = new MemoryStore();
+
+app.use(logfmt.requestLogger());
+app.use(express.cookieParser());
+app.use(express.session({secret: 'secrete_key', key: 'sid', store: sessionStore}));
+
 app.configure(function(){
     app.use(express.bodyParser({limit: '5mb'}));
     app.use(express.json({limit: '5mb'}));
 app.use(express.urlencoded({limit: '5mb'}));
     app.use(app.router);
 });
-
-
-app.use(logfmt.requestLogger());
 
 
 
@@ -37,17 +44,66 @@ app.get('/', function(req, res) {
     res.end('</body></html>');
 });
 
-app.post('/users/signup', function(req, res) {
+app.post('/users/signup2', function(req, res) {
     var userController = new UserController(res);
     userController.signup(req.body);
 });
 
-
-  
-app.post('/users/login', function(req, res) {
+app.post('/users/login2', function(req, res) {
     var userController = new UserController(res);
     userController.login(req.body);
 });
+
+app.post('/users/signup', function(req, res) {
+    req.session.regenerate(function() {
+        req.session.user = req.body.user;
+        req.session.success = Constants.SUCCESS;
+        req.session.save();
+    });
+
+    var userController = new UserController(res);
+    userController.signup(req.body);
+});
+
+app.post('/users/login', function(req, res) {
+    req.session.regenerate(function() {
+        req.session.user = req.body.user;
+        req.session.success = Constants.SUCCESS;
+        req.session.save();
+    });
+
+    var userController = new UserController(res);
+    userController.login(req.body);
+});
+
+
+app.get('/sessionLogin', function(req,res) {
+
+    res.header('Content-Type', 'application/json');
+    var json = {errCode : ''}
+
+    try {
+
+      var sid = req.cookies.sid.split(':')[1].split('.')[0];
+      sessionStore.get(sid, function(err, sess){
+        if (err || sess == undefined){
+          json.errCode = Constants.ERR_USER_NOTFOUND;
+          res.end(JSON.stringify(json));
+        } else {
+          // check database
+          var sessionController = new SessionController(res);
+          sessionController.checkUser(sess.user);
+        };
+      });
+
+    }catch (err) {
+      json.errCode = Constants.ERR_USER_NOTFOUND;
+      res.end(JSON.stringify(json));
+
+    }
+});
+  
+
 
 app.post('/users/changePassword', function(req, res) {
     var userController = new UserController(res);
