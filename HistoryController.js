@@ -42,7 +42,6 @@ var HistoryController = function(res) {
         historyModel.setParser(new PostgreSQLParser());
         db.connect();   
         
-        //result will have something if successful
         historyModel.getAllHistoryFromUser(function (err, result) {
             db.end();
             var json = {errCode : err};
@@ -53,6 +52,40 @@ var HistoryController = function(res) {
 		    history[index] = recipe;
 	    }
 	    json["history"] = history;
+            }
+            res.header('Content-Type', 'application/json');
+            res.end(JSON.stringify(json));
+        });
+    }
+    
+    //Temporary function for frontend testing
+    // postRequest is a json containing the fields: user
+    this.getHistoryTemp = function(postRequest) {
+        var jsonObject = {};     
+        var historyModel = new HistoryModel(postRequest.user, postRequest.recipe_name, postRequest.current_date);
+        var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+        historyModel.setDatabaseModel(db);
+        historyModel.setParser(new PostgreSQLParser());
+        db.connect();
+        
+        historyModel.getAllHistoryFromUser(function (err, result) {
+            //db.end();
+            var json = {errCode : err};
+            if(result != null){
+                var history = new Array();
+                for (index = 0; index < result.length; index++) {
+                    var recipe = { "recipe_name":result[index].recipe_name, "date_created": result[index].datecreated};
+                    db.query("select * from "+ Constants.RATING_TABLE + "where username EQUALS " + postRequest.user + "AND recipe_name EQUALS " + postRequest.recipe_name, function(err, result) {
+                        if(result.rows.length > 0){
+                            recipe.rating = result.rows[0];
+                        }
+                        else{
+                            recipe.rating = null;
+                        }
+                    }
+                    history[index] = recipe;
+                }
+                json["history"] = history;
             }
             res.header('Content-Type', 'application/json');
             res.end(JSON.stringify(json));
