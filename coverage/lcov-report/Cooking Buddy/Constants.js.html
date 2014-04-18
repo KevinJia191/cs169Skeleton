@@ -199,7 +199,7 @@
     <h1>Code coverage report for <span class="entity">Cooking Buddy\Constants.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">100% <small>(34 / 34)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">100% <small>(40 / 40)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Branches: <span class="metric">100% <small>(0 / 0)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -208,7 +208,7 @@
         Functions: <span class="metric">0% <small>(0 / 1)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">100% <small>(34 / 34)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">100% <small>(40 / 40)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -264,35 +264,28 @@
 46
 47
 48
-49</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
@@ -301,12 +294,39 @@
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
@@ -315,6 +335,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
 <span class="fstat-no" title="function not covered" >function Constants(){</span>
 }
+&nbsp;
+&nbsp;
+Constants.SIGNED_IN = "SIGNED_IN";
+Constants.NOT_SIGNED_IN = "NOT_SIGNED_IN";
 &nbsp;
 &nbsp;
 //ERROR CODES
@@ -334,6 +358,8 @@ Constants.ERR_INVAL_CRED = "ERR_INVAL_CRED"; //Wrong Username, Password Combinat
 Constants.BAD_USER = "BAD_USER"; //username is longer than 128 characters or of length 0
 Constants.BAD_PASS = "BAD_PASS"; //password is longer than 128 characters
 &nbsp;
+Constants.INVALID_RATING = "INVALID_RATING"; //user tried to rate &lt;1 or &gt;5
+&nbsp;
 //URLS
 Constants.LOGIN = '/users/login';
 Constants.SEARCH = '/recipes/search';
@@ -347,17 +373,21 @@ Constants.GET_RECIPE_DATA = '/recipes/getRecipeData';
 Constants.GET_HISTORY = '/recipes/history';
 Constants.MAKE_RECIPE = '/recipes/make';
 Constants.CLEAR_HISTORY = '/recipes/deleteAllHistory';
+Constants.RATE = '/recipes/rate';
+&nbsp;
 Constants.RESET_FIXTURE = '/TESTAPI/resetFixture';
 &nbsp;
 &nbsp;
 Constants.INGREDIENTS_TABLE = "ingredients";
 Constants.USERS_TABLE = "users";
 Constants.HISTORY_TABLE = "history";
+Constants.RATING_TABLE = "ratings";
 &nbsp;
 &nbsp;
 Constants.INGREDIENTS_NUM_FIELDS = 5;
-Constants.USERS_NUM_FIELDS = 2;
+Constants.USERS_NUM_FIELDS = 3;
 Constants.HISTORY_NUM_FIELDS = 3;
+Constants.RATINGS_NUM_FIELDS = 3;
 &nbsp;
 module.exports = Constants;
 &nbsp;</pre></td></tr>
@@ -365,7 +395,7 @@ module.exports = Constants;
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Apr 02 2014 11:28:14 GMT-0700 (Pacific Daylight Time)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Apr 18 2014 16:35:53 GMT-0700 (Pacific Daylight Time)</div>
 </div>
 
 <script src="../prettify.js"></script>

@@ -17,12 +17,15 @@ var searchcontroller = function(json){
     //  q: search keyword
     //  allowedCourseFilteres: [Breakfast: true...]
     this.search = function(postRequest,callback){
+        //Array Initilizations
         jsonArray = []
         recArray=[];
         recnameArray=[];
         siuArray=[];
         dArray=[];
         ilArray=[];
+        
+        
         var credentials = {
           id: '13944c3c',
           key: '5a09042c7587234cbd1adc10150874cf'

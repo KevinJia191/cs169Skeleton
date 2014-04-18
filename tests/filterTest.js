@@ -26,6 +26,48 @@ exports['filterIsRunningTest'] = function (test) {
     });
 };
 
+exports['emptyFilterTest'] = function (test) {
+	query="chicken";
+    var postRequest = {};
+    postRequest.q = query;
+    postRequest.allowedCourse = null;
+	var result;
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(postRequest,function(result){
+      s = result;
+      if(s.indexOf(query) == -1){
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+	  test.equal(result,1,"empty Filter test failed");
+	  test.done();
+    });
+};
+
+exports['multipleFilterTest'] = function (test) {
+	query="chicken";
+    var postRequest = {};
+    postRequest.q = query;
+    postRequest.allowedCourse = ["course^course-Appetizers", "course^course-Breads"];
+	var result;
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(postRequest,function(result){
+      s = result;
+      if(s.indexOf(query) == -1){
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+	  test.equal(result,1,"multipleFilterTest failed");
+	  test.done();
+    });
+};
+
 exports['filterIsActuallyFilteringTest'] = function (test) {
 	query="chicken";
     var postRequest = {};
@@ -274,6 +316,27 @@ exports['CocktailsFilterTest'] = function (test) {
       	result = 1;
       }
 	  test.equal(result,1,query+"Cocktails filter not returning recipes");
+	  test.done();
+    });
+};
+
+exports['allergyDairyFilterTest'] = function (test) {
+	query="soy milk";
+    var postRequest = {};
+    postRequest.q = query;
+    postRequest.allowedAllergy = "396^Dairy-Free";
+	var result;
+	var s;
+	var searchController = new SearchController(null);
+    searchController.search(postRequest,function(result){
+      s = result;
+      if(s.indexOf(query)==-1){
+      	result = -1;
+      }
+      else{
+      	result = 1;
+      }
+	  test.equal(result,1,query+"allergy dairy filter test messed up");
 	  test.done();
     });
 };

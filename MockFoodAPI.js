@@ -25,11 +25,13 @@ MockFoodAPI.prototype.walk = function() {
 /*
 This function takes in the query only!
 
-@param Query as a string
+>>>@param Query as a string -CHANGED-
+@param postRequest is a jsonobject of the form: {q: query, allowedCourseFilters[]: "...."}
 @return JSON same style as yummly which will contain 10 elements
 */
-MockFoodAPI.prototype.search = function(query,callback){
-    jsonArray = []
+MockFoodAPI.prototype.search = function(postRequest,callback){
+    var query = postRequest.q;
+    jsonArray = [];
     recArray=[];
     recnameArray=[];
     siuArray=[];
