@@ -173,23 +173,25 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
   ///////
   //var params = { host: 'ec2-54-197-238-8.compute-1.amazonaws.com',user: 'zbbaxdqhmzxnwh',password: '8WEQZA6SCS4P911KYoKY0lNvpO',database: 'de0l8cfdtcishp',ssl: true };
     ////pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      client.query('DELETE from ingredients', function(err, result) {
-	  client.query('DELETE from history', function(err, result) {
-	      client.query('DELETE from ratings', function(err, result) {
-		  client.query('DELETE from users', function(err, result) {
-		  
-	      });
-	      });
-	  });
-      });
+
+    var client = pg. new pg.Client(process.env.DATABASE_URL);
+    client.connect();
+    client.query('DELETE from ingredients', function(err, result) {
+	client.query('DELETE from history', function(err, result) {
+	    client.query('DELETE from ratings', function(err, result) {
+		client.query('DELETE from users', function(err, result) {
+		    var new_son = {
+			errCode: 1
+		    }
+		    var format_son = JSON.stringify(new_son);
+		    res.write(format_son);
+		    res.end();
+		    client.end();
+		});
+	    });
+	});
     });
-    var new_son = {
-      errCode: 1
-    }
-    var format_son = JSON.stringify(new_son);
-    res.write(format_son);
-    res.end();
+
 
 });
 
