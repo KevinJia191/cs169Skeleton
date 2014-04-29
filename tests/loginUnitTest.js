@@ -163,7 +163,7 @@ exports["testAddInvalidUser2"] = function(test){
 };
 
 
-exports["testAddInvalidUser2"] = function(test){
+exports["testAddInvalidPassword"] = function(test){
     var db = new SQLite3Model();
     test.expect(1);
     doSetup(db, function() {

@@ -30,6 +30,10 @@ app.configure(function(){
     app.use(app.router);
 });
 
+
+setInterval(function() {
+    console.log("hi :)");}, 10000);
+
 app.get('/', function(req, res) {
   res.writeHead(200);
     res.write('<html><body>');
