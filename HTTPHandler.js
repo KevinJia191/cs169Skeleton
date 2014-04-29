@@ -3,7 +3,7 @@ var logfmt = require("logfmt");
 var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
-
+var gcm = require('node-gcm');
 var UserController = require("./UserController.js");
 var IngredientController = require('./IngredientController.js');
 var HistoryController = require('./HistoryController.js');
@@ -31,9 +31,47 @@ app.configure(function(){
 });
 
 
-setInterval(function() {
-    console.log("hi :)");}, 10000);
+function sendStuff() {
+    console.log("BEGAN");
+    // or with object values
+    var message = new gcm.Message({
+	collapseKey: 'demo',
+	delayWhileIdle: true,
+	timeToLive: 3,
+	data: {
+            key1: 'message1',
+            key2: 'message2'
+	}
+    });
 
+    var sender = new gcm.Sender("AIzaSyAciShjm6nSbLyjCMiCU4svWJLK0VHE8v0");
+    var registrationIds = [];
+
+    // OPTIONAL
+    // add new key-value in data object
+    message.addDataWithKeyValue('key1','message1');
+    message.addDataWithKeyValue('key2','message2');   
+
+    // At least one required
+    registrationIds.push('regId1');
+
+    /**
+     * Params: message-literal, registrationIds-array, No. of retries, callback-function
+     **/
+    sender.send(message, registrationIds, 4, function (err, result) {
+	console.log(err);
+	console.log(result);
+    });   
+}
+
+function f()  {
+    console.log("potato");
+}
+
+//setInterval(sendStuff, 1000000);
+console.log("Ran");
+f();
+sendStuff();
 app.get('/', function(req, res) {
   res.writeHead(200);
     res.write('<html><body>');
