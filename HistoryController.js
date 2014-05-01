@@ -1,13 +1,12 @@
 var pg = require('pg');
-var HistoryModel = require('./HistoryModel.js');
-var RatingModel = require('./RatingModel.js');
-var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
-var PostgreSQLParser = require('./PostgreSQLParser.js');
+var HistoryModel = require('../Models/HistoryModel.js');
+var RatingModel = require('../Models/RatingModel.js');
+var PostgreSQLDatabaseModel = require('../Models/PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('../Parsers/PostgreSQLParser.js');
 
 var HistoryController = function(res) {
 
     this.res = res;
-    
     
     // postRequest is a json containing the fields: user, recipe_name, current_date
     this.make = function(postRequest) {
@@ -71,13 +70,13 @@ var HistoryController = function(res) {
                 var history = new Array();
                 for (index = 0; index < resultHist.length; index++) {
                     ratingModel.getRating(function(err, resultRating){
-                        var historyElement = {   
+                        var historyElementWithRating = {   
                             "recipe_name": resultHist[index].recipe_name,
                             "date_created": resultHist[index].datecreated,
                             "rating" : resultRating[index].rating
                         };
-                        history[index] = historyElement;
-                    }
+                        history[index] = historyElementWithRating;
+                    });
                 }
                 json["history"] = history;
                 db.end();
