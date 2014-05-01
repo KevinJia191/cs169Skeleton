@@ -155,3 +155,31 @@ exports["testClearHistory"] = function(test){
         });
     });
 };
+
+//Incomplete as of now
+/*
+exports["testGetHistoryWithRatings"] = function(test){
+    var db = new SQLite3Model();
+    test.expect(2);
+    doSetup(db, function() {
+        var historyModel = new HistoryModel('jernchr', 'OnionSoup', '5/21/17');
+        var ratingModel = new RatingModel('jernchr', 'OnionSoup', 3);
+        historyModel.setDatabaseModel(db);
+        historyModel.setParser(new SQLite3Parser());
+        
+        ratingModel.setDatabaseModel(db);
+        ratingModel.setParser(new SQLite3Parser());
+        db.connect();
+        historyModel.make(function(err1, result1) {
+            test.equal(err1, Constants.SUCCESS, "Make should be success");
+            ratingModel.rate(function(err2, result2) {
+                test.equal(err2, Constants.SUCCESS, "Rate should be success");
+                db.query("select * from "+ Constants.RATING_TABLE, function(err3, rows) {
+                    test.equal(rows.length, 1, "Should be just one recipe rated");
+                    test.done();
+                });
+            });
+        });
+    });
+};
+*/
