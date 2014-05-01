@@ -6,6 +6,7 @@
 */
 function ActiveRecord() {
     this.fields = {};
+    this.constraints = {}; //field maps a field name to the constraint applied on it
     this.tableName = null;
     this.connection = null;
     this.parser = null;
@@ -16,7 +17,9 @@ function ActiveRecord() {
 
 ActiveRecord.prototype.put = function(key, value) {
     this.fields[key] = value;
+    this.constraints[key] = ActiveRecord.EQUAL;
 }
+
 
 /*
  * Adds the record to the database. No fields of the record should be null.
@@ -50,6 +53,13 @@ ActiveRecord.prototype.insert = function(callback) {
 	callback(self.parser.parseError(err));
     });
 }
+
+ActiveRecord.EQUAL = "=";
+ActiveRecord.LESS_THAN = "<";
+ActiveRecord.GREATER_THAN = ">";
+ActiveRecord.LESS_THAN_OR_EQ = "<=";
+ActiveRecord.GREATER_THAN_OR_EQ = ">=";
+ActiveRecord.NOT_EQUAL = "!=";
 
 /*
  * Removes all records from the database matching having the given fields. Null fields are treated as wildcards.

@@ -53,7 +53,9 @@ function sendStuff() {
     /**
      * Params: message-literal, registrationIds-array, No. of retries, callback-function
      **/
+    console.log("about to send");
     sender.send(message, registrationIds, 4, function (err, result) {
+	console.log("boom");
 	console.log(err);
 	console.log(result);
     });   
