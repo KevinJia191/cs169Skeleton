@@ -31,7 +31,7 @@ app.configure(function(){
 });
 
 
-function sendStuff() {
+function sendStuff(reg_id, res) {
     console.log("BEGAN");
     // or with object values
     var message = new gcm.Message({
@@ -44,11 +44,11 @@ function sendStuff() {
 	}
     });
 
-    var sender = new gcm.Sender("AIzaSyAciShjm6nSbLyjCMiCU4svWJLK0VHE8v0");
+    var sender = new gcm.Sender("AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8");
     var registrationIds = [];
 
     // At least one required
-    registrationIds.push('APA91bHYjqrWYHng0cWctstptHB1enF4qn4c2tSUUFUjw-36QrIE6KJPziD73X3TspTiRVVnDLQlRke8flC7uZLToBNqc8S68eth_-Wqz4DBmU__9uer5SceGM0OIX4LjrD3-A6e4w1qZCC8SFlX9TSbqoHX5k2teVSP_aoItnlOb5TfEUXQ_54');
+    registrationIds.push(reg_id);
 
     /**
      * Params: message-literal, registrationIds-array, No. of retries, callback-function
@@ -58,6 +58,11 @@ function sendStuff() {
 	console.log("boom");
 	console.log(err);
 	console.log(result);
+	jsonObject = {};
+	jsonObject.err = err;
+	jsonObject.result = result;
+        res.header('Content-Type', 'application/json');
+        res.end(JSON.stringify(jsonObject));
     });   
 }
 
@@ -65,8 +70,12 @@ function f()  {
     console.log("potato");
 }
 
-//setInterval(sendStuff, 1000000);
-sendStuff();
+
+app.post('/push', function(req, res) {
+    var reg_id = req.body['reg_id'];
+    sendStuff(reg_id, res);
+});
+
 app.get('/', function(req, res) {
   res.writeHead(200);
     res.write('<html><body>');
