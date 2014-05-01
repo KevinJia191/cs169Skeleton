@@ -71,15 +71,16 @@ var HistoryController = function(res) {
                 var history = new Array();
                 for (index = 0; index < resultHist.length; index++) {
                     ratingModel.getRating(function(err, resultRating){
-                        db.end();
-                        var recipe ={   "recipe_name": resultHist[index].recipe_name,
-                                        "date_created": resultHist[index].datecreated,
-                                        "rating" : resultRating[index].rating
-                                    };
-                        history[index] = recipe;
+                        var historyElement = {   
+                            "recipe_name": resultHist[index].recipe_name,
+                            "date_created": resultHist[index].datecreated,
+                            "rating" : resultRating[index].rating
+                        };
+                        history[index] = historyElement;
                     }
                 }
                 json["history"] = history;
+                db.end();
             }
             res.header('Content-Type', 'application/json');
             res.end(JSON.stringify(json));
