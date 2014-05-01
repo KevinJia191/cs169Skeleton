@@ -77,7 +77,7 @@ var HistoryController = function(res) {
                             "rating" : resultRating[index].rating
                         };
                         history[index] = historyElement;
-                    }
+                    });
                 }
                 json["history"] = history;
                 db.end();
