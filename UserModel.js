@@ -46,6 +46,8 @@ function UserModel(username, password, salt, newPassword){
 	}
 	try {
 	    var salt = crypto.randomBytes(64).toString('hex');
+
+	    // if a salt has been given in the constructor, use it
 	    if (self.salt) {
 		salt = self.salt;
 	    }

@@ -3,7 +3,7 @@ var logfmt = require("logfmt");
 var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
-
+var gcm = require('node-gcm');
 var UserController = require("./UserController.js");
 var IngredientController = require('./IngredientController.js');
 var HistoryController = require('./HistoryController.js');
@@ -30,6 +30,41 @@ app.configure(function(){
     app.use(app.router);
 });
 
+
+function sendStuff() {
+    console.log("BEGAN");
+    // or with object values
+    var message = new gcm.Message({
+	collapseKey: 'demo',
+	delayWhileIdle: true,
+	timeToLive: 3,
+	data: {
+            key1: 'message1',
+            key2: 'message2'
+	}
+    });
+
+    var sender = new gcm.Sender("AIzaSyAciShjm6nSbLyjCMiCU4svWJLK0VHE8v0");
+    var registrationIds = [];
+
+    // At least one required
+    registrationIds.push('APA91bHYjqrWYHng0cWctstptHB1enF4qn4c2tSUUFUjw-36QrIE6KJPziD73X3TspTiRVVnDLQlRke8flC7uZLToBNqc8S68eth_-Wqz4DBmU__9uer5SceGM0OIX4LjrD3-A6e4w1qZCC8SFlX9TSbqoHX5k2teVSP_aoItnlOb5TfEUXQ_54');
+
+    /**
+     * Params: message-literal, registrationIds-array, No. of retries, callback-function
+     **/
+    sender.send(message, registrationIds, 4, function (err, result) {
+	console.log(err);
+	console.log(result);
+    });   
+}
+
+function f()  {
+    console.log("potato");
+}
+
+//setInterval(sendStuff, 1000000);
+sendStuff();
 app.get('/', function(req, res) {
   res.writeHead(200);
     res.write('<html><body>');
@@ -173,26 +208,25 @@ app.post('/TESTAPI/resetFixture', function(req, res) {
   ///////
   //var params = { host: 'ec2-54-197-238-8.compute-1.amazonaws.com',user: 'zbbaxdqhmzxnwh',password: '8WEQZA6SCS4P911KYoKY0lNvpO',database: 'de0l8cfdtcishp',ssl: true };
     ////pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      client.query('DELETE from ingredients', function(err, result) {
-        done();
-        if(err) return console.error(err);
-      });
-      client.query('DELETE from history', function(err, result) {
-        done();
-        if(err) return console.error(err);
-      });
-      client.query('DELETE from users', function(err, result) {
-        done();
-        if(err) return console.error(err);
-      });
+
+    var client = new pg.Client(process.env.DATABASE_URL);
+    client.connect();
+    client.query('DELETE from ingredients', function(err, result) {
+	client.query('DELETE from history', function(err, result) {
+	    client.query('DELETE from ratings', function(err, result) {
+		client.query('DELETE from users', function(err, result) {
+		    var new_son = {
+			errCode: 1
+		    }
+		    var format_son = JSON.stringify(new_son);
+		    res.write(format_son);
+		    res.end();
+		    client.end();
+		});
+	    });
+	});
     });
-    var new_son = {
-      errCode: 1
-    }
-    var format_son = JSON.stringify(new_son);
-    res.write(format_son);
-    res.end();
+
 
 });
 

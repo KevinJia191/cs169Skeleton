@@ -63,6 +63,8 @@ class TestAdd(testLib.RestTestCase):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'password'} )
         self.assertResponse(respData, SUCCESS)
+
+
     def testAddTwo(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData1 = self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
@@ -99,7 +101,6 @@ testLoginInvalid(): Try to login with invalid credentials.
 
 Assuming Invalid User is one with a null name
     """
-
    
 
 class TestLogin(testLib.RestTestCase):
@@ -111,6 +112,7 @@ class TestLogin(testLib.RestTestCase):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'baduser', 'password' : 'password'} )
         self.assertResponse(respData, CERR_INVAL_CRED)  
+
     def testLoginValid(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
@@ -122,10 +124,6 @@ class TestLogin(testLib.RestTestCase):
         respData2 = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'wrong password'} )
         self.assertResponse(respData1, SUCCESS)
         self.assertResponse(respData2, CERR_INVAL_CRED)
-
-"""
-ERROR WITH RUNNING THESE TESTS
-"""
 
 class TestIngredients(testLib.RestTestCase):
     def assertResponse(self, respData, code):
@@ -233,7 +231,6 @@ class TestIngredients(testLib.RestTestCase):
         self.assertResponse(respData,INVALID_USER)
         
 
-
 class TestRecipe(testLib.RestTestCase):
     def assertResponse(self, respData, code):
         if (respData["errCode"]==code):
@@ -244,15 +241,15 @@ class TestRecipe(testLib.RestTestCase):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Apple Pie', 'current_date': '3/11/14', 'rating':'4'} )
-        respData = self.makeRequest("/recipes/history", method="GET", data = {'user': 'user1'} )
+        respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Apple Pie', 'current_date': '3/11/14'} )
+        respData = self.makeRequest("/recipes/history", method="POST", data = {'user': 'user1'} )
         print(respData)
         self.assertResponse(respData,SUCCESS)
     def testMakeRecipe(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Apple Pie', 'current_date': '3/11/14', 'rating':'4'} )
+        #respData = self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
+        respData = self.makeRequest("/recipes/make", method="POST", data = {'user': 'user1', 'recipe_name': 'Apple Pie', 'current_date': '3/11/14'} )
         print(respData)
         self.assertResponse(respData,SUCCESS)
     
@@ -280,7 +277,6 @@ class TestSession(testLib.RestTestCase):
     def testNoCookieFails(self):
         r = requests.post("http://"+self.server+"/users/verify")
         self.assertEquals(r.text, '{"errCode":"NOT_SIGNED_IN"}')
-
 class TestRatings(testLib.RestTestCase):
     def assertResponse(self, respData, code):
         if (respData["errCode"]==code):
@@ -291,14 +287,14 @@ class TestRatings(testLib.RestTestCase):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        respData = self.makeRequest("recipes/rate", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', "rating":4} )
+        respData = self.makeRequest("/recipes/rate", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', 'rating': 4} )
         self.assertResponse(respData, SUCCESS)
 
     def testIncorrectRating(self):
         self.makeRequest("/TESTAPI/resetFixture", method="POST")
         self.makeRequest("/users/signup", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
         self.makeRequest("/users/login", method="POST", data = { 'user' : 'user1', 'password' : 'user1'} )
-        respData = self.makeRequest("recipes/rate", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', "rating":7} )
+        respData = self.makeRequest("/recipes/rate", method="POST", data = { 'user' : 'user1', 'recipe_name' : 'Apple Pie', 'rating': 7} )
         self.assertResponse(respData, INVALID_RATING)    
 
     
