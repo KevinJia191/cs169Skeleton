@@ -1,8 +1,8 @@
-var SQLite3Model = require('./SQLite3DatabaseModel.js');
-var UserModel = require('../UserModel.js');
-var SQLite3Parser = require('./SQLite3Parser.js');
+var SQLite3Model = require('../Models/SQLite3DatabaseModel.js');
+var UserModel = require('../Models/UserModel.js');
+var SQLite3Parser = require('../Parsers/SQLite3Parser.js');
 var Constants = require('../Constants.js');
-var HelperMethods = require('./TestHelperMethods.js');
+var HelperMethods = require('../Helpers/TestHelperMethods.js');
 var doSetup = HelperMethods.doSetup;
 var crypto = require('crypto');
 

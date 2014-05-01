@@ -3,11 +3,11 @@
 * @author Christopher
 *
 */
-var SQLite3Model = require('./SQLite3DatabaseModel.js');
-var IngredientModel = require('../Ingredient.js');
-var SQLite3Parser = require('./SQLite3Parser.js');
+var SQLite3Model = require('../Models/SQLite3DatabaseModel.js');
+var IngredientModel = require('../Models/Ingredient.js');
+var SQLite3Parser = require('../Parsers/SQLite3Parser.js');
 var Constants = require('../Constants.js');
-var HelperMethods = require('./TestHelperMethods.js');
+var HelperMethods = require('../Helpers/TestHelperMethods.js');
 var doSetup = HelperMethods.setupAndCreateUsers;
 /*
 * SQLite3 appears to ignore foreign key constraint checks. For example, I can directly add an item to the Ingredient's table without having the specified user in the

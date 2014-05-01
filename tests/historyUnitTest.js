@@ -1,11 +1,11 @@
-var HistoryController = require('../HistoryController.js');
-var SQLite3Model = require('./SQLite3DatabaseModel.js');
-var HistoryModel = require('../HistoryModel.js');
-var RatingModel = require('../RatingModel.js');
-var SQLite3Parser = require('./SQLite3Parser.js');
+var HistoryController = require('../Controllers/HistoryController.js');
+var SQLite3Model = require('../Models/SQLite3DatabaseModel.js');
+var HistoryModel = require('../Models/HistoryModel.js');
+var RatingModel = require('../Models/RatingModel.js');
+var SQLite3Parser = require('../Parsers/SQLite3Parser.js');
 var Constants = require('../Constants.js');
 
-var HelperMethods = require('./TestHelperMethods.js');
+var HelperMethods = require('../Helpers/TestHelperMethods.js');
 var doSetup = HelperMethods.setupAndCreateUsers;
 
 exports["testMakeRecipe"] = function(test){
