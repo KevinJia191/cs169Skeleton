@@ -30,26 +30,6 @@ exports["testMakeRecipe"] = function(test){
     });
 };
 
-exports["testClearHistory"] = function(test){
-    var db = new SQLite3Model();
-    test.expect(5);
-    doSetup(db, function() {
-        var historyModel = new HistoryModel('jernchr', 'OnionSoup', '5/21/17');
-        historyModel.setDatabaseModel(db);
-        historyModel.setParser(new SQLite3Parser());
-        db.connect();
-        historyModel.make(function(err, result) {
-            test.equal(err, Constants.SUCCESS, "Make should be success");
-            db.query("select * from "+ Constants.HISTORY_TABLE, function(err, rows) {
-                db.end();
-                historyModel.clearAllHistoryFromUser(function(err, result){
-                    
-                });
-                test.done();
-            });
-        });
-    });
-};
 
 exports["testMakeTwoRecipes"] = function(test){
     var db = new SQLite3Model();
@@ -150,6 +130,28 @@ exports["testRateRecipe"] = function(test){
                 test.equal(rows.length, 1, "Should be just one recipe rated");
                 test.done();
             });
+        });
+    });
+};
+
+exports["testClearHistory"] = function(test){
+    var db = new SQLite3Model();
+    test.expect(2);
+    doSetup(db, function() {
+        var historyModel = new HistoryModel('jernchr', 'OnionSoup', '5/21/17');
+        historyModel.setDatabaseModel(db);
+        historyModel.setParser(new SQLite3Parser());
+        db.connect();
+        historyModel.make(function(err, result) {
+            test.equal(err, Constants.SUCCESS, "Make should be success");
+                historyModel.clearAllHistoryFromUser(function(err, result){
+                    db.query("select * from "+ Constants.HISTORY_TABLE+" where username = 'jernchr'", function(err, rows) {
+			console.log("lol");
+			test.equal(rows.length, 0);
+			test.done();
+			db.end();
+		    });
+                });
         });
     });
 };

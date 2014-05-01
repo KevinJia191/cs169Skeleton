@@ -22,7 +22,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.start = null;
     this.end = null;
     this.validUnits = { "oz" : true, "count": true};
-    this.fields = { "username": username, "ingredient_name":ingredient_name, "expiration_date":expiration_date, "quantity":quantity, "unit":unit};
     this.conversion = {"count/oz": null}; // null means conversion isn't allowed. This contains all combinations where [a,b] means that a is lexicographically less than b. 
 
     this.userExists = function(callback) {

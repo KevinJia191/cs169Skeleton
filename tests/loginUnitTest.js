@@ -150,14 +150,14 @@ exports["testAddInvalidUser2"] = function(test){
     var db = new SQLite3Model();
     test.expect(1);
     doSetup(db, function() {
-	var longPass = "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu";
-        var userModel = new UserModel("user", longPass);
+	var longUser = "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu";
+        var userModel = new UserModel(longUser);
         userModel.setDatabaseModel(db);
         userModel.setParser(new SQLite3Parser());
 	db.connect();
         userModel.signUp(function(err) {
-		test.equal(err, Constants.BAD_USER);
-		test.done();
+	    test.equal(err, Constants.BAD_USER);
+	    test.done();
 	});
     });
 };

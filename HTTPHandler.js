@@ -47,13 +47,8 @@ function sendStuff() {
     var sender = new gcm.Sender("AIzaSyAciShjm6nSbLyjCMiCU4svWJLK0VHE8v0");
     var registrationIds = [];
 
-    // OPTIONAL
-    // add new key-value in data object
-    message.addDataWithKeyValue('key1','message1');
-    message.addDataWithKeyValue('key2','message2');   
-
     // At least one required
-    registrationIds.push('regId1');
+    registrationIds.push('APA91bHYjqrWYHng0cWctstptHB1enF4qn4c2tSUUFUjw-36QrIE6KJPziD73X3TspTiRVVnDLQlRke8flC7uZLToBNqc8S68eth_-Wqz4DBmU__9uer5SceGM0OIX4LjrD3-A6e4w1qZCC8SFlX9TSbqoHX5k2teVSP_aoItnlOb5TfEUXQ_54');
 
     /**
      * Params: message-literal, registrationIds-array, No. of retries, callback-function
@@ -69,8 +64,6 @@ function f()  {
 }
 
 //setInterval(sendStuff, 1000000);
-console.log("Ran");
-f();
 sendStuff();
 app.get('/', function(req, res) {
   res.writeHead(200);
