@@ -72,7 +72,7 @@ var HistoryController = function(res) {
                 for (index = 0; index < resultHist.length; index++) {
                     ratingModel.getRating(function(err, resultRating){
                         db.end();
-                        var recipe =  { "recipe_name": resultHist[index].recipe_name,
+                        var recipe ={ "recipe_name": resultHist[index].recipe_name,
                                         "date_created": resultHist[index].datecreated,
                                         "rating" : resultRating[index].rating
                                     };
