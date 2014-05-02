@@ -81,6 +81,7 @@ function sendPushNotification(reg_id, message, res, callback) {
 	}
     });
 
+    message.dryRun = true;
     var sender = new gcm.Sender("AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8");
     var registrationIds = [];
 
