@@ -26,3 +26,9 @@ recipe_name text,
 rating int check(rating > 0 AND rating <= 5),
 primary key(username, recipe_name)
 );
+
+Create table registration_ids (
+       username text references users(username),
+       reg_id text,
+       primary key(username)
+);

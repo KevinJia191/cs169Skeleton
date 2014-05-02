@@ -34,26 +34,6 @@ function PostgreSQLParser() {
 	}
 	return ingredients;
     }
-
-    this.parseIngredientReg = function(result) {
-	var ingredients = new Array();
-	if (result.rows.length == 0) {
-	    return ingredients;
-	}
-	for (index = 0; index < result.rows.length; index++) {
-	    var row = result.rows[index];
-	    var ingredient = {};
-	    ingredient["username"] = row["username"]
-	    ingredient["ingredient_name"] = row["ingredient_name"];
-	    ingredient["reg_id"] = row["reg_id"];	
-	    ingredient["day"] = row["day"];
-	    ingredient["year"] = row["year"];
-	    ingredient["month"] = row["month"];
-	    ingredients[index] = ingredient;
-	}
-	return ingredients;
-    }
-
     
     this.parseUser = function(result) {
         var users = new Array();

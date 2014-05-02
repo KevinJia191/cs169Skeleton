@@ -103,7 +103,7 @@ var UserController = function(res) {
             var json = {errCode : err};
             self.res.header('Content-Type', 'application/json');
             self.res.end(JSON.stringify(json));
-    });
+	});
     }
 
 

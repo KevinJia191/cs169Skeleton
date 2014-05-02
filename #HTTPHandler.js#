@@ -43,19 +43,21 @@ ingredientModel.setParser(new PostgreSQLParser());
 db.connect();
 ingredientModel.getExpiringIngredients(10, function(result) {
     db.end();
-    //console.log(result);
-    var index = 0;
-    for (index = 0; index < result.length; index++) {
-	var ingredient = result[index];
-	console.log("ingredient:"+ingredient);
-	var msg = ingredient["ingredient_name"] + " is expiring soon!";
-	console.log(msg);
-	sendPushNotification(ingredient["reg_id"], msg, null, function() {
-	    console.log("fiished");
-	    //ingredientModel.put("username", ingredient["username"]);
-	    //ingredientModel.put("ingredient_name", ingredient["ingredient_name"]);
-	    //ingredientModel.put("expiration_date", ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
-	     
+    for (ingredient in results) {
+	var regModel = new RegistrationModel(result.username);
+	regModel.get(function(err, result) {
+	    console.log(err);
+	    if (err) {
+		return;
+	    }
+	    else {
+		var msg = ingredient.ingredient_name + " is expiring soon!";
+		sendPushNotification(result.rows[0].reg_id, msg, function() {
+		        ingredientModel.put("username", username);
+		    ingredientModel.put("ingredient_name", ingredient_name);
+		    ingredientModel.put("expiration_date", expiration_date);
+		});
+	    }
 	});
     }
     console.log("Finished");
@@ -68,7 +70,8 @@ function sendPushNotification(reg_id, message, res, callback) {
 	delayWhileIdle: true,
 	timeToLive: 5,
 	data: {
-	    message: message
+            key1: 'message1',
+            key2: 'message2'
 	}
     });
 
@@ -97,7 +100,7 @@ function sendPushNotification(reg_id, message, res, callback) {
 
 app.post('/push', function(req, res) {
     var reg_id = req.body['reg_id'];
-    sendStuff(reg_id,"derp",  res, function() {});
+    sendStuff(reg_id, res);
 });
 
 

@@ -279,4 +279,16 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     }
 }
 
+
+Ingredient.getExpiringIngredients = function(daysAhead, callback) { 
+    var expQuery = "select * from ingredients where expiration_date <= (current_date at time zone 'UTC') and expiration_date <= (current_date at time zone 'UTC') + interval '"+ daysAhead + " days' and (notification_sent is null or notification_sent != (current_date at time zone 'UTC'))";
+    console.log(expQuery);
+    self.connection.query(expQuery, function(err, result) {
+	console.log(err);
+	console.log(result);
+	callback();
+	
+    });
+}
+    
 module.exports = Ingredient;
