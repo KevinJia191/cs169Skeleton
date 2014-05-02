@@ -1,7 +1,7 @@
-var RegistrationModel = require('./RegistrationModel.js');
-var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
-var PostgreSQLParser = require('./PostgreSQLParser.js');
-var Constants = require('./Constants.js');
+var RegistrationModel = require('../Models/RegistrationModel.js');
+var PostgreSQLDatabaseModel = require('../Models/PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('../Parsers/PostgreSQLParser.js');
+var Constants = require('../Constants.js');
 var RegistrationController = function(res) {
     this.res = res;
     var self = this;

@@ -1,6 +1,6 @@
 var pg = require('pg');
-var Constants = require('./Constants.js');
-var RegistrationRecord = require('./RegistrationRecord.js')
+var Constants = require('../Constants.js');
+var RegistrationRecord = require('../Records/RegistrationRecord.js')
 
 function RegistrationModel(username, reg_id){
     this.username = username;
