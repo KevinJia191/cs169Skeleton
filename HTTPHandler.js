@@ -26,11 +26,10 @@ var sessionStore = new MemoryStore();
 
 app.use(logfmt.requestLogger());
 app.use(express.cookieParser());
-app.use(express.session({secret: 'secrete_key', key: 'sid', store: sessionStore, expires: new Date(Date.now() + (7 * 86400 * 1000))}));
+app.use(express.session({secret: '1AGFSSD7890QWERTY', key: 'sid', store: sessionStore, expires: new Date(Date.now() + (7 * 86400 * 1000))}));
 
 app.configure(function(){
     app.use(express.cookieParser());
-    app.use(express.session({secret: '1234567890QWERTY'}));
     app.use(express.bodyParser({limit: '5mb'}));
     app.use(express.json({limit: '5mb'}));
     app.use(express.urlencoded({limit: '5mb'}));
@@ -50,6 +49,7 @@ ingredientModel.getExpiringIngredients(10, function(result) {
     for (index = 0; index < result.length; index++) {
 	var ingredient = result[index];
 	console.log("ingredient:"+ingredient);
+	console.log("notification_sent:"+ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"];
 	var msg = ingredient["ingredient_name"] + " is expiring soon!";
 	console.log(msg);
 	sendPushNotification(ingredient["reg_id"], msg, null, function() {
