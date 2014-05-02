@@ -45,28 +45,33 @@ ingredientModel.setParser(parser);
 db.connect();
 ingredientModel.getExpiringIngredients(10, function(result) {
     db.end();
-    //console.log(result);
+    console.log("Length:"+result.length);
     var index = 0;
     for (index = 0; index < result.length; index++) {
 	var ingredient = result[index];
-	console.log("ingredient:"+ingredient);
+	console.log("ingredient:"+ingredient["ingredient_name"]);
 	console.log("notification_sent:"+ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
 	var msg = ingredient["ingredient_name"] + " is expiring soon!";
 	console.log(msg);
 	sendPushNotification(ingredient["reg_id"], msg, null, function() {
 	    console.log("Ran");
 	    var record = new IngredientRecord();
+	    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+	    db.connect();
 	    record.setUp(db, parser);
 	    record.put("username", ingredient["username"]);
 	    record.put("ingredient_name", ingredient["ingredient_name"]);
 	    var current_date = new  Date();
 	    var date = (1+current_date.getUTCMonth())+"/"+current_date.getUTCDate()+"/"+current_date.getUTCFullYear();
 	    console.log(date);
-	    record.put("expiration_date", date);
-	    record.update(function() {
+	    record.put("expiration_date", ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
+	    record.update(function(err) {
+		db.end();
+		console.log("update error:"+err);
 		console.log("updated!");
 	    }, {"notification_sent":date});
 	});
+	console.log("A loop completed");
     }
     console.log("Finished");
 });
