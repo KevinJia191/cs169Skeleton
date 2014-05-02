@@ -22,7 +22,6 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     this.start = null;
     this.end = null;
     this.validUnits = { "oz" : true, "count": true};
-    this.fields = { "username": username, "ingredient_name":ingredient_name, "expiration_date":expiration_date, "quantity":quantity, "unit":unit};
     this.conversion = {"count/oz": null}; // null means conversion isn't allowed. This contains all combinations where [a,b] means that a is lexicographically less than b. 
 
     this.userExists = function(callback) {
@@ -109,7 +108,9 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 
     /* 
      * Removes a quantity of an ingredient from  the User's inventory.
-     * These fields CANNOT be null: username, ingredient_name, expiration_date, quantity. Ignores unit.
+     * These fields CANNOT be null: username, ingredient_name, expiration_date, quantity
+     * If unit is not specified, the currently stored unit for this ingredient will be used.
+     * result will be the amount of the ingredient left.
      */
     this.remove = function(callback) {
 	var self = this;
@@ -278,4 +279,16 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
     }
 }
 
+
+Ingredient.getExpiringIngredients = function(daysAhead, callback) { 
+    var expQuery = "select * from ingredients where expiration_date <= (current_date at time zone 'UTC') and expiration_date <= (current_date at time zone 'UTC') + interval '"+ daysAhead + " days' and (notification_sent is null or notification_sent != (current_date at time zone 'UTC'))";
+    console.log(expQuery);
+    self.connection.query(expQuery, function(err, result) {
+	console.log(err);
+	console.log(result);
+	callback();
+	
+    });
+}
+    
 module.exports = Ingredient;

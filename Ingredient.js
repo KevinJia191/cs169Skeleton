@@ -247,6 +247,17 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	});
     }
 
+    this.getExpiringIngredients = function(daysAhead, callback) { 
+	var self = this;
+	var expQuery = "select ingredients.username, registration_ids.reg_id, ingredients.ingredient_name, extract(month from expiration_date) as month, extract(day from expiration_date) as day, extract(year from expiration_date) as year from ingredients, registration_ids where ingredients.username = registration_ids.username and expiration_date >= (current_date at time zone 'UTC') and expiration_date <= ((current_date at time zone 'UTC') + interval '10 days') and (notification_sent is null or notification_sent != (current_date at time zone 'UTC'));"
+	console.log(expQuery);
+	self.connection.query(expQuery, function(err, result) {
+	    //console.log(result);
+	    callback(self.parser.parseIngredientReg(result));
+	    
+	});
+    }
+
     /*
      * Sets the database that this object will connect to.
      *
@@ -278,5 +289,5 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.limit = limit;
     }
 }
-
+    
 module.exports = Ingredient;
