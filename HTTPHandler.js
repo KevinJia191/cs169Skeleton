@@ -49,7 +49,7 @@ ingredientModel.getExpiringIngredients(10, function(result) {
     for (index = 0; index < result.length; index++) {
 	var ingredient = result[index];
 	console.log("ingredient:"+ingredient);
-	console.log("notification_sent:"+ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"];
+	console.log("notification_sent:"+ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
 	var msg = ingredient["ingredient_name"] + " is expiring soon!";
 	console.log(msg);
 	sendPushNotification(ingredient["reg_id"], msg, null, function() {
