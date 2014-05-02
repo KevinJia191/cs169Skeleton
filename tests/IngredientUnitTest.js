@@ -26,6 +26,7 @@ exports["testAddIngredient"] = function(test){
 	ingredientModel.setParser(new SQLite3Parser());
 	db.connect();
 	ingredientModel.add(function(err, result) {
+	    console.log(err);
 	    test.equal(err, Constants.SUCCESS, "Add should have succeeded");
 	    db.query("select * from ingredients", function(err, rows) {
 		db.end();

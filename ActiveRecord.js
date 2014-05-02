@@ -24,6 +24,9 @@ function ActiveRecord() {
 
 
 ActiveRecord.prototype.put = function(key, value) {
+    if (value == undefined) {
+	value = null;
+    }
     this.fields[key] = value;
     this.constraints[key] = ActiveRecord.EQUAL;
 }
@@ -43,15 +46,14 @@ ActiveRecord.prototype.insert = function(callback) {
     var columns = " (";
     var count = 1;
     for (field in this.fields) {
-	if (this.fields[field] != null) {
-	    if (count == this.numFields) {
-		values = values + this.getValue(field, this.fields) + ")";
-		columns = columns + field + ")";
-	    }
-	    else {
-		values = values + this.getValue(field, this.fields)+", ";
-		columns = columns + field + ", ";
-	    }
+	console.log(field);
+	if (count == this.numFields) {
+	    values = values + this.getValue(field, this.fields) + ")";
+	    columns = columns + field + ")";
+	}
+	else {
+	    values = values + this.getValue(field, this.fields)+", ";
+	    columns = columns + field + ", ";
 	}
 	count = count + 1;
     }
