@@ -58,7 +58,7 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 	    record.put("username", ingredient["username"]);
 	    record.put("ingredient_name", ingredient["ingredient_name"]);
 	    var current_date = new  Date();
-	    var date = (1+current_date.getUTCMonth())+"/"+current_date.getUTCDate()+"/"+getUTCFullYear();
+	    var date = (1+current_date.getUTCMonth())+"/"+current_date.getUTCDate()+"/"+current_date.getUTCFullYear();
 	    console.log(date);
 	    record.put("expiration_date", date);
 	    record.update(function() {
