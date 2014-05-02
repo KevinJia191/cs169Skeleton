@@ -63,7 +63,7 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 	    record.put("expiration_date", date);
 	    record.update(function() {
 		console.log("updated!");
-	    });
+	    }, {"notification_sent":date});
 	});
     }
     console.log("Finished");
