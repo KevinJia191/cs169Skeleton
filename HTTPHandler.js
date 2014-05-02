@@ -69,11 +69,6 @@ ingredientModel.getExpiringIngredients(10, function(result) {
     }
     console.log("Finished");
 });
-	     
-function sendPushNotification(ingredient, message, res, callback) {
-    reg_id = ingredient["reg_id"];
-    console.log("Finished");
-});
 
 function sendPushNotification(reg_id, message, res, callback) {
     var message = new gcm.Message({
