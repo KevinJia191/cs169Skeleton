@@ -7,6 +7,9 @@ function RegistrationModel(username, reg_id){
     this.reg_id = reg_id;
     this.connection = null;
     this.parser = null;
+    
+    this.fields = {"username": username, "reg_id":reg_id};
+    
     var self = this;
    
     this.set = function(callback) {
