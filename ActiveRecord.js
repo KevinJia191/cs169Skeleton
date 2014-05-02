@@ -45,17 +45,24 @@ ActiveRecord.prototype.insert = function(callback) {
     var values = " values(";
     var columns = " (";
     var count = 1;
+    var fieldCount = 0;
     for (field in this.fields) {
-	console.log(field);
-	if (count == this.numFields) {
-	    values = values + this.getValue(field, this.fields) + ")";
-	    columns = columns + field + ")";
+	if (this.fields[field] != null) {
+	    fieldCount = fieldCount + 1;
 	}
-	else {
-	    values = values + this.getValue(field, this.fields)+", ";
-	    columns = columns + field + ", ";
+    }
+    for (field in this.fields) {
+	if (this.fields[field]) {
+	    if (count == fieldCount) {
+		values = values + this.getValue(field, this.fields) + ")";
+		columns = columns + field + ")";
+	    }
+	    else {
+		values = values + this.getValue(field, this.fields)+", ";
+		columns = columns + field + ", ";
+	    }
+	    count = count + 1;
 	}
-	count = count + 1;
     }
     insertQuery = insertQuery + columns + values;
     console.log(insertQuery);
