@@ -73,7 +73,7 @@ var HistoryController = function(res) {
                         var historyElementWithRating = {   
                             "recipe_name": resultHist[index].recipe_name,
                             "date_created": resultHist[index].datecreated,
-                            "rating" : resultRating[index].rating
+                            "rating" : resultRating[0].rating
                         };
                         history[index] = historyElementWithRating;
                     });
