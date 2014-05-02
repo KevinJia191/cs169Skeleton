@@ -54,7 +54,6 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 	var msg = ingredient["ingredient_name"] + " is expiring soon!";
 	console.log(msg);
 	sendPushNotification(ingredient["reg_id"], msg, null, function() {
-	    console.log("Ran");
 	    var record = new IngredientRecord();
 	    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	    db.connect();
@@ -67,27 +66,20 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 	    record.put("expiration_date", ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
 	    record.update(function(err) {
 		db.end();
-		console.log("update error:"+err);
-		console.log("updated!");
 	    }, {"notification_sent":date});
 	});
-	console.log("A loop completed");
     }
     console.log("Finished");
 });
 
 function sendPushNotification(reg_id, message, res, callback) {
-    callback();
-    return;
-    // or with object values
     var message = new gcm.Message({
-	collapseKey: 'Cooking Buddy',
+	collapseKey: 'CookingBuddy',
 	delayWhileIdle: true,
 	data: {
 	    message: message
 	}
     });
-    message.dryRun = true;
 
     var sender = new gcm.Sender("AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8");
     var registrationIds = [];
