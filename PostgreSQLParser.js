@@ -71,5 +71,18 @@ function PostgreSQLParser() {
         }
         return ratings;
     }
+
+    this.parseRegistration = function(result) {
+	var registrations = new Array();
+	if (result.rows.length == 0) {
+	    return registrations;
+	}
+	for (index = 0; index < result.rows.length; index++) {
+	    var row = result.rows[index];
+	    var registration = new RegistrationModel(row["username"], row["reg_id"]);
+	    registrations[index] = registration;
+	}
+	return registrations;
+    }
 }
 module.exports = PostgreSQLParser;

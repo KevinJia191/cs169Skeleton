@@ -1,0 +1,55 @@
+var RegistrationModel = require('./RegistrationModel.js');
+var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('./PostgreSQLParser.js');
+var Constants = require('./Constants.js');
+var RegistrationController = function(res) {
+    this.res = res;
+    var self = this;
+
+    this.signup = function (req) {
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL)
+        var userModel = new UserModel(req.body.user, req.body.password);
+        userModel.setDatabaseModel(db);
+        userModel.setParser(new PostgreSQLParser());
+        db.connect();
+        userModel.signUp(function (err, result) {
+	    db.end();
+	    self.res.header('Content-Type', 'application/json');
+	    var json = {errCode : err};
+	    if (err == Constants.SUCCESS) {
+		   req.session.regenerate(function() {
+			req.session.user = req.body.user;
+			req.session.save();
+			self.res.end(JSON.stringify(json));
+		    });
+	    }
+	    else {
+		self.res.end(JSON.stringify(json));
+	    }
+	});
+    }
+
+    this.login = function (req) {
+	var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+        var userModel = new UserModel(req.body.user, req.body.password);
+        userModel.setDatabaseModel(db);
+        userModel.setParser(new PostgreSQLParser());
+        db.connect();
+        userModel.login(function (err, result) {
+	    db.end();
+	    var json = {errCode : err};
+	    self.res.header('Content-Type', 'application/json');
+	    if (err == Constants.SUCCESS) {
+		req.session.regenerate(function() {
+		    req.session.user = req.body.user;
+		    req.session.save();
+		    self.res.end(JSON.stringify(json));
+		});
+	    }
+	    else {
+		self.res.end(JSON.stringify(json));
+	    }
+	});
+    }
+}
+module.exports = RegistrationController;

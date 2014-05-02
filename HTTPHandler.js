@@ -5,6 +5,7 @@ var pg = require('pg');
 var yummly = require('yummly');
 var gcm = require('node-gcm');
 var UserController = require("./UserController.js");
+var RegistrationController = require("./RegistrationController.js");
 var IngredientController = require('./IngredientController.js');
 var HistoryController = require('./HistoryController.js');
 var SearchController = require('./SearchController.js');
@@ -31,13 +32,12 @@ app.configure(function(){
 });
 
 
-function sendStuff(reg_id, res) {
-    console.log("BEGAN");
+function sendPushNotification(reg_id, res) {
     // or with object values
     var message = new gcm.Message({
-	collapseKey: 'demo',
+	collapseKey: 'Cooking Buddy',
 	delayWhileIdle: true,
-	timeToLive: 3,
+	timeToLive: 5,
 	data: {
             key1: 'message1',
             key2: 'message2'
@@ -53,9 +53,7 @@ function sendStuff(reg_id, res) {
     /**
      * Params: message-literal, registrationIds-array, No. of retries, callback-function
      **/
-    console.log("about to send");
     sender.send(message, registrationIds, 4, function (err, result) {
-	console.log("boom");
 	console.log(err);
 	console.log(result);
 	jsonObject = {};
@@ -66,14 +64,15 @@ function sendStuff(reg_id, res) {
     });   
 }
 
-function f()  {
-    console.log("potato");
-}
-
-
 app.post('/push', function(req, res) {
     var reg_id = req.body['reg_id'];
     sendStuff(reg_id, res);
+});
+
+
+app.post('/setRegistrationId', function(req, res) {
+    var regController = new RegistrationController(res);
+    regController.set(req);
 });
 
 app.get('/', function(req, res) {
