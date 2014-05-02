@@ -48,11 +48,12 @@ Constants.INGREDIENTS_TABLE = "ingredients";
 Constants.USERS_TABLE = "users";
 Constants.HISTORY_TABLE = "history";
 Constants.RATING_TABLE = "ratings";
-
+Constants.REGISTRATION_TABLE = "registration_ids";
 
 Constants.INGREDIENTS_NUM_FIELDS = 5;
 Constants.USERS_NUM_FIELDS = 3;
 Constants.HISTORY_NUM_FIELDS = 3;
 Constants.RATINGS_NUM_FIELDS = 3;
+Constants.REGISTRATION_NUM_FIELDS = 2;
 
 module.exports = Constants;
