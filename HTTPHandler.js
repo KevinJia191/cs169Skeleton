@@ -38,7 +38,6 @@ app.configure(function(){
 });
 
 console.log("Beginning");
-/*
 var ingredientModel = new IngredientModel();
 var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 ingredientModel.setDatabaseModel(db);
@@ -69,7 +68,6 @@ ingredientModel.getExpiringIngredients(10, function(result) {
     }
     console.log("Finished");
 });
-*/
 
 function sendPushNotification(reg_id, message, res, callback) {
     callback();
