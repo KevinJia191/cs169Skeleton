@@ -1,8 +1,8 @@
 var pg = require('pg');
-var Constants = require('./Constants.js');
+var Constants = require('../Constants.js');
 var ActiveRecord = require('./ActiveRecord.js');
-var RatingRecord = require('./RatingRecord.js');
-var UserRecord = require('./UserRecord.js');
+var RatingRecord = require('../Records/RatingRecord.js');
+var UserRecord = require('../Records/UserRecord.js');
 /*
 Model for "Rating" element, primary key'd by username, recipe_name, rating
 */
@@ -22,24 +22,24 @@ function RatingModel(username, recipe_name, rating){
     this.fields = {"username": username, "recipe_name":recipe_name, "rating":rating};
     
     this.getRating = function(callback) {
-	var self = this;
-	self.userExists(function(err) {
-	    if (err != Constants.SUCCESS) {
-		callback(err);
-		return;
-	    }
-	    var ratingRecord = new RatingRecord(self.username, self.recipe_name);
-	    ratingRecord.setUp(self.connection, self.parser);
-	    ratingRecord.select(function(err, result) {
-		if (err) {
-		    callback(Constants.ERROR);
-		}
-		else {
-		    console.log(self.parser.parseRating(result));
-		    callback(Constants.SUCCESS, self.parser.parseRating(result)[0].rating);
-		}
-	    });
-	});
+        var self = this;
+        self.userExists(function(err) {
+            if (err != Constants.SUCCESS) {
+                callback(err);
+            return;
+            }
+            var ratingRecord = new RatingRecord(self.username, self.recipe_name);
+            ratingRecord.setUp(self.connection, self.parser);
+            ratingRecord.select(function(err, result) {
+            if (err) {
+                callback(Constants.ERROR);
+            }
+            else {
+                console.log(self.parser.parseRating(result));
+                callback(Constants.SUCCESS, self.parser.parseRating(result)[0].rating);
+            }
+            });
+        });
     }
 
 
@@ -66,7 +66,7 @@ function RatingModel(username, recipe_name, rating){
                     // Object has never been made before on this day
                     if (result.length == 0) {
                         if(self.rating >= 1 && self.rating <= 5){
-			    ratingRecord.put("rating", self.rating);
+                            ratingRecord.put("rating", self.rating);
                             ratingRecord.insert(function(err, result) {
                                 if (err) {
                                     callback(Constants.ERROR);
@@ -87,16 +87,16 @@ function RatingModel(username, recipe_name, rating){
                     else{//result.length==1, meaning recipe has already been previously rated
                         if(result.rating != self.rating){
                             if(self.rating >= 1 && self.rating <= 5){
-				ratingRecord.setUp(self.connection, self.parser);
+                                ratingRecord.setUp(self.connection, self.parser);
                                 ratingRecord.update(function(err, result) {
                                     if (err) {
                                         callback(Constants.ERROR);
                                         return;
                                     }
-				    else {
-					callback(Constants.SUCCESS);
-					return;
-				    }
+                                    else {
+                                        callback(Constants.SUCCESS);
+                                        return;
+                                    }
                                 }, {"rating": self.rating}); 
                             }
                             else{
@@ -104,10 +104,10 @@ function RatingModel(username, recipe_name, rating){
                                 return;
                             }
                         }
-			else {
+                        else {
                             callback(Constants.SUCCESS);
                             return;
-			}
+                        }
                     }
                 }
             });
@@ -148,7 +148,6 @@ function RatingModel(username, recipe_name, rating){
         var userRecord = new UserRecord(this.username);
         userRecord.setUp(self.connection, self.parser);
         userRecord.select(function(err, result) {
-            //console.log(err);
             if (err) {
                 callback(Constants.ERROR);
                 return;

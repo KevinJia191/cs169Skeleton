@@ -1,5 +1,5 @@
 //var SearchController = require('../MockFoodAPI.js');
-var SearchController = require('../SearchController.js');
+var SearchController = require('../Controllers/SearchController.js');
 var query;
 
 //TODO: make a test for each possible allowedcourse, just to see if they run

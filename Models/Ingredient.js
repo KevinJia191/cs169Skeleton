@@ -1,8 +1,8 @@
 var pg = require('pg');
-var Constants = require('./Constants.js');
+var Constants = require('../Constants.js');
 var ActiveRecord = require('./ActiveRecord.js');
-var IngredientRecord = require('./IngredientRecord.js');
-var UserRecord = require('./UserRecord.js');
+var IngredientRecord = require('../Records/IngredientRecord.js');
+var UserRecord = require('../Records/UserRecord.js');
 /*
 * Model for an ingredient. username, ingredient_name, expiration_date are primary keys.
 * All methods in here have a callback function of format function(err, result);
@@ -288,6 +288,18 @@ function Ingredient(username, ingredient_name, expiration_date, quantity, unit){
 	this.sortBy = sortBy;
 	this.limit = limit;
     }
+}
+    
+
+Ingredient.getExpiringIngredients = function(daysAhead, callback) { 
+    var expQuery = "select * from ingredients where expiration_date <= (current_date at time zone 'UTC') and expiration_date <= (current_date at time zone 'UTC') + interval '"+ daysAhead + " days' and (notification_sent is null or notification_sent != (current_date at time zone 'UTC'))";
+    console.log(expQuery);
+    self.connection.query(expQuery, function(err, result) {
+	console.log(err);
+	console.log(result);
+	callback();
+	
+    });
 }
     
 module.exports = Ingredient;

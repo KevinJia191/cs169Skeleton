@@ -1,8 +1,8 @@
 var pg = require('pg');
-var Constants = require('./Constants.js');
+var Constants = require('../Constants.js');
 var ActiveRecord = require('./ActiveRecord.js');
-var RecipeRecord = require('./RecipeRecord.js');
-var UserRecord = require('./UserRecord.js');
+var RecipeRecord = require('../Records/RecipeRecord.js');
+var UserRecord = require('../Records/UserRecord.js');
 /*
 Model for a "History" element : primary key'd by (username, recipe_name, dateCreated)
 Also Model for "Rating" element, primary key'd by username, recipe_name, rating

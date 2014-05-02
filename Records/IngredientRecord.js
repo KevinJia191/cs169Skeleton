@@ -1,5 +1,5 @@
-var ActiveRecord = require('./ActiveRecord.js');
-var Constants = require('./Constants.js');
+var ActiveRecord = require('../Models/ActiveRecord.js');
+var Constants = require('../Constants.js');
 var util = require("util");
 function IngredientRecord(username, ingredient_name, expiration_date, quantity, unit, notification_sent) {
     ActiveRecord.call(this);

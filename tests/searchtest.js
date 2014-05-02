@@ -1,7 +1,7 @@
 /*
 Searchcontroller Tests
 */
-var SearchController = require('../MockFoodAPI.js');
+var SearchController = require('../Controllers/MockFoodAPI.js');
 //var SearchController = require('../SearchController.js');
 var query;
 

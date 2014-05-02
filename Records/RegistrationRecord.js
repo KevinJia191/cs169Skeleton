@@ -1,5 +1,5 @@
-var ActiveRecord = require('./ActiveRecord.js');
-var Constants = require('./Constants.js');
+var ActiveRecord = require('../ActiveRecord.js');
+var Constants = require('../Constants.js');
 
 function RegistrationRecord(username, reg_id) {
     ActiveRecord.call(this);

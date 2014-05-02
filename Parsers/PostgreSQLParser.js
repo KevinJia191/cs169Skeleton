@@ -1,8 +1,8 @@
-var Ingredient = require('./Ingredient.js');
-var UserModel = require('./UserModel.js');
-var HistoryModel = require('./HistoryModel.js');
-var RatingModel = require('./RatingModel.js');
-var DatabaseModel = require('./DatabaseModel.js');
+var Ingredient = require('../Models/Ingredient.js');
+var UserModel = require('../Models/UserModel.js');
+var HistoryModel = require('../Models/HistoryModel.js');
+var RatingModel = require('../Models/RatingModel.js');
+var DatabaseModel = require('../Models/DatabaseModel.js');
 
 function PostgreSQLParser() {
     this.errMap = { '23505':DatabaseModel.UNIQUE_VIOLATION, '23503':DatabaseModel.FOREIGN_KEY_VIOLATION, '2300': DatabaseModel.CONSTRAINT_VIOLATED};
@@ -93,19 +93,6 @@ function PostgreSQLParser() {
             ratings[index] = rating;
         }
         return ratings;
-    }
-
-    this.parseRegistration = function(result) {
-	var registrations = new Array();
-	if (result.rows.length == 0) {
-	    return registrations;
-	}
-	for (index = 0; index < result.rows.length; index++) {
-	    var row = result.rows[index];
-	    var registration = new RegistrationModel(row["username"], row["reg_id"]);
-	    registrations[index] = registration;
-	}
-	return registrations;
     }
 }
 module.exports = PostgreSQLParser;

@@ -1,5 +1,5 @@
 //MockFoodAPI.js
-var RecipeAPIProcessor = require('./RecipeAPIProcessor.js')
+var RecipeAPIProcessor = require('../Parsers/RecipeAPIProcessor.js')
   , inherits     = require('util').inherits
   ;
 

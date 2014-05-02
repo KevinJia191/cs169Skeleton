@@ -1,7 +1,7 @@
 var pg = require('pg');
-var IngredientModel = require('./Ingredient.js');
-var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
-var PostgreSQLParser = require('./PostgreSQLParser.js');
+var IngredientModel = require('../Models/Ingredient.js');
+var PostgreSQLDatabaseModel = require('../Models/PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('../Parsers/PostgreSQLParser.js');
 /*
  * Controller for the Ingredient model that takes in json requests and responds with json.
  * @author Christopher

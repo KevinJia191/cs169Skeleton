@@ -1,11 +1,8 @@
+var UserModel = require('../Models/UserModel.js');
+var PostgreSQLDatabaseModel = require('../Models/PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('../Parsers/PostgreSQLParser.js');
+var Constants = require('../Constants.js');
 
-//UserController
-//
-
-var UserModel = require('./UserModel.js');
-var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
-var PostgreSQLParser = require('./PostgreSQLParser.js');
-var Constants = require('./Constants.js');
 var UserController = function(res) {
     this.res = res;
     var self = this;
@@ -103,7 +100,7 @@ var UserController = function(res) {
             var json = {errCode : err};
             self.res.header('Content-Type', 'application/json');
             self.res.end(JSON.stringify(json));
-	});
+    });
     }
 
 

@@ -15,8 +15,6 @@ var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 var PostgreSQLParser = require('./PostgreSQLParser.js');
 
 var IngredientModel = require('./Ingredient.js');
-var IngredientRecord = require('./IngredientRecord.js');
-var RegistrationModel = require('./RegistrationModel.js');
 
 
 var SessionModel = require('./SessionController.js');
@@ -71,9 +69,13 @@ ingredientModel.getExpiringIngredients(10, function(result) {
     }
     console.log("Finished");
 });
-
+	     
 function sendPushNotification(ingredient, message, res, callback) {
     reg_id = ingredient["reg_id"];
+    console.log("Finished");
+});
+
+function sendPushNotification(reg_id, message, res, callback) {
     var message = new gcm.Message({
 	//collapseKey: 'CookingBuddy',
 	delayWhileIdle: true,

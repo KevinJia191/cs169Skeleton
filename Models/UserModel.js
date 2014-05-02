@@ -1,6 +1,6 @@
 var pg = require('pg');
-var Constants = require('./Constants.js');
-var UserRecord = require('./UserRecord.js')
+var Constants = require('../Constants.js');
+var UserRecord = require('../Records/UserRecord.js')
 var crypto = require('crypto');
 
 function UserModel(username, password, salt, newPassword){

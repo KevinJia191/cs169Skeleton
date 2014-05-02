@@ -1,9 +1,9 @@
 // SessionController.js
 
 
-var UserRecord = require('./UserRecord.js');
-var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
-var PostgreSQLParser = require('./PostgreSQLParser.js');
+var UserRecord = require('../Records/UserRecord.js');
+var PostgreSQLDatabaseModel = require('../Models/PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('../Parsers/PostgreSQLParser.js');
 var Constants = require('./Constants.js');
 
 
