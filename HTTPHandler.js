@@ -75,14 +75,14 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 function sendPushNotification(ingredient, message, res, callback) {
     reg_id = ingredient["reg_id"];
     var message = new gcm.Message({
-	collapseKey: 'CookingBuddy',
+	//collapseKey: 'CookingBuddy',
 	delayWhileIdle: true,
 	data: {
 	    message: message
 	}
     });
-
-    message.dryRun = true;
+    // for testing
+    //message.dryRun = true;
     var sender = new gcm.Sender("AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8");
     var registrationIds = [];
 
