@@ -21,9 +21,9 @@ exports["testMakeRecipe"] = function(test){
             db.query("select * from "+ Constants.HISTORY_TABLE, function(err, rows) {
                 db.end();
                 test.equal(rows.length, 1, "Should be just one recipe made");
-		var exp = { username: 'jernchr', recipe_name: 'OnionSoup', datecreated: '5/21/17'};
-		var row = rows[0];
-		testRecipeEqual(row, exp, test);
+                var exp = { username: 'jernchr', recipe_name: 'OnionSoup', datecreated: '5/21/17'};
+                var row = rows[0];
+                testRecipeEqual(row, exp, test);
                 test.done();
             });
         });
@@ -42,27 +42,26 @@ exports["testMakeTwoRecipes"] = function(test){
         historyModel.make(function(err, result) {
 	    test.equal(err, Constants.SUCCESS, "Make should be success");
 	    var historyModel = new HistoryModel('jernchr', 'Chicken Parmesan', '5/21/19');
-            historyModel.setDatabaseModel(db);
-            historyModel.setParser(new SQLite3Parser());
+        historyModel.setDatabaseModel(db);
+        historyModel.setParser(new SQLite3Parser());
 	    historyModel.make(function(err, result) {
 		test.equal(err, Constants.SUCCESS, "Make should be success");
 		db.query("select * from "+ Constants.HISTORY_TABLE, function(err, rows) {
                     db.end();
                     test.equal(rows.length, 2, "Should be two recipes made");
-		    var exp = { username: 'jernchr', recipe_name: 'OnionSoup', datecreated: '5/21/17'};
-		    var exp2 = { username: 'jernchr', recipe_name: 'Chicken Parmesan', datecreated: '5/21/19'};
-		    if (rows[0]["recipe_name"] == "Chicken Parmesan") {
-
-			testRecipeEqual(rows[0], exp2, test);
-			testRecipeEqual(rows[1], exp, test);
-		    }
-		    else {
-			testRecipeEqual(rows[0], exp, test);
-			testRecipeEqual(rows[1], exp2, test);
-		    }
+                    var exp = { username: 'jernchr', recipe_name: 'OnionSoup', datecreated: '5/21/17'};
+                    var exp2 = { username: 'jernchr', recipe_name: 'Chicken Parmesan', datecreated: '5/21/19'};
+                    if (rows[0]["recipe_name"] == "Chicken Parmesan") {
+                        testRecipeEqual(rows[0], exp2, test);
+                        testRecipeEqual(rows[1], exp, test);
+                    }
+                    else {
+                        testRecipeEqual(rows[0], exp, test);
+                        testRecipeEqual(rows[1], exp2, test);
+                    }
                     test.done();
-		});
-	    });
+                });
+            });
         });
     });
 };
@@ -79,27 +78,27 @@ exports["getHistory"] = function(test){
 	    var historyModel = new HistoryModel('jernchr', 'Chicken Parmesan', '5/21/19');
             historyModel.setDatabaseModel(db);
             historyModel.setParser(new SQLite3Parser());
-	    historyModel.make(function(err, result) {
-		test.equal(err, Constants.SUCCESS, "Make should be success");
-		var historyModel = new HistoryModel('jernchr');
-		historyModel.setDatabaseModel(db);
-		historyModel.setParser(new SQLite3Parser());
-		historyModel.getAllHistoryFromUser(function(err, results) {
-		    test.equal(err, Constants.SUCCESS, "Get history should be success");
-		    test.equal(results.length, 2);
-		    var exp = { username: 'jernchr', recipe_name: 'OnionSoup', datecreated: '5/21/17'};
-		    var exp2 = { username: 'jernchr', recipe_name: 'Chicken Parmesan', datecreated: '5/21/19'};
-		    if (results[0].fields["recipe_name"] == "Chicken Parmesan") {
-			testRecipeEqual(results[0].fields, exp2, test);
-			testRecipeEqual(results[1].fields, exp, test);
-		    }
-		    else {
-			testRecipeEqual(results[1].fields, exp2, test);
-			testRecipeEqual(results[0].fields, exp, test);
-		    }
-		    test.done();
-		});
-	    });
+            historyModel.make(function(err, result) {
+            test.equal(err, Constants.SUCCESS, "Make should be success");
+            var historyModel = new HistoryModel('jernchr');
+            historyModel.setDatabaseModel(db);
+            historyModel.setParser(new SQLite3Parser());
+            historyModel.getAllHistoryFromUser(function(err, results) {
+                test.equal(err, Constants.SUCCESS, "Get history should be success");
+                test.equal(results.length, 2);
+                var exp = { username: 'jernchr', recipe_name: 'OnionSoup', datecreated: '5/21/17'};
+                var exp2 = { username: 'jernchr', recipe_name: 'Chicken Parmesan', datecreated: '5/21/19'};
+                if (results[0].fields["recipe_name"] == "Chicken Parmesan") {
+                    testRecipeEqual(results[0].fields, exp2, test);
+                    testRecipeEqual(results[1].fields, exp, test);
+                }
+                else {
+                    testRecipeEqual(results[1].fields, exp2, test);
+                    testRecipeEqual(results[0].fields, exp, test);
+                }
+                test.done();
+                });
+            });
         });
     });
 };
@@ -144,23 +143,22 @@ exports["testClearHistory"] = function(test){
         db.connect();
         historyModel.make(function(err, result) {
             test.equal(err, Constants.SUCCESS, "Make should be success");
-                historyModel.clearAllHistoryFromUser(function(err, result){
-                    db.query("select * from "+ Constants.HISTORY_TABLE+" where username = 'jernchr'", function(err, rows) {
-			console.log("lol");
-			test.equal(rows.length, 0);
-			test.done();
-			db.end();
-		    });
-                });
+            historyModel.clearAllHistoryFromUser(function(err, result){
+                db.query("select * from "+ Constants.HISTORY_TABLE+" where username = 'jernchr'", function(err, rows) {
+                    console.log("lol");
+                    test.equal(rows.length, 0);
+                    test.done();
+                    db.end();
+                 });
+            });
         });
     });
 };
 
 //Incomplete as of now
-/*
 exports["testGetHistoryWithRatings"] = function(test){
     var db = new SQLite3Model();
-    test.expect(2);
+    test.expect(3);
     doSetup(db, function() {
         var historyModel = new HistoryModel('jernchr', 'OnionSoup', '5/21/17');
         var ratingModel = new RatingModel('jernchr', 'OnionSoup', 3);
@@ -182,4 +180,3 @@ exports["testGetHistoryWithRatings"] = function(test){
         });
     });
 };
-*/
