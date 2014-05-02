@@ -3,9 +3,9 @@ var Constants = require('../Constants.js');
 
 function RecipeRecord(username, recipe_name, dateCreated) {
     ActiveRecord.call(this);
-    this.fields["username"] = username;
-    this.fields["recipe_name"] = recipe_name;
-    this.fields["datecreated"] = dateCreated;
+    this.put["username"] = username;
+    this.put["recipe_name"] = recipe_name;
+    this.put["datecreated"] = dateCreated;
     this.numFields = Constants.HISTORY_NUM_FIELDS;
     this.tableName = Constants.HISTORY_TABLE;
 }
