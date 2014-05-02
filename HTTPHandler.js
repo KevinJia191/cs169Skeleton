@@ -4,20 +4,18 @@ var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
 var gcm = require('node-gcm');
-var UserController = require("./UserController.js");
-var RegistrationController = require("./RegistrationController.js");
-var IngredientController = require('./IngredientController.js');
-var HistoryController = require('./HistoryController.js');
-var SearchController = require('./SearchController.js');
-var MockFoodAPI = require('./MockFoodAPI.js');
+var UserController = require("./Controllers/UserController.js");
+var RegistrationController = require("./Controllers/RegistrationController.js");
+var IngredientController = require('./Controllers/IngredientController.js');
+var HistoryController = require('./Controllers/HistoryController.js');
+var SearchController = require('./Controllers/SearchController.js');
+var MockFoodAPI = require('./Controllers/MockFoodAPI.js');
 var Constants = require('./Constants.js');
-var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
-var PostgreSQLParser = require('./PostgreSQLParser.js');
+var PostgreSQLDatabaseModel = require('./Models/PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('./Parsers/PostgreSQLParser.js');
 
-var IngredientModel = require('./Ingredient.js');
+var IngredientModel = require('./Models/Ingredient.js');
 
-
-var SessionModel = require('./SessionController.js');
 
 var MemoryStore = express.session.MemoryStore;
 var sessionStore = new MemoryStore();
