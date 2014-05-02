@@ -56,7 +56,7 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 	sendPushNotification(ingredient["reg_id"], msg, null, function() {
 	    console.log("Ran");
 	    var record = new IngredientRecord();
-	    ingredientRecord.setUp(db, parser);
+	    record.setUp(db, parser);
 	    record.put("username", ingredient["username"]);
 	    record.put("ingredient_name", ingredient["ingredient_name"]);
 	    var current_date = new  Date();
