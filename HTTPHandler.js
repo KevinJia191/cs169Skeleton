@@ -40,7 +40,8 @@ console.log("Beginning");
 var ingredientModel = new IngredientModel();
 var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 ingredientModel.setDatabaseModel(db);
-ingredientModel.setParser(new PostgreSQLParser());
+var parser = new PostgreSQLParser();
+ingredientModel.setParser(parser);
 db.connect();
 ingredientModel.getExpiringIngredients(10, function(result) {
     db.end();
@@ -55,6 +56,7 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 	sendPushNotification(ingredient["reg_id"], msg, null, function() {
 	    console.log("Ran");
 	    var record = new IngredientRecord();
+	    ingredientRecord.setUp(db, parser);
 	    record.put("username", ingredient["username"]);
 	    record.put("ingredient_name", ingredient["ingredient_name"]);
 	    var current_date = new  Date();
