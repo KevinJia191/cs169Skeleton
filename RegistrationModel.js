@@ -32,7 +32,7 @@ function RegistrationModel(username, reg_id){
     }
     
     this.get = function(callback) {
-	var regRecord = new RegistrationRecord(self.username, self.reg_id);
+	var regRecord = new RegistrationRecord(self.username);
 	regRecord.setUp(self.connection, self.parser);
 	regRecord.select(function(err) {
 	    if (err) {

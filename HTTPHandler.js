@@ -12,6 +12,11 @@ var SearchController = require('./SearchController.js');
 var MockFoodAPI = require('./MockFoodAPI.js');
 var Constants = require('./Constants.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('./PostgreSQLParser.js');
+
+var IngredientModel = require('./Ingredient.js');
+var RegistrationModel = require('./RegistrationModel.js');
+
 
 var SessionModel = require('./SessionController.js');
 
@@ -31,16 +36,39 @@ app.configure(function(){
     app.use(app.router);
 });
 
+var ingredientModel = new IngredientModel();
+var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+ingredientModel.setDatabaseModel(db);
+ingredientModel.setParser(new PostgreSQLParser());
+db.connect();
+ingredientModel.getExpiringIngredients(10, function(result) {
+    db.end();
+    //console.log(result);
+    var index = 0;
+    for (index = 0; index < result.length; index++) {
+	var ingredient = result[index];
+	console.log("ingredient:"+ingredient);
+	var msg = ingredient["ingredient_name"] + " is expiring soon!";
+	console.log(msg);
+	sendPushNotification(ingredient["reg_id"], msg, null, function() {
+	    console.log("fiished");
+	    //ingredientModel.put("username", ingredient["username"]);
+	    //ingredientModel.put("ingredient_name", ingredient["ingredient_name"]);
+	    //ingredientModel.put("expiration_date", ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
+	     
+	});
+    }
+    console.log("Finished");
+});
 
-function sendPushNotification(reg_id, res) {
+function sendPushNotification(reg_id, message, res, callback) {
     // or with object values
     var message = new gcm.Message({
 	collapseKey: 'Cooking Buddy',
 	delayWhileIdle: true,
 	timeToLive: 5,
 	data: {
-            key1: 'message1',
-            key2: 'message2'
+	    message: message
 	}
     });
 
@@ -59,14 +87,17 @@ function sendPushNotification(reg_id, res) {
 	jsonObject = {};
 	jsonObject.err = err;
 	jsonObject.result = result;
-        res.header('Content-Type', 'application/json');
-        res.end(JSON.stringify(jsonObject));
+	if (res) {
+            res.header('Content-Type', 'application/json');
+            res.end(JSON.stringify(jsonObject));
+	}
+	callback();
     });   
 }
 
 app.post('/push', function(req, res) {
     var reg_id = req.body['reg_id'];
-    sendStuff(reg_id, res);
+    sendStuff(reg_id,"derp",  res, function() {});
 });
 
 

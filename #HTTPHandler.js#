@@ -5,12 +5,18 @@ var pg = require('pg');
 var yummly = require('yummly');
 var gcm = require('node-gcm');
 var UserController = require("./UserController.js");
+var RegistrationController = require("./RegistrationController.js");
 var IngredientController = require('./IngredientController.js');
 var HistoryController = require('./HistoryController.js');
 var SearchController = require('./SearchController.js');
 var MockFoodAPI = require('./MockFoodAPI.js');
 var Constants = require('./Constants.js');
 var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('./PostgreSQLParser.js');
+
+var IngredientModel = require('./Ingredient.js');
+var RegistrationModel = require('./RegistrationModel.js');
+
 
 var SessionModel = require('./SessionController.js');
 
@@ -30,8 +36,34 @@ app.configure(function(){
     app.use(app.router);
 });
 
+var ingredientModel = new IngredientModel();
+var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+ingredientModel.setDatabaseModel(db);
+ingredientModel.setParser(new PostgreSQLParser());
+db.connect();
+ingredientModel.getExpiringIngredients(10, function(result) {
+    db.end();
+    for (ingredient in results) {
+	var regModel = new RegistrationModel(result.username);
+	regModel.get(function(err, result) {
+	    console.log(err);
+	    if (err) {
+		return;
+	    }
+	    else {
+		var msg = ingredient.ingredient_name + " is expiring soon!";
+		sendPushNotification(result.rows[0].reg_id, msg, function() {
+		        ingredientModel.put("username", username);
+		    ingredientModel.put("ingredient_name", ingredient_name);
+		    ingredientModel.put("expiration_date", expiration_date);
+		});
+	    }
+	});
+    }
+    console.log("Finished");
+});
 
-function sendPushNotification(reg_id, res) {
+function sendPushNotification(reg_id, message, res, callback) {
     // or with object values
     var message = new gcm.Message({
 	collapseKey: 'Cooking Buddy',
@@ -58,8 +90,11 @@ function sendPushNotification(reg_id, res) {
 	jsonObject = {};
 	jsonObject.err = err;
 	jsonObject.result = result;
-        res.header('Content-Type', 'application/json');
-        res.end(JSON.stringify(jsonObject));
+	if (res) {
+            res.header('Content-Type', 'application/json');
+            res.end(JSON.stringify(jsonObject));
+	}
+	callback();
     });   
 }
 
@@ -70,8 +105,9 @@ app.post('/push', function(req, res) {
 
 
 app.post('/setRegistrationId', function(req, res) {
-    
-}
+    var regController = new RegistrationController(res);
+    regController.set(req);
+});
 
 app.get('/', function(req, res) {
   res.writeHead(200);
