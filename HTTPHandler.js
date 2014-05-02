@@ -53,7 +53,7 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 	console.log("expiration:"+ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
 	var msg = ingredient["ingredient_name"] + " is expiring soon!";
 	console.log(msg);
-	sendPushNotification(ingredient["reg_id"], msg, null, function(ingredient) {
+	sendPushNotification(ingredient, msg, null, function(ingredient) {
 	    var record = new IngredientRecord();
 	    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	    db.connect();
