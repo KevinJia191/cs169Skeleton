@@ -4,20 +4,18 @@ var app = express();
 var pg = require('pg');
 var yummly = require('yummly');
 var gcm = require('node-gcm');
-var UserController = require("./UserController.js");
-var RegistrationController = require("./RegistrationController.js");
-var IngredientController = require('./IngredientController.js');
-var HistoryController = require('./HistoryController.js');
-var SearchController = require('./SearchController.js');
-var MockFoodAPI = require('./MockFoodAPI.js');
+var UserController = require("./Controllers/UserController.js");
+var RegistrationController = require("./Controllers/RegistrationController.js");
+var IngredientController = require('./Controllers/IngredientController.js');
+var HistoryController = require('./Controllers/HistoryController.js');
+var SearchController = require('./Controllers/SearchController.js');
+var MockFoodAPI = require('./Controllers/MockFoodAPI.js');
 var Constants = require('./Constants.js');
-var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
-var PostgreSQLParser = require('./PostgreSQLParser.js');
+var PostgreSQLDatabaseModel = require('./Models/PostgreSQLDatabaseModel.js');
+var PostgreSQLParser = require('./Parsers/PostgreSQLParser.js');
 
-var IngredientModel = require('./Ingredient.js');
-
-
-var SessionModel = require('./SessionController.js');
+var IngredientModel = require('./Models/Ingredient.js');
+var IngredientRecord = require('./Records/IngredientRecord.js');
 
 var MemoryStore = express.session.MemoryStore;
 var sessionStore = new MemoryStore();
@@ -41,17 +39,20 @@ ingredientModel.setDatabaseModel(db);
 var parser = new PostgreSQLParser();
 ingredientModel.setParser(parser);
 db.connect();
+
+
 ingredientModel.getExpiringIngredients(10, function(result) {
     db.end();
     console.log("Length:"+result.length);
     var index = 0;
     for (index = 0; index < result.length; index++) {
 	var ingredient = result[index];
-	console.log("ingredient:"+ingredient["ingredient_name"]);
-	console.log("expiration:"+ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
+	//console.log("ingredient:"+ingredient["ingredient_name"]);
+	//console.log("expiration:"+ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
 	var msg = ingredient["ingredient_name"] + " is expiring soon!";
-	console.log(msg);
+	//console.log(msg);
 	sendPushNotification(ingredient, msg, null, function(ingredient) {
+	    console.log("My ingredient is "+ingredient.ingredient_name);
 	    var record = new IngredientRecord();
 	    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 	    db.connect();
@@ -60,7 +61,7 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 	    record.put("ingredient_name", ingredient["ingredient_name"]);
 	    var current_date = new  Date();
 	    var date = (1+current_date.getUTCMonth())+"/"+current_date.getUTCDate()+"/"+current_date.getUTCFullYear();
-	    console.log(date);
+	    //console.log(date);
 	    record.put("expiration_date", ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
 	    record.update(function(err) {
 		db.end();
@@ -69,16 +70,11 @@ ingredientModel.getExpiringIngredients(10, function(result) {
     }
     console.log("Finished");
 });
-	     
-function sendPushNotification(ingredient, message, res, callback) {
-    reg_id = ingredient["reg_id"];
-    console.log("Finished");
-});
 
-function sendPushNotification(reg_id, message, res, callback) {
+function sendPushNotification(ingredient, message, res, callback) {
+    var reg_id = ingredient["reg_id"];
     var message = new gcm.Message({
-	//collapseKey: 'CookingBuddy',
-	delayWhileIdle: true,
+	collapseKey: 'CookingBuddy',
 	data: {
 	    message: message
 	}
@@ -94,9 +90,13 @@ function sendPushNotification(reg_id, message, res, callback) {
     /**
      * Params: message-literal, registrationIds-array, No. of retries, callback-function
      **/
+    console.log("Trying to send message for "+ingredient.ingredient_name);
     sender.send(message, registrationIds, 4, function (err, result) {
-	console.log(err);
-	console.log(result);
+	console.log("Sent"+ingredient.ingredient_name);
+	console.log(ingredient.ingredient_name+" Successes:"+result["success"]);
+	console.log("************************");
+	//console.log(err);
+	//console.log(result);
 	jsonObject = {};
 	jsonObject.err = err;
 	jsonObject.result = result;
@@ -108,10 +108,12 @@ function sendPushNotification(reg_id, message, res, callback) {
     });   
 }
 
+/*
 app.post('/push', function(req, res) {
     var reg_id = req.body['reg_id'];
     sendStuff(reg_id,"derp",  res, function() {});
 });
+*/
 
 
 app.post('/setRegistrationId', function(req, res) {
