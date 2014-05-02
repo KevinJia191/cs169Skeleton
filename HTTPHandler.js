@@ -38,6 +38,7 @@ app.configure(function(){
 });
 
 console.log("Beginning");
+/*
 var ingredientModel = new IngredientModel();
 var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 ingredientModel.setDatabaseModel(db);
@@ -57,7 +58,8 @@ ingredientModel.getExpiringIngredients(10, function(result) {
 	    var record = new IngredientRecord();
 	    record.put("username", ingredient["username"]);
 	    record.put("ingredient_name", ingredient["ingredient_name"]);
-	    var date = ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"];
+	    var current_date = new  Date();
+	    var date = (1+current_date.getUTCMonth())+"/"+current_date.getUTCDate()+"/"+getUTCFullYear();
 	    console.log(date);
 	    record.put("expiration_date", date);
 	    record.update(function() {
@@ -67,6 +69,7 @@ ingredientModel.getExpiringIngredients(10, function(result) {
     }
     console.log("Finished");
 });
+*/
 
 function sendPushNotification(reg_id, message, res, callback) {
     callback();

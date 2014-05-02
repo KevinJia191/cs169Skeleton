@@ -15,6 +15,7 @@ var PostgreSQLDatabaseModel = require('./PostgreSQLDatabaseModel.js');
 var PostgreSQLParser = require('./PostgreSQLParser.js');
 
 var IngredientModel = require('./Ingredient.js');
+var IngredientRecord = require('./IngredientRecord.js');
 var RegistrationModel = require('./RegistrationModel.js');
 
 
@@ -36,6 +37,7 @@ app.configure(function(){
     app.use(app.router);
 });
 
+console.log("Beginning");
 var ingredientModel = new IngredientModel();
 var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
 ingredientModel.setDatabaseModel(db);
@@ -43,37 +45,42 @@ ingredientModel.setParser(new PostgreSQLParser());
 db.connect();
 ingredientModel.getExpiringIngredients(10, function(result) {
     db.end();
-    for (ingredient in results) {
-	var regModel = new RegistrationModel(result.username);
-	regModel.get(function(err, result) {
-	    console.log(err);
-	    if (err) {
-		return;
-	    }
-	    else {
-		var msg = ingredient.ingredient_name + " is expiring soon!";
-		sendPushNotification(result.rows[0].reg_id, msg, function() {
-		        ingredientModel.put("username", username);
-		    ingredientModel.put("ingredient_name", ingredient_name);
-		    ingredientModel.put("expiration_date", expiration_date);
-		});
-	    }
+    //console.log(result);
+    var index = 0;
+    for (index = 0; index < result.length; index++) {
+	var ingredient = result[index];
+	console.log("ingredient:"+ingredient);
+	var msg = ingredient["ingredient_name"] + " is expiring soon!";
+	console.log(msg);
+	sendPushNotification(ingredient["reg_id"], msg, null, function() {
+	    console.log("Ran");
+	    var record = new IngredientRecord();
+	    record.put("username", ingredient["username"]);
+	    record.put("ingredient_name", ingredient["ingredient_name"]);
+	    var current_date = new  Date();
+	    var date = (1+current_date.getUTCDate())+"/"+current_date+"/"+ingredient["year"];
+	    console.log(date);
+	    record.put("expiration_date", date);
+	    record.update(function() {
+		console.log("updated!");
+	    });
 	});
     }
     console.log("Finished");
 });
 
 function sendPushNotification(reg_id, message, res, callback) {
+    callback();
+    return;
     // or with object values
     var message = new gcm.Message({
 	collapseKey: 'Cooking Buddy',
 	delayWhileIdle: true,
-	timeToLive: 5,
 	data: {
-            key1: 'message1',
-            key2: 'message2'
+	    message: message
 	}
     });
+    message.dryRun = true;
 
     var sender = new gcm.Sender("AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8");
     var registrationIds = [];
@@ -100,7 +107,7 @@ function sendPushNotification(reg_id, message, res, callback) {
 
 app.post('/push', function(req, res) {
     var reg_id = req.body['reg_id'];
-    sendStuff(reg_id, res);
+    sendStuff(reg_id,"derp",  res, function() {});
 });
 
 

@@ -8,7 +8,7 @@ function IngredientRecord(username, ingredient_name, expiration_date, quantity, 
     this.put("expiration_date", expiration_date);
     this.put("quantity", quantity);
     this.put("unit", unit);
-    this.put("notification_sent", unit);
+    this.put("notification_sent", notification_sent);
     this.numFields = Constants.INGREDIENTS_NUM_FIELDS;
     this.tableName = Constants.INGREDIENTS_TABLE;
 }
