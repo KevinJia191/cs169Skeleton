@@ -39,81 +39,90 @@ ingredientModel.setDatabaseModel(db);
 var parser = new PostgreSQLParser();
 ingredientModel.setParser(parser);
 db.connect();
-
-
-ingredientModel.getExpiringIngredients(10, function(result) {
+ingredientModel.getExpiringIngredients(2, function(result) {
     db.end();
-    console.log("Length:"+result.length);
-    var index = 0;
-    for (index = 0; index < result.length; index++) {
-	var ingredient = result[index];
-	//console.log("ingredient:"+ingredient["ingredient_name"]);
-	//console.log("expiration:"+ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
-	var msg = ingredient["ingredient_name"] + " is expiring soon!";
-	//console.log(msg);
-	sendPushNotification(ingredient, msg, null, function(ingredient) {
-	    console.log("My ingredient is "+ingredient.ingredient_name);
-	    var record = new IngredientRecord();
-	    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
-	    db.connect();
-	    record.setUp(db, parser);
-	    record.put("username", ingredient["username"]);
-	    record.put("ingredient_name", ingredient["ingredient_name"]);
-	    var current_date = new  Date();
-	    var date = (1+current_date.getUTCMonth())+"/"+current_date.getUTCDate()+"/"+current_date.getUTCFullYear();
-	    //console.log(date);
-	    record.put("expiration_date", ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
-	    record.update(function(err) {
-		db.end();
-	    }, {"notification_sent":date});
+    for (user in result) {
+	var msg = "";
+	ingredients = result[user];
+	console.log("length:"+ingredients.length);
+	for (var index = 0; index < ingredients.length; index++) {
+	    //console.log(ingredients[index]);
+	    var env = function() { 
+		var ingredient = ingredients[index];
+		var record = new IngredientRecord();
+		var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+		db.connect();
+		record.setUp(db, parser);
+		record.put("username", ingredient["username"]);
+		record.put("ingredient_name", ingredient["ingredient_name"]);
+		var current_date = new Date();
+		var date = (1+current_date.getUTCMonth())+"/"+current_date.getUTCDate()+"/"+current_date.getUTCFullYear();
+		record.put("expiration_date", ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
+		record.update(function(err) {
+		    db.end();
+		}, {"notification_sent":date});
+	    }
+	    env();
+	    if (index == ingredients.length - 1) {
+		msg = msg + "and "+ ingredients[index]["ingredient_name"];
+	    }
+	    else {
+		msg = msg + ingredients[index]["ingredient_name"]+", ";
+	    }
+	}
+	var regId = result[user][0]["reg_id"];
+	msg = msg + "will expire soon!";
+	console.log(msg);
+	var sender = "AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8";
+	notify(regId, msg, null, sender, function(results) {
 	});
     }
     console.log("Finished");
 });
 
-function sendPushNotification(ingredient, message, res, callback) {
-    var reg_id = ingredient["reg_id"];
+function notify(regId, message, collapseKey, senderId, callback) {
     var message = new gcm.Message({
-	collapseKey: 'CookingBuddy',
+	//collapseKey: collapseKey,
 	data: {
 	    message: message
 	}
     });
     // for testing
     //message.dryRun = true;
-    var sender = new gcm.Sender("AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8");
+    var sender = new gcm.Sender(senderId);
     var registrationIds = [];
-
-    // At least one required
-    registrationIds.push(reg_id);
-
-    /**
-     * Params: message-literal, registrationIds-array, No. of retries, callback-function
-     **/
-    console.log("Trying to send message for "+ingredient.ingredient_name);
+    registrationIds.push(regId);
+    console.log("Sending message:"+message);
     sender.send(message, registrationIds, 4, function (err, result) {
-	console.log("Sent"+ingredient.ingredient_name);
-	console.log(ingredient.ingredient_name+" Successes:"+result["success"]);
-	console.log("************************");
-	//console.log(err);
-	//console.log(result);
-	jsonObject = {};
-	jsonObject.err = err;
-	jsonObject.result = result;
-	if (res) {
-            res.header('Content-Type', 'application/json');
-            res.end(JSON.stringify(jsonObject));
-	}
-	callback(ingredient);
+	console.log("Message sent:"+message);
+	var results = {};
+	results["err"] = err;
+	results["result"] = result;
+	callback(results);
     });   
 }
 
-/*
+
+
 app.post('/push', function(req, res) {
-    var reg_id = req.body['reg_id'];
-    sendStuff(reg_id,"derp",  res, function() {});
+    var regId = "APA91bHYjqrWYHng0cWctstptHB1enF4qn4c2tSUUFUjw-36QrIE6KJPziD73X3TspTiRVVnDLQlRke8flC7uZLToBNqc8S68eth_-Wqz4DBmU__9uer5SceGM0OIX4LjrD3-A6e4w1qZCC8SFlX9TSbqoHX5k2teVSP_aoItnlOb5TfEUXQ_54";
+    var message = "holds up spork my name is katy but u can call me t3h PeNgU1N oF d00m!!!!!!!! lol";
+    var message2 = "Second message being sent!";
+    var collapseKey = "Le Le Le xD";
+    var collapseKey2 = "WildStyle";
+    var sender = "AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8";
+    notify(regId, message, collapseKey, sender, function(results) {
+	console.log(results);
+	notify(regId, message2, collapseKey2, sender, function(results2) {
+	    console.log(results2);
+	    jsonObject = {};
+	    jsonObject.result1 = results;
+	    jsonObject.result2 = results2;
+            res.header('Content-Type', 'application/json');
+            res.end(JSON.stringify(jsonObject));
+	});
+    });
 });
-*/
 
 
 app.post('/setRegistrationId', function(req, res) {

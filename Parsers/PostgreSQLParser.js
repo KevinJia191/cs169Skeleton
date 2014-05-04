@@ -36,7 +36,7 @@ function PostgreSQLParser() {
     }
 
     this.parseIngredientReg = function(result) {
-	var ingredients = new Array();
+	var ingredients = {};
 	if (result.rows.length == 0) {
 	    return ingredients;
 	}
@@ -49,8 +49,14 @@ function PostgreSQLParser() {
 	    ingredient["day"] = row["day"];
 	    ingredient["year"] = row["year"];
 	    ingredient["month"] = row["month"];
-	    ingredients[index] = ingredient;
+	    if (ingredients["username"]) {
+		ingredients["username"].push(ingredient);
+	    }
+	    else {
+		ingredients["username"] = [ingredient];
+	    }
 	}
+	//console.log(ingredients);
 	return ingredients;
     }
 
