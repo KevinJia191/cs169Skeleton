@@ -29,8 +29,22 @@ function RegistrationModel(username, reg_id){
 		else {
 		    callback(Constants.SUCCESS);
 		}
-		
 	    });
+	});
+    }
+
+    this.clear = function(callback) {
+	var regRecord = new RegistrationRecord(self.username);
+	regRecord.setUp(self.connection, self.parser);
+	regRecord.remove(function(err) {
+	    console.log(err);
+	    if (err) {
+		callback(Constants.ERROR);
+		return;
+	    }
+	    else {
+		callback(Constants.SUCCESS);
+	    }
 	});
     }
     

@@ -132,9 +132,9 @@ app.post('/push', function(req, res) {
 
 
 
-app.post('/setRegistrationId', function(req, res) {
+app.post('/clearRegistrationId', function(req, res) {
     var regController = new RegistrationController(res);
-    regController.set(req);
+    regController.clear(req);
 });
 
 app.post('/setRegistrationId', function(req, res) {
