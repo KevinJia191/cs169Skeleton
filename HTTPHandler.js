@@ -33,52 +33,58 @@ app.configure(function(){
 });
 
 console.log("Beginning");
-var ingredientModel = new IngredientModel();
-var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
-ingredientModel.setDatabaseModel(db);
-var parser = new PostgreSQLParser();
-ingredientModel.setParser(parser);
-db.connect();
-ingredientModel.getExpiringIngredients(2, function(result) {
-    db.end();
-    for (user in result) {
-	var msg = "";
-	ingredients = result[user];
-	console.log("length:"+ingredients.length);
-	for (var index = 0; index < ingredients.length; index++) {
-	    //console.log(ingredients[index]);
-	    var env = function() { 
-		var ingredient = ingredients[index];
-		var record = new IngredientRecord();
-		var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
-		db.connect();
-		record.setUp(db, parser);
-		record.put("username", ingredient["username"]);
-		record.put("ingredient_name", ingredient["ingredient_name"]);
-		var current_date = new Date();
-		var date = (1+current_date.getUTCMonth())+"/"+current_date.getUTCDate()+"/"+current_date.getUTCFullYear();
-		record.put("expiration_date", ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
-		record.update(function(err) {
-		    db.end();
-		}, {"notification_sent":date});
+
+function checkForExpirations() {
+    console.log("Checking...");
+    var ingredientModel = new IngredientModel();
+    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+    ingredientModel.setDatabaseModel(db);
+    var parser = new PostgreSQLParser();
+    ingredientModel.setParser(parser);
+    db.connect();
+    ingredientModel.getExpiringIngredients(2, function(result) {
+	db.end();
+	for (user in result) {
+	    var msg = "";
+	    ingredients = result[user];
+	    console.log("length:"+ingredients.length);
+	    for (var index = 0; index < ingredients.length; index++) {
+		//console.log(ingredients[index]);
+		var env = function() { 
+		    var ingredient = ingredients[index];
+		    var record = new IngredientRecord();
+		    var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
+		    db.connect();
+		    record.setUp(db, parser);
+		    record.put("username", ingredient["username"]);
+		    record.put("ingredient_name", ingredient["ingredient_name"]);
+		    var current_date = new Date();
+		    var date = (1+current_date.getUTCMonth())+"/"+current_date.getUTCDate()+"/"+current_date.getUTCFullYear();
+		    record.put("expiration_date", ingredient["month"]+"/"+ingredient["day"]+"/"+ingredient["year"]);
+		    record.update(function(err) {
+			db.end();
+		    }, {"notification_sent":date});
+		}
+		env();
+		if (index == ingredients.length - 1) {
+		    msg = msg + "and "+ ingredients[index]["ingredient_name"];
+		}
+		else {
+		    msg = msg + ingredients[index]["ingredient_name"]+", ";
+		}
 	    }
-	    env();
-	    if (index == ingredients.length - 1) {
-		msg = msg + "and "+ ingredients[index]["ingredient_name"];
-	    }
-	    else {
-		msg = msg + ingredients[index]["ingredient_name"]+", ";
-	    }
+	    var regId = result[user][0]["reg_id"];
+	    msg = msg + "will expire soon!";
+	    console.log(msg);
+	    var sender = "AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8";
+	    notify(regId, msg, null, sender, function(results) {
+	    });
 	}
-	var regId = result[user][0]["reg_id"];
-	msg = msg + "will expire soon!";
-	console.log(msg);
-	var sender = "AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8";
-	notify(regId, msg, null, sender, function(results) {
-	});
-    }
-    console.log("Finished");
-});
+	console.log("Finished");
+    });
+}
+
+setInterval(checkForExpirations, 1000*60*60);
 
 function notify(regId, message, collapseKey, senderId, callback) {
     var message = new gcm.Message({

@@ -17,6 +17,7 @@ function RegistrationModel(username, reg_id){
 	regRecord.setUp(self.connection, self.parser);
 
 	regRecord.remove(function(err) {
+	    console.log(err);
 	    if (err) {
 		callback(Constants.ERROR);
 		return;
