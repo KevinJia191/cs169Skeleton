@@ -7,7 +7,7 @@ function RegistrationModel(username, reg_id){
     this.reg_id = reg_id;
     this.connection = null;
     this.parser = null;
-    
+    console.log("Registration:"+username);
     this.fields = {"username": username, "reg_id":reg_id};
     
     var self = this;
@@ -15,7 +15,6 @@ function RegistrationModel(username, reg_id){
     this.set = function(callback) {
 	var regRecord = new RegistrationRecord(self.username);
 	regRecord.setUp(self.connection, self.parser);
-
 	regRecord.remove(function(err) {
 	    console.log(err);
 	    if (err) {
