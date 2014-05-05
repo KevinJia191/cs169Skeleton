@@ -96,7 +96,10 @@ ActiveRecord.prototype.remove = function(callback) {
  */
 ActiveRecord.prototype.update = function(callback, fields) {
     var self = this;
-    var updateQuery = "update "+ this.tableName + " set " + this.createConstraints(fields) + "where " + this.createConstraints(this.fields);
+    var updateQuery = "update "+ this.tableName + " set " + this.createConstraints(fields);
+    if (this.hasConstraints(this.fields)) {
+	"where " + this.createConstraints(this.fields);
+    }
     console.log(updateQuery);
     this.connection.query(updateQuery, function(err, result) {
 	callback(self.parser.parseError(err));
@@ -196,6 +199,16 @@ ActiveRecord.prototype.getConstraint = function(field) {
     else {
 	return null;
     }
+}
+
+
+ActiveRecord.prototype.hasConstraints = function(fields) {
+    for (field in fields) {
+	if (fields[field] != null) {
+	    return true;
+	}
+    }
+    return false;
 }
 
 ActiveRecord.prototype.createConstraints = function(fields) {
