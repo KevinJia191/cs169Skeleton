@@ -34,7 +34,7 @@ app.configure(function(){
 
 console.log("Beginning");
 
-function checkForExpirations() {
+function checkForExpirations(constrain) {
     console.log("Checking...");
     var ingredientModel = new IngredientModel();
     var db = new PostgreSQLDatabaseModel(process.env.DATABASE_URL);
@@ -42,7 +42,7 @@ function checkForExpirations() {
     var parser = new PostgreSQLParser();
     ingredientModel.setParser(parser);
     db.connect();
-    ingredientModel.getExpiringIngredients(2, function(result) {
+    ingredientModel.getExpiringIngredients(2, constrain, function(result) {
 	db.end();
 	for (user in result) {
 	    var msg = "";
@@ -66,15 +66,21 @@ function checkForExpirations() {
 		    }, {"notification_sent":date});
 		}
 		env();
-		if (index == ingredients.length - 1) {
+		if (ingredients.length == 1) {
+		    msg = msg + ingredients[index]["ingredient_name"];
+		}
+		else if (index == ingredients.length - 1) {
 		    msg = msg + "and "+ ingredients[index]["ingredient_name"];
+		}
+		else if (ingredients.length == 2){
+		    msg = msg + ingredients[index]["ingredient_name"]+" ";
 		}
 		else {
 		    msg = msg + ingredients[index]["ingredient_name"]+", ";
 		}
 	    }
 	    var regId = result[user][0]["reg_id"];
-	    msg = msg + "will expire soon!";
+	    msg = msg + " will expire soon!";
 	    console.log(msg);
 	    var sender = "AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8";
 	    notify(regId, msg, null, sender, function(results) {
@@ -84,7 +90,7 @@ function checkForExpirations() {
     });
 }
 
-setInterval(checkForExpirations, 1000*60*60);
+setInterval(checkForExpirations, 1000*60*60, true);
 
 function notify(regId, message, collapseKey, senderId, callback) {
     var message = new gcm.Message({
@@ -110,26 +116,26 @@ function notify(regId, message, collapseKey, senderId, callback) {
 
 
 
-app.post('/push', function(req, res) {
-    var regId = "APA91bHYjqrWYHng0cWctstptHB1enF4qn4c2tSUUFUjw-36QrIE6KJPziD73X3TspTiRVVnDLQlRke8flC7uZLToBNqc8S68eth_-Wqz4DBmU__9uer5SceGM0OIX4LjrD3-A6e4w1qZCC8SFlX9TSbqoHX5k2teVSP_aoItnlOb5TfEUXQ_54";
-    var message = "holds up spork my name is katy but u can call me t3h PeNgU1N oF d00m!!!!!!!! lol";
-    var message2 = "Second message being sent!";
-    var collapseKey = "Le Le Le xD";
-    var collapseKey2 = "WildStyle";
-    var sender = "AIzaSyCJnQfzs7SN07m8x4v8CQdywZwLrAvYAE8";
-    notify(regId, message, collapseKey, sender, function(results) {
-	console.log(results);
-	notify(regId, message2, collapseKey2, sender, function(results2) {
-	    console.log(results2);
-	    jsonObject = {};
-	    jsonObject.result1 = results;
-	    jsonObject.result2 = results2;
-            res.header('Content-Type', 'application/json');
-            res.end(JSON.stringify(jsonObject));
-	});
-    });
+app.post('/forcePush', function(req, res) {
+    checkForExpirations(false);
+    var jsonObject = {};
+    res.header('Content-Type', 'application/json');
+    res.end(JSON.stringify(jsonObject));
 });
 
+app.post('/push', function(req, res) {
+    checkForExpirations(true);
+    var jsonObject = {};
+    res.header('Content-Type', 'application/json');
+    res.end(JSON.stringify(jsonObject));
+});
+
+
+
+app.post('/setRegistrationId', function(req, res) {
+    var regController = new RegistrationController(res);
+    regController.set(req);
+});
 
 app.post('/setRegistrationId', function(req, res) {
     var regController = new RegistrationController(res);
