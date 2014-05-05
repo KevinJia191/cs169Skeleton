@@ -84,7 +84,7 @@ function checkForExpirations() {
     });
 }
 
-setInterval(checkForExpirations, 10000);
+setInterval(checkForExpirations, 1000*60*60);
 
 function notify(regId, message, collapseKey, senderId, callback) {
     var message = new gcm.Message({
@@ -94,7 +94,7 @@ function notify(regId, message, collapseKey, senderId, callback) {
 	}
     });
     // for testing
-    message.dryRun = true;
+    //message.dryRun = true;
     var sender = new gcm.Sender(senderId);
     var registrationIds = [];
     registrationIds.push(regId);
