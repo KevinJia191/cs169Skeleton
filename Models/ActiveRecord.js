@@ -83,7 +83,10 @@ ActiveRecord.NOT_EQUAL = "!=";
  */
 ActiveRecord.prototype.remove = function(callback) {
     var self = this;
-    var removeQuery = "delete from "+ this.tableName + " where "+this.createConstraints(this.fields);
+    var removeQuery = "delete from "+ this.tableName;
+    if (this.hasConstraints(this.fields)) {
+	removeQuery = removeQuery + " where " + this.createConstraints(this.fields);
+    }
     console.log(removeQuery);
     this.connection.query(removeQuery, function(err, result) {
 	callback(self.parser.parseError(err));
@@ -98,7 +101,7 @@ ActiveRecord.prototype.update = function(callback, fields) {
     var self = this;
     var updateQuery = "update "+ this.tableName + " set " + this.createConstraints(fields);
     if (this.hasConstraints(this.fields)) {
-	"where " + this.createConstraints(this.fields);
+	updateQuery = updateQuery + " where " + this.createConstraints(this.fields);
     }
     console.log(updateQuery);
     this.connection.query(updateQuery, function(err, result) {
@@ -111,7 +114,10 @@ ActiveRecord.prototype.update = function(callback, fields) {
  */
 ActiveRecord.prototype.select = function(callback) {
     var self = this;
-    var selectQuery = "select * from " + this.tableName  +" where "+this.createConstraints(this.fields);
+    var selectQuery = "select * from " + this.tableName;
+    if (this.hasConstraints(this.fields)) {
+	selectQuery = selectQuery + " where " + this.createConstraints(this.fields);
+    }
     if (this.sortField != null) {
 	selectQuery = selectQuery + "order by "+this.sortField;
 	if (this.order != null) { 
