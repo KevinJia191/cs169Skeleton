@@ -1,4 +1,5 @@
 var UserModel = require('../Models/UserModel.js');
+var RegistrationModel = require('../Models/RegistrationModel.js');
 var PostgreSQLDatabaseModel = require('../Models/PostgreSQLDatabaseModel.js');
 var PostgreSQLParser = require('../Parsers/PostgreSQLParser.js');
 var Constants = require('../Constants.js');
@@ -33,8 +34,12 @@ var UserController = function(res) {
     this.logout = function(req) {
 	res.header('Content-Type', 'application/json');
 	if (req.session.user) {
+	    var user = req.sessions.user;
 	    req.session.user = null;
-	    self.res.end(JSON.stringify({"errCode":Constants.SUCCESS}));
+	    var regModel = new RegistrationModel(user);
+	    regModel.clear(function(err) {
+		self.res.end(JSON.stringify(err));
+	    });
 	}
 	else {
 	    self.res.end(JSON.stringify({"errCode":Constants.ERROR}));

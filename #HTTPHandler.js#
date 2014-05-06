@@ -168,8 +168,6 @@ app.post('/users/verify', function(req, res) {
 app.post('/users/logout', function(req, res) {
     var userController = new UserController(res);
     userController.logout(req);
-    var regController = new RegistrationController(res);
-    regController.clear(req);
 });
 
 
